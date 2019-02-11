@@ -1,0 +1,7 @@
+# Dokumentation - Team Abschlusscalisthenics
+
+
+## Tag 1
+
+. Eine grobe Architektur für die Anwendung wurde erstellt.
+Offene Fragen: Interaktion von unangemeldeten Usern und Website.
