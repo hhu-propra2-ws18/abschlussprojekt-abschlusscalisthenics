@@ -11,6 +11,11 @@
 # Allow recursive
 !*/
 
+# Gradle Files
+!*.gradle
+!*.bat
+!gradlew
+
 # Java Files
 !*.java
 
