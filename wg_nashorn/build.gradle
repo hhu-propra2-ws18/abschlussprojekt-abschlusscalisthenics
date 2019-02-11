@@ -27,9 +27,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
-
-plugins {
-	id 'checkstyle'
-	id 'com.github.spotbugs' version '1.6.9'
+	compile group: 'checkstyle', name: 'checkstyle', version: '5.0'
+	compile group: 'gradle.plugin.com.github.spotbugs', name: 'spotbugs-gradle-plugin', version: '1.6.9'
 }
