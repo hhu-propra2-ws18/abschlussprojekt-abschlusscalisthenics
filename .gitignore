@@ -34,12 +34,9 @@
 !Dockerfile
 !.dockerignore
 
-# Markdown
+# Readme
 !*.md
-
-# Pip-Tools and requirements
-!*.in
-!*requirements/*.txt
+!*.adoc
 
 # Json files
 !*.json
