@@ -1,0 +1,45 @@
+## Blacklist
+*
+
+## Whitelist
+
+# Git
+!.gitignore
+!.gitkeep
+!.gitattributes
+
+# Allow recursive
+!*/
+
+# Java Files
+!*.java
+
+# Shell scripts
+!*.sh
+
+# Frontend
+!app/templates/*.html
+!app/static/*.css
+!app/static/*.less
+!app/static/*.sass
+!app/static/*.js
+
+# Conf files
+!*.conf
+
+# CI/CD
+!*.yml
+
+# Docker files
+!Dockerfile
+!.dockerignore
+
+# Markdown
+!*.md
+
+# Pip-Tools and requirements
+!*.in
+!*requirements/*.txt
+
+# Json files
+!*.json
