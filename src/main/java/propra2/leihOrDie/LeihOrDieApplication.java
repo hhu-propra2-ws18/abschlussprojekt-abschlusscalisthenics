@@ -6,9 +6,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class leihOrDieApplication {
+public class LeihOrDieApplication {
     public static void main(String[] args) {
-        SpringApplication.run(leihOrDieApplication.class, args);
+        SpringApplication.run(LeihOrDieApplication.class, args);
     }
 
 }
