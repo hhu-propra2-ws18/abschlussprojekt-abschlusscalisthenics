@@ -18,6 +18,7 @@ public class Item {
     private Currency deposit;
     private boolean availability;
     private int availableTime;
+    private String location;
 
     @ManyToOne
     @JoinColumn(name="username")
