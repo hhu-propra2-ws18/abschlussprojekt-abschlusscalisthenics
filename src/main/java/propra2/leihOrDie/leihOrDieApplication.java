@@ -1,14 +1,14 @@
-package de.abschlusscalisthenics.wg_nashorn;
+package propra2.leihOrDie;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-public class WgNashornApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(WgNashornApplication.class, args);
-	}
+@EnableScheduling
+public class leihOrDieApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(leihOrDieApplication.class, args);
+    }
 
 }
-
