@@ -23,7 +23,7 @@
 !*.sh
 
 # Frontend
-!app/templates/*.html
+!src/resources/templates/*.html
 !app/static/*.css
 !app/static/*.less
 !app/static/*.sass
