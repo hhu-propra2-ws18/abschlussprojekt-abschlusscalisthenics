@@ -8,4 +8,4 @@ dieorliedb:
       - MYSQL_ROOT_PASSWORD=12345
       - MYSQL_USER=nutzer
       - MYSQL_PASSWORD=1234
-      - MYSQL_DATABASE=kunden
+      - MYSQL_DATABASE=testdb
