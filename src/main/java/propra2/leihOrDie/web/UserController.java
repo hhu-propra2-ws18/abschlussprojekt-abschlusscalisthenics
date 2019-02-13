@@ -11,8 +11,8 @@ import propra2.leihOrDie.dataaccess.UserRepository;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-    @Autowired
-    private UserRepository userRepository;
+    //@Autowired
+    //private UserRepository userRepository;
 
     @GetMapping("/")
     public String new_user() {
