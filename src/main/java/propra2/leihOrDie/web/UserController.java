@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import propra2.leihOrDie.dataaccess.UserRepository;
 
 @Controller
-@RequestMapping("/user")
 public class UserController {
     //@Autowired
     //private UserRepository userRepository;
