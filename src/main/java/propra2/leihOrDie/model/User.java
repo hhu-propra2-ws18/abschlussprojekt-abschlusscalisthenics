@@ -14,6 +14,9 @@ public class User {
 
     private String email;
     private byte[] password;
+
+    @ManyToOne
+    @JoinColumn(name="address_id")
     private Address address;
 
     public User() {}
