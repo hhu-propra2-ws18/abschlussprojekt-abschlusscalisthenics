@@ -14,8 +14,8 @@ public class Item {
 
     private String name;
     private String description;
-    private Currency cost;
-    private Currency deposit;
+    private int cost;
+    private int deposit;
     private boolean availability;
     private int availableTime;
     private String location;
