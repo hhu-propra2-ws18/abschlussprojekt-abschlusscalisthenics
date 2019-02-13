@@ -15,4 +15,10 @@ public class User {
     private String email;
     private byte[] password;
 
+    public User(String username, String email, byte[] password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
+
 }

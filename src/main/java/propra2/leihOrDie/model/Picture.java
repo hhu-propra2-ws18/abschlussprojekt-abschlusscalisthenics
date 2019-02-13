@@ -17,4 +17,9 @@ public class Picture {
     @ManyToOne
     @JoinColumn(name="item_id")
     private Item item;
+
+    public Picture(SerialBlob blob, Item item) {
+        this.blob = blob;
+        this.item = item;
+    }
 }

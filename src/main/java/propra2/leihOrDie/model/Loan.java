@@ -21,4 +21,11 @@ public class Loan {
     @ManyToOne
     @JoinColumn(name="item_id")
     private Item item;
+
+    public Loan(String state, int duration, User user, Item item) {
+        this.state = state;
+        this.duration = duration;
+        this.user = user;
+        this.item = item;
+    }
 }
