@@ -13,6 +13,12 @@ public class User {
     private String username;
 
     private String email;
-    private char[] password;
+    private byte[] password;
+
+    public User(String username, String email, byte[] password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 
 }

@@ -42,3 +42,6 @@
 
 # Properties
 !*.properties
+
+# Images via lsf
+!*.jpg
