@@ -8,23 +8,25 @@ services:
       - ./proxy/conf/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./proxy/conf/domain.conf:/etc/nginx/domain.conf:ro
     depends_on:
-      - projekt
-      - projektdb
+      - propay
+      - leihordie
+      - leihordiedb
 
-  projekt:
-    build: dieOrLie-ac
-    image: dieOrLie-ac
+
+  leihordie:
+    build: ./
+    image: ./
     environment:
-      - DB_HOST=lieordiedb
+      - DB_HOST=leihordiedb
       - DB_USER=nutzer
       - DB_PASSWORD=1234
       - DB_DATABASE=lieordiedb-ac
     depends_on:
-      - projektdb
+      - leihordiedb
     links:
-      - projektdb
+      - leihordiedb
 
-  lieordiedb:
+  leihordiedb:
     image: mysql:5.7
     ports:
       - "3306:3306"
@@ -36,12 +38,12 @@ services:
       - MYSQL_PASSWORD=1234
       - MYSQL_DATABASE=lieordiedb-ac
 
-    propay:
-      image: propra/propay
-      ports:
-        - "8888:8888"
-      # Optional
-      volumes:
-        - ./data:/code/data
+  propay:
+    image: propra/propay
+    ports:
+      - "8888:8888"
+    # Optional
+    volumes:
+      - ./data:/code/data
 
   # ========================================
