@@ -1,13 +1,26 @@
 package propra2.leihOrDie;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import propra2.leihOrDie.dataaccess.ItemRepository;
+import propra2.leihOrDie.dataaccess.UserRepository;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.User;
 import java.security.*;
+import java.util.Arrays;
 import java.util.List;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class JoinTest {
+    @Autowired
+    private ItemRepository itemRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     public void testUserjoinItem() throws Exception {
@@ -21,9 +34,17 @@ public class JoinTest {
         Item item2 = new Item("säge", "eine tolle säge", 200, 3, false, 20,
                 "duesseldorf", user);
 
-        List<Item> items = user.getItems();
+        //user.setItems(Arrays.asList(item, item2));
 
-        System.out.println(items.get(0));
+        userRepository.save(user);
+        itemRepository.save(item);
+        itemRepository.save(item2);
+
+        User userFromDB = userRepository.findById("testuser").get();
+
+        List<Item> items = itemRepository.findItemsFromUser("testuser");
+
+        System.out.println(items.size());
 
     }
 }
