@@ -45,3 +45,6 @@
 
 # Json files
 !*.json
+
+# Properties
+!*.properties
