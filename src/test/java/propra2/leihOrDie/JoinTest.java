@@ -8,30 +8,15 @@ import java.security.*;
 public class JoinTest {
 
     @Test
-    public void testUserjoinItem() {
-        User user = new User();
-        Item item = new Item();
-        byte[] thedigest;
+    public void testUserjoinItem() throws Exception {
+        byte[] bytesOfMessage = "passwort1".getBytes("UTF-8");
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] thedigest = md.digest(bytesOfMessage);
 
-        try {
-            byte[] bytesOfMessage = "passwort1".getBytes("UTF-8");
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            thedigest = md.digest(bytesOfMessage);
-        } catch (java.io.UnsupportedEncodingException | java.security.NoSuchAlgorithmException e) {
-            return;
-        }
+        User user = new User("testuser", "test@email.de", thedigest);
 
-        user.setUsername("testuser");
-        user.setEmail("test@email.de");
-        user.setPassword(thedigest);
+        Item item = new Item("testitem", "ein test", 100, 20, true, 10,
+                "testlocation", user);
 
-        item.setAvailability(true);
-        item.setAvailableTime(10);
-        item.setCost(100);
-        item.setDeposit(20);
-        item.setName("testitem");
-        item.setDescription("ein test");
-        item.setLocation("testlocation");
-        item.setUser(user);
     }
 }
