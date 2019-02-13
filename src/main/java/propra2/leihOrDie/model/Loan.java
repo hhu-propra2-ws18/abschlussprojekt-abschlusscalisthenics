@@ -6,6 +6,11 @@ import javax.persistence.*;
 @Data
 @Entity
 public class Loan {
+    @Id
+    @GeneratedValue
+    @Column(name="loan_id")
+    private Long id;
+
     private String state;
     private int duration;
 
