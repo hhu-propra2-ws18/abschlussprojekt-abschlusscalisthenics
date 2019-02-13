@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:pth="http://www.w3.org/1999/xhtml" lang="">
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="">
 
 <head>
     <meta charset="utf-8">
@@ -22,13 +22,9 @@
                   <p class="subtitle has-text-black">Please fill in your personal information</p>
                   <div class="box">
 
-                    <div class="field">
-                      <label class="label">Name</label>
-                      <div class="control">
-                        <input class="input" type="text" th:field="*{name}" placeholder="Name">
-                      </div>
-                    </div>
+                    <!--- TODO: must changethe action and the object --->
 
+                    <form action="#" th:action="@{???????}" th:object="${?????}" method="post">
                     <div class="field">
                       <label class="label">Username</label>
                       <div class="control">
@@ -50,25 +46,7 @@
                       </div>
                     </div>
 
-                    <div class="field">
-                      <label class="label">Gender</label>
-                      <div class="control">
-                        <div class="select">
-                          <select>
-                            <option>Female</option>
-                            <option>Male</option>
-                            <option>Don't want to specify</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="field">
-                      <label class="label">About yourself</label>
-                      <div class="control">
-                        <textarea class="textarea" placeholder="Textarea"></textarea>
-                      </div>
-                    </div>
+                    <!--
 
                     <div class="field">
                       <div class="control">
@@ -87,15 +65,18 @@
                         </label>
                       </div>
                     </div>
+                            -->
+
 
                     <div class="field is-grouped">
                       <div class="control">
-                        <button class="button is-block is-primary is-normal is-fullwidth">Submit</button>
+                        <button class="button is-block is-primary is-normal is-fullwidth" type="submit">Submit</button>
                       </div>
                       <div class="control">
                         <button class="button is-text">Cancel</button>
                       </div>
                     </div>
+                    </form>
                   </div>
               </div>
           </div>
