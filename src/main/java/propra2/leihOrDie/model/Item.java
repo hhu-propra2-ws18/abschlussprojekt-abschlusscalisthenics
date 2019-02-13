@@ -2,7 +2,6 @@ package propra2.leihOrDie.model;
 
 import lombok.Data;
 import javax.persistence.*;
-import java.util.Currency;
 
 @Data
 @Entity
@@ -23,6 +22,8 @@ public class Item {
     @ManyToOne
     @JoinColumn(name="username")
     private User user;
+
+    public Item() {}
 
     public Item(String name, String description, int cost, int deposit, boolean availability, int availableTime,
                 String location, User user) {
