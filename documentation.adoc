@@ -5,3 +5,8 @@
 
 . Eine grobe Architektur für die Anwendung wurde erstellt.
 Offene Fragen: Interaktion von unangemeldeten Usern und Website.
+
+## Tag 2
+. Frontend Entwicklung hat angefangen.
+. Die Datenbank wurde aufgesetzt. Noch Probleme mit den Models.
+. Docker wurde angefangen: Der Dockerfile und eine .yml-Datei um die Datenbank einzeln starten zu können.
