@@ -18,6 +18,8 @@ public class Picture {
     @JoinColumn(name="item_id")
     private Item item;
 
+    public Picture() {}
+
     public Picture(SerialBlob blob, Item item) {
         this.blob = blob;
         this.item = item;

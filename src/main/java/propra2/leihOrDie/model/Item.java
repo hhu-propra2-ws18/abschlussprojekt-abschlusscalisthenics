@@ -2,7 +2,6 @@ package propra2.leihOrDie.model;
 
 import lombok.Data;
 import javax.persistence.*;
-import java.util.List;
 
 @Data
 @Entity
@@ -24,11 +23,7 @@ public class Item {
     @JoinColumn(name="username")
     private User user;
 
-    @OneToMany
-    private List<Picture> pictures;
-
-    @OneToMany
-    private List<Loan> loans;
+    public Item() {}
 
     public Item(String name, String description, int cost, int deposit, boolean availability, int availableTime,
                 String location, User user) {
