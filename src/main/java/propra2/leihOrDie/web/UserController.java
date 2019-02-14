@@ -13,8 +13,25 @@ public class UserController {
     //@Autowired
     //private UserRepository userRepository;
 
-    @GetMapping("/")
-    public String new_user() {
+    @GetMapping("/login")
+    public String user() {
         return "login";
     }
+
+    @PostMapping("/login")
+    public String logUser() {
+        return "login";
+    }
+
+    @GetMapping("/signup")
+    public String see() {
+        return "signup";
+    }
+
+    @PostMapping("/signup")
+    public String newUser() {
+        return "signup";
+    }
+
+
 }
