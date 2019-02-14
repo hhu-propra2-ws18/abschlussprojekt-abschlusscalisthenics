@@ -14,6 +14,6 @@ public interface LoanRepository extends CrudRepository<Loan, Long> {
     List<Loan> findLoansOfUser(@Param("username") String username);
 
     @Query("SELECT l FROM Loan l WHERE l.item.item_id = :itemId")
-    List<Loan> findLoansOfItem(@Param("itemId") String itemId);
+    List<Loan> findLoansOfItem(@Param("itemId") Long itemId);
 
 }

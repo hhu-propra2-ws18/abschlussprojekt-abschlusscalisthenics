@@ -11,5 +11,5 @@ public interface PictureRepository extends CrudRepository<Picture, Long> {
     List<Picture> findAll();
 
     @Query("SELECT p FROM Picture p WHERE p.item.item_id = :itemId")
-    List<Picture> findPicturesOfItem(@Param("itemId") String itemId);
+    List<Picture> findPicturesOfItem(@Param("itemId") Long itemId);
 }
