@@ -22,8 +22,6 @@ public class Loan {
     @JoinColumn(name="item_id")
     private Item item;
 
-    public Loan() {}
-
     public Loan(String state, int duration, User user, Item item) {
         this.state = state;
         this.duration = duration;
