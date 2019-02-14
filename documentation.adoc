@@ -30,3 +30,4 @@ Der Verweis auf den zugehörigen Artikel erfolgt durch Speichern des Fremdschlü
 . Für User, Item, Loan und Picture wurden je ein Repository erstellt. Address wurde als Embedabble
 implementiert. Die Repositories wurden außerdem um eine Query erweitert, über die man die Entitäten
 nach den Fremdschlüsseln filtern kann.
+
