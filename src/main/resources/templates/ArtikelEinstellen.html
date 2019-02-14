@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" lang="">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="utf-8">
@@ -24,46 +24,52 @@
 
                     <!--- TODO: must changethe action and the object --->
 
-                    <form action="#" th:action="@{???????}" th:object="${?????}" method="post">
+                    <form action="#" th:action="@{/new}" th:object="${itemForm}" method="post">
                     <div class="field">
-                      <label class="label">Titel</label>
+                      <label class="label">Produkt Name</label>
                       <div class="control">
-                        <input class="input" type="text" th:field="*{username}" placeholder="Wähle einen Produkttitel">
+                        <input class="input" type="text" th:field="*{name}" placeholder="Wähle einen Produkttitel">
+                          <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
                       </div>
                     </div>
 
                     <div class="field">
                       <label class="label">Beschreibung</label>
                       <div class="control">
-                        <input class="input" type="password" th:field="*{password}" placeholder="Wähle eine aussagekräftige Beschreibung">
+                        <input class="input" type="text" th:field="*{descrption}" placeholder="Wähle eine aussagekräftige Beschreibung">
+                          <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}">description Error</div>
                       </div>
                     </div>
 
                     <div class="field">
                       <label class="label">Abholort</label>
                       <div class="control">
-                        <input class="input" th:field="*{email}" placeholder="Wo soll dein Artikel abgeholt werden?">
+                        <input class="input" type="text" th:field="*{location}" placeholder="Wo soll dein Artikel abgeholt werden?">
+                          <div th:if="${#fields.hasErrors('location')}" th:errors="*{location}">location Error</div>
                       </div>
                     </div>
 
                     <div class="field">
                       <label class="label">Verfügbarkeit</label>
                       <div class="control">
-                        <input class="input" type="password" th:field="*{password}" placeholder="Wie lange am Stück willst du deinen Artikel ausleihen?">
+                        <input class="input" type="text" th:field="*{availableTime}" placeholder="Wie lange am Stück willst du deinen Artikel ausleihen?">
+                          <div th:if="${#fields.hasErrors('availableTime')}" th:errors="*{availableTime}">availableTime Error</div>
                       </div>
                     </div>
 
                     <div class="field">
                       <label class="label">Kaution</label>
                       <div class="control">
-                        <input class="input" th:field="*{email}" placeholder="in Euro">
+                        <input class="input" th:field="*{deposit}" type="text" placeholder="in Euro">
+                          <div th:if="${#fields.hasErrors('deposit')}" th:errors="*{deposit}">deposit Error</div>
                       </div>
                     </div>
 
                     <div class="field">
                       <label class="label">Preis</label>
                       <div class="control">
-                        <input class="input" type="password" th:field="*{password}" placeholder="in Euro / pro Tag">
+                        <input class="input" type="text" th:field="*{cost}" placeholder="in Euro / pro Tag">
+                          <div th:if="${#fields.hasErrors('cost')}" th:errors="*{cost}">cost Error</div>
                       </div>
                     </div>
 
