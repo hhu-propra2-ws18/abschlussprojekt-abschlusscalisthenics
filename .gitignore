@@ -22,6 +22,7 @@
 # Frontend
 !src/main/resources/templates/*.html
 !src/main/resources/templates/fragments/*.html
+!src/main/resources/templates/ArtikelEinstellen.html
 
 # Conf files
 !*.conf
