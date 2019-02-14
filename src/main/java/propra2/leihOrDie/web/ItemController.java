@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import propra2.leihOrDie.dataaccess.ItemRepository;
+import propra2.leihOrDie.dataaccess.UserRepository;
+import propra2.leihOrDie.model.Address;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.User;
+
 
 import javax.validation.Valid;
 
@@ -17,30 +20,38 @@ import javax.validation.Valid;
 public class ItemController {
     @Autowired
     ItemRepository itemRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @PostMapping("/new")
     public String new_item_post(Model model, @Valid ItemForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "ArtikelEinstellen_only_HTML";
+            return "ArtikelEinstellen";
         }
 
-        byte[] pass = {1, 2, 3};
-        User dummyUser = new User("dummy", "dummy mail", pass);
+        /////// dummy User erstellen und in DB speichern
+        byte[] pass = {12, 12};
+        Address adr = new Address();
+        adr.setCity("Düsseldorf");
+        adr.setPostcode(40225);
+        adr.setStreet("Universitätsstraße");
+        adr.setHouseNumber(1);
+        User dummyUser = new User("lala", "kk@dd", pass, adr);
+        userRepository.save(dummyUser);
+        ////////
 
-        saveItemInRepository(form.getName(), form.getDescription(), form.getCost(), form.getDeposit(), form.getAvailableTime(), form.getLocation(), dummyUser);
+        Item item = new Item();
+        saveItem(item, form.getName(), form.getDescription(), form.getCost(), form.getDeposit(), form.getAvailableTime(), form.getLocation(), dummyUser);
 
-        return "redirect:/ArtikelEinstellen_only_HTML";
+        return "redirect:/";
     }
 
     @GetMapping("/new")
-    public String new_item_get(Model model, @Valid ItemForm form, BindingResult bindingResult) {
-        return "ArtikelEinstellen_only_HTML";
+    public String new_item_get(Model model, ItemForm form) {
+        return "ArtikelEinstellen";
     }
 
-    private void saveItemInRepository (String name, String description, int cost, int deposit, int availableTime, String location, User user) {
-        Item item = new Item(name, description, cost, deposit, true, availableTime, location, user);
-        itemRepository.save(item);
-    }
+
 
     @GetMapping("/editItem/{id}")
     public String edit_item_get(Model model, @PathVariable Long id, ItemForm form) {
@@ -62,11 +73,11 @@ public class ItemController {
         if (bindingResult.hasErrors()) {
             return "ItemEdit";
         }
-         Item item = itemRepository.findById(id).get();
-        saveItemInRepository(form.getName(), form.getDescription(), form.getCost(), form.getDeposit(), form.getAvailableTime(), form.getLocation(), form.getUser());
+        Item item = itemRepository.findById(id).get();
         loadItemIntoForm(model, item);
+        saveItem(item, form.getName(), form.getDescription(), form.getCost(), form.getDeposit(), form.getAvailableTime(), form.getLocation(), item.getUser());
 
-        return "redirect:/item/{id}";
+        return "redirect:/";
     }
 
     private void loadItemIntoForm(Model model, Item item) {
@@ -77,5 +88,20 @@ public class ItemController {
         model.addAttribute("deposit", item.getDeposit());
         model.addAttribute("cost", item.getCost());
     }
+
+    private void saveItem(Item item, String name, String description, int cost, int deposit, int availableTime, String location, User user ) {
+        item.setName(name);
+        item.setDescription(description);
+        item.setCost(cost);
+        item.setDeposit(deposit);
+        item.setAvailableTime(availableTime);
+        item.setLocation(location);
+        item.setUser(user);
+        itemRepository.save(item);
+    }
+
+    //private void updateItem(Item item, String name, String description, int cost, int deposit, int availableTime, String location, User user ){
+
+    //}
 
 }
