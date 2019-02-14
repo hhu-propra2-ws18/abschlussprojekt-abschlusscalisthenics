@@ -10,3 +10,24 @@ Offene Fragen: Interaktion von unangemeldeten Usern und Website.
 . Frontend Entwicklung hat angefangen.
 . Die Datenbank wurde aufgesetzt. Noch Probleme mit den Models.
 . Docker wurde angefangen: Der Dockerfile und eine .yml-Datei um die Datenbank einzeln starten zu können.
+
+## Tag 3
+. Die Datenbank wurde fertig gestellt. Die Entitäten, welche in der Datenbank gespeichert werden,
+sind die User, Artikel, Ausleihen, Bilder und Adressen.
+.. User: Besitzen einen eindeutigen Benutzernamen, eine Email, ein verschlüsseltes Passwort
+und eine Adresse
+.. Item: Besitzt eine automatisch generierte eindeutige Id, einen Namen, Beschreibung,
+Kosten, Kaution, Standort, aktuelle Verfügbarkeit und gesamte Einstellungsdauer.
+Außerdem wird der der Primärschlüssel von User als Fremdschlüssel gespeichert.
+.. Address: Besitzt eine Straße, Hausnummer, Stadt und PLZ
+.. Loan: Speichert die gesamte Ausleihdauer und den Status der Ausleihe (z.B. Laufend,
+  Abgeschlossen, Konflikt, ...). Zusätzlich werden die ItemId und der username des Users, der
+  sich den Artikel ausleiht gespeichert. Über die itemId kann dann auch der User, welcher
+  den Artikel verleiht ermittelt werden.
+.. Picture: Besitzt ebenfalls eine automatisch generierte und eindeutige Id und ein Blob.
+Der Verweis auf den zugehörigen Artikel erfolgt durch Speichern des Fremdschlüssels item_id.
+
+. Für User, Item, Loan und Picture wurden je ein Repository erstellt. Address wurde als Embedabble
+implementiert. Die Repositories wurden außerdem um eine Query erweitert, über die man die Entitäten
+nach den Fremdschlüsseln filtern kann.
+

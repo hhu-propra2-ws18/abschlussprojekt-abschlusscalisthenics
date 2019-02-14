@@ -2,7 +2,6 @@ package propra2.leihOrDie.model;
 
 import lombok.Data;
 import javax.persistence.*;
-import java.util.Currency;
 
 @Data
 @Entity
