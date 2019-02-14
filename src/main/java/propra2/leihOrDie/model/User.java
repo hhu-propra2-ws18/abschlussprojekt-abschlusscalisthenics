@@ -15,8 +15,7 @@ public class User {
     private String email;
     private byte[] password;
 
-    @ManyToOne
-    @JoinColumn(name="address_id")
+    @Embedded
     private Address address;
 
     public User() {}
