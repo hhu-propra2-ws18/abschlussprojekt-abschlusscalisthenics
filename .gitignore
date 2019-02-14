@@ -8,9 +8,6 @@
 !.gitkeep
 !.gitattributes
 
-# Allow recursive
-!*/
-
 # Gradle Files
 !*.gradle
 !*.bat
@@ -23,11 +20,8 @@
 !*.sh
 
 # Frontend
-!app/templates/*.html
-!app/static/*.css
-!app/static/*.less
-!app/static/*.sass
-!app/static/*.js
+!src/main/resources/templates/*.html
+!src/main/resources/templates/fragments/*.html
 
 # Conf files
 !*.conf
