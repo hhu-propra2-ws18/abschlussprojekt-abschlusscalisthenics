@@ -11,6 +11,7 @@ import java.io.Serializable;
 public class Picture {
     @Id
     @ManyToOne
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @JoinColumn(name="item_id")
     private Item item;
 
