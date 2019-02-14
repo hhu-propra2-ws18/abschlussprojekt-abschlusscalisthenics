@@ -9,12 +9,12 @@ import javax.persistence.*;
 public class Address {
     private int postcode;
     private String street;
-    private String houseNumber;
+    private int houseNumber;
     private String city;
 
     public Address() {}
 
-    public Address(int postcode, String street, String houseNumber, String city) {
+    public Address(int postcode, String street, int houseNumber, String city) {
         this.postcode = postcode;
         this.street = street;
         this.houseNumber = houseNumber;

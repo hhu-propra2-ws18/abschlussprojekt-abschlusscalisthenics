@@ -1,12 +1,13 @@
 package propra2.leihOrDie.model;
 
 import lombok.Data;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
 @Entity
-@IdClass(PrimaryKey.class)
+@IdClass(Picture.ComposedKey.class)
 public class Picture {
     @Id
     @ManyToOne
@@ -14,29 +15,24 @@ public class Picture {
     private Item item;
 
     @Id
-    @GeneratedValue
     @Column(name="picture_id")
     private Long id;
 
     public Picture() {}
 
     public Picture(Item item) {
-        /*if(id >= 10) {
-            throw Exception;
-        }*/
-
         this.item = item;
     }
-}
 
-class PrimaryKey implements Serializable {
-    protected Long id;
+    static class ComposedKey implements Serializable {
+        protected Long id;
 
-    protected Item item;
+        protected Item item;
 
-    public PrimaryKey() {}
+        public ComposedKey() {}
 
-    public PrimaryKey(Item item) {
-        this.item = item;
+        public ComposedKey(Item item) {
+            this.item = item;
+        }
     }
 }
