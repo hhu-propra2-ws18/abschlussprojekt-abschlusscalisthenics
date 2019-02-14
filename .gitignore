@@ -24,6 +24,9 @@
 !src/main/resources/templates/fragments/*.html
 !src/main/resources/templates/ArtikelEinstellen.html
 
+# Tests
+!src/test/java/propra2/leihOrDie/*.java
+
 # Conf files
 !*.conf
 
