@@ -1,10 +1,9 @@
 package propra2.leihOrDie;
 
 import org.assertj.core.api.Assertions;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +58,7 @@ public class ItemRepositoryTest {
         DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
         User user = dummyUserGenerator.generateUser();
         DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
-        Item item= dummyItemGenerator.generatItem(user);
+        Item item= dummyItemGenerator.generateItem(user);
         userRepository.save(user);
         itemRepository.save(item);
         List<Item> itemList = itemRepository.findAll();
@@ -72,15 +71,17 @@ public class ItemRepositoryTest {
         DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
         User user = dummyUserGenerator.generateUser();
         DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
-        Item firstItem= dummyItemGenerator.generatItem(user);
-        Item secondItem = dummyItemGenerator.generatAnotherItem(user);
+        Item firstItem= dummyItemGenerator.generateItem(user);
+        Item secondItem = dummyItemGenerator.generateAnotherItem(user);
         userRepository.save(user);
         itemRepository.save(firstItem);
         itemRepository.save(secondItem);
+
         List<Item> itemList = itemRepository.findAll();
 
         Assertions.assertThat(itemList.size()).isEqualTo(2);
         Assertions.assertThat(itemList.get(0).getName()).isEqualTo("Fahrrad");
+        Assertions.assertThat(itemList.get(1).getName()).isEqualTo("Kickbike");
 
         Item firstItemFromRepo = itemList.get(0);
         Assertions.assertThat(firstItemFromRepo.getName()).isEqualTo("Fahrrad");
@@ -104,7 +105,7 @@ public class ItemRepositoryTest {
         DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
         User user = dummyUserGenerator.generateUser();
         DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
-        Item item= dummyItemGenerator.generatItem(user);
+        Item item= dummyItemGenerator.generateItem(user);
         userRepository.save(user);
         itemRepository.save(item);
 
@@ -133,5 +134,29 @@ public class ItemRepositoryTest {
         itemRepository.save(itemList.get(0));
         itemList = itemRepository.findAll();
         Assertions.assertThat(itemList.get(0).getDeposit()).isEqualTo(1000);
+    }
+
+    @Test
+    public void allItemsOfUser() throws Exception {
+        DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
+        User firstUser = dummyUserGenerator.generateUser();
+        User secondUser = dummyUserGenerator.generateUser();
+        DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
+        Item firstItem= dummyItemGenerator.generateItem(firstUser);
+        Item secondItem = dummyItemGenerator.generateAnotherItem(firstUser);
+        Item thirdItem= dummyItemGenerator.generateItem(secondUser);
+        userRepository.save(firstUser);
+        userRepository.save(secondUser);
+        itemRepository.save(firstItem);
+        itemRepository.save(secondItem);
+        itemRepository.save(thirdItem);
+
+        List<Item> itemOfFirstUser = itemRepository.findItemsOfUser(firstUser.getUsername());
+        Assertions.assertThat(itemOfFirstUser.size()).isEqualTo(2);
+        Assertions.assertThat(itemOfFirstUser.get(0).getName()).isEqualTo("Fahrrad");
+        Assertions.assertThat(itemOfFirstUser.get(1).getName()).isEqualTo("Kickbike");
+        List<Item> itemOfSecondUser = itemRepository.findItemsOfUser(secondUser.getUsername());
+        Assertions.assertThat(itemOfSecondUser.size()).isEqualTo(1);
+        Assertions.assertThat(itemOfSecondUser.get(0).getName()).isEqualTo("Fahrrad");
     }
 }
