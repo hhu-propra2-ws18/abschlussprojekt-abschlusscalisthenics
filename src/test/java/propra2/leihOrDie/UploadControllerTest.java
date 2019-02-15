@@ -17,8 +17,10 @@ import propra2.leihOrDie.dataaccess.PictureRepository;
 import propra2.leihOrDie.dataaccess.UserRepository;
 import propra2.leihOrDie.model.Address;
 import propra2.leihOrDie.model.Item;
+import propra2.leihOrDie.model.Picture;
 import propra2.leihOrDie.model.User;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
 
@@ -53,6 +55,16 @@ public class UploadControllerTest {
 
     @After
     public void tearDown() {
+        List<Item> itemList = itemRepository.findAll();
+        String itemId = Long.toString(itemList.get(0).getId());
+
+        List<Picture> pictureList = pictureRepository.findAll();
+        String pictureId = Long.toString(pictureList.get(0).getId());
+
+        File file = new File("images/" + itemId + pictureId + ".jpg");
+
+        file.delete();
+
         userRepository.deleteAll();
         itemRepository.deleteAll();
         pictureRepository.deleteAll();
@@ -61,7 +73,6 @@ public class UploadControllerTest {
 
     @Test
     public void testUploadImage() throws Exception {
-
         FileInputStream fis = new FileInputStream("src/main/resources/images/test.jpg");
         MockMultipartFile multipartFile = new MockMultipartFile("file", fis);
 
