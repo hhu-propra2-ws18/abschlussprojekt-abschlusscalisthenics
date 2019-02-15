@@ -36,12 +36,12 @@ public class UploadController {
         Long itemId = Long.parseLong(itemIdString);
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("message", "Bitte Datei zum Hochladen auswählen.");
-            return "redirect:uploadStatus";
+            return "redirect:/image/uploadFailed";
         }
 
         if (checkPictureCount(itemId)) {
             redirectAttributes.addFlashAttribute("message", "Maximale Anzahl an Bildern ist erreicht.");
-            return "redirect:uploadStatus";
+            return "redirect:/image/uploadFailed";
         }
 
         Item item = itemRepository.findById(itemId).get();
@@ -59,9 +59,11 @@ public class UploadController {
         } catch (IOException error) {
             error.printStackTrace();
             redirectAttributes.addFlashAttribute("message", "Fehler beim Upload.");
+
+            return "redirect:/image/uploadFailed";
         }
 
-        return "redirect:/image/uploadStatus";
+        return "redirect:/image/uploadSuccessful";
     }
 
     private Path buildPath(Long pictureId, String fileName) {
@@ -78,8 +80,13 @@ public class UploadController {
         return pictureList.size() > 10;
     }
 
-    @GetMapping("/image/uploadStatus")
-    public String uploadStatus() {
+    @GetMapping(value="/image/uploadSuccessful")
+    public String uploadSuccessful() {
+        return "uploadStatus";
+    }
+
+    @GetMapping(value="/image/uploadFailed")
+    public String uploadFailed() {
         return "uploadStatus";
     }
 }

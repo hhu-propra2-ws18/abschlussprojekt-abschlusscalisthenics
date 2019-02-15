@@ -3,7 +3,6 @@ package propra2.leihOrDie.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Data
 @Entity
@@ -13,8 +12,8 @@ public class Picture {
     private Item item;
 
     @Id
-    @Column(name="picture_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="picture_id")
     private Long id;
 
     public Picture() {}
