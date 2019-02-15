@@ -9,6 +9,7 @@
 !.gitattributes
 
 # Gradle Files
+!gradle/*
 !*.gradle
 !*.bat
 !gradlew
