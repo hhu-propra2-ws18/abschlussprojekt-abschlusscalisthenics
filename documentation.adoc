@@ -31,3 +31,31 @@ Der Verweis auf den zugehörigen Artikel erfolgt durch Speichern des Fremdschlü
 implementiert. Die Repositories wurden außerdem um eine Query erweitert, über die man die Entitäten
 nach den Fremdschlüsseln filtern kann.
 
+## Tag 4
+. Travis fertig gestellt
+. Arbeit an Docker
+.. Probleme mit der Datenbank
+.. Probleme eine Datenbank für development Zwecke in der selben .properties Datei zu starten
+. Frontend:
+.. arbeit an Seiten
+.. Thymeleaf angefangen einzubeziehen
+
+
+## Tag 5
+. Docker wurde fertiggestellt:
+.. docker-compose up:
+... stellt Anwendung auf localhost:8080 bereit
+... stellt die Datenbank nach außen abgeschlossen auf leihordiedb:3306 bereit
+... stellt Propay auf localhost:8888 bereit
+.. docker-compose -f datenbanktest.yml up:
+... stellt eine Testdatenbank nach außen offen auf localhost:3306 bereit
+. Anpassung der Datenbank
+. arbeit an Test für Uploadcontroller
+. ItemRepository Test fertiggestellt
+.. 3 Helfer Klassen:
+... DummyItemGenerator
+... SummyUserGenerator
+... DummyLoanGenerator.
+.arbeit an LoanRepository Test
+. 2 Controller geschrieben: UserController, HomepageController
+. arbeit an html Seiten
