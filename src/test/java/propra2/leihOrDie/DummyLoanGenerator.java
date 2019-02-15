@@ -12,5 +12,4 @@ public class DummyLoanGenerator {
         Loan loan = new Loan(state, duration, user, item);
         return loan;
     }
-
 }
