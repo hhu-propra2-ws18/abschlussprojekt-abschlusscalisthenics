@@ -79,7 +79,12 @@ public class UploadControllerTest {
         List<Item> itemList = itemRepository.findAll();
         String itemId = Long.toString(itemList.get(0).getId());
 
-        mvc.perform(MockMvcRequestBuilders.multipart("/image/upload").file(multipartFile).param("itemId", itemId))
+        String fileName = "test.jpg";
+
+        mvc.perform(MockMvcRequestBuilders.multipart("/image/upload")
+                .file(multipartFile)
+                .param("itemId", itemId)
+                .param("fileName", fileName))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
