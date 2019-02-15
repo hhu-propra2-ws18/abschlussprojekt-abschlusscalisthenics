@@ -13,9 +13,4 @@ public class HomepageController {
         return "homepage";
     }
 
-    @PostMapping("")
-    public String home(){
-        return "";
-    }
-
 }
