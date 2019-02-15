@@ -1,5 +1,6 @@
 package propra2.leihOrDie;
 
+import propra2.leihOrDie.model.Address;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.User;
 
@@ -17,7 +18,7 @@ public class DummyItemGenerator {
         return item;
     }
 
-    public Item generatAnotherItem(User user) {
+    public Item generateAnotherItem(User user) {
         String name= "Kickbike";
         String description = "Kickbike Cross MAX 29er – Offroad. Farbe: Schwartz";
         int cost = 80;
