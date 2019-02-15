@@ -8,4 +8,3 @@ FROM openjdk:8-jre-alpine
 WORKDIR ./
 COPY --from=build-env /build/libs/*.jar *.jar
 ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "*.jar"]
-#"-Dspring.profiles.active=dev",
