@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Artikel Ändern</title>
+</head>
+<body>
+
+<h1>Artikel Ändern</h1>
+
+<form action="#" th:action="@{/editItem/{id}" th:object="${itemForm}" method="post">
+    <table>
+    <tr>
+        <td>Produkt Name:</td>
+        <td><input type="text" th:value="*{name}" placeholder="Wähle einen Produkttitel" /></td>
+        <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</td>
+    </tr>
+    <tr>
+        <td>Beschreibung:</td>
+        <td><input type="text" th:value="*{description}" placeholder="Wähle eine aussagekräftige Beschreibung" /></td>
+        <td th:if="${#fields.hasErrors('description')}" th:errors="*{description}">description Error</td>
+    </tr>
+    <tr>
+        <td>Abholort:</td>
+        <td><input type="text" th:value="*{location}" placeholder="Wo soll dein Artikel abgeholt werden?" /></td>
+        <td th:if="${#fields.hasErrors('location')}" th:errors="*{location}">location Error</td>
+    </tr>
+    <tr>
+        <td>Verfügbarkeit:</td>
+        <td><input type="text" th:value="*{availableTime}" placeholder="Wie lange am Stück willst du deinen Artikel ausleihen?" /></td>
+        <td th:if="${#fields.hasErrors('availableTime')}" th:errors="*{availableTime}">availableTime Error</td>
+    </tr>
+    <tr>
+        <td>Kaution:</td>
+        <td><input type="text" th:value="*{deposit}" placeholder="in Euro" /></td>
+        <td th:if="${#fields.hasErrors('deposit')}" th:errors="*{deposit}">deposit Error</td>
+    </tr>
+    <tr>
+        <td>Preis:</td>
+        <td><input type="text" th:value="*{cost}" placeholder="in Euro" /></td>
+        <td th:if="${#fields.hasErrors('cost')}" th:errors="*{cost}">cost Error</td>
+    </tr>
+        <tr>
+        <td><button type="submit">Submit</button></td>
+    </tr>
+    </table>
+</form>
+
+</body>
+</html>
