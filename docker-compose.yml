@@ -40,7 +40,7 @@ services:
     ports:
       - "8888:8888"
     # Optional
-  # volumes:
-  #    - ./data:/code/data
+    volumes:
+      - ./data:/code/data
 
   # ========================================
