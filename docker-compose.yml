@@ -8,19 +8,19 @@ services:
       - ./proxy/conf/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./proxy/conf/domain.conf:/etc/nginx/domain.conf:ro
     depends_on:
-      - propay
+      #- propay
       - leihordie
       - leihordiedb
 
 
   leihordie:
-    build: ./
-    image: ./
+    build: .
+    image: abschlussprojekt-abschlusscalisthenics
     environment:
       - DB_HOST=leihordiedb
       - DB_USER=nutzer
       - DB_PASSWORD=1234
-      - DB_DATABASE=lieordiedb-ac
+      - DB_DATABASE=lieordiedbac
     depends_on:
       - leihordiedb
     links:
@@ -30,20 +30,20 @@ services:
     image: mysql:5.7
     ports:
       - "3306:3306"
-    volumes:
-      - ./data:/var/lib/mysql:rw
+    #volumes:
+    #  - ./data:/var/lib/mysql:rw
     environment:
       - MYSQL_ROOT_PASSWORD=12345
       - MYSQL_USER=nutzer
       - MYSQL_PASSWORD=1234
-      - MYSQL_DATABASE=lieordiedb-ac
+      - MYSQL_DATABASE=lieordiedbac
 
-  propay:
-    image: propra/propay
-    ports:
-      - "8888:8888"
+  #propay:
+  #  image: propra/propay
+  #  ports:
+  #    - "8888:8888"
     # Optional
-    volumes:
-      - ./data:/code/data
+  # volumes:
+  #    - ./data:/code/data
 
   # ========================================
