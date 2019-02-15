@@ -30,8 +30,8 @@ services:
     image: mysql:5.7
     ports:
       - "3306:3306"
-    #volumes:
-    #  - ./data:/var/lib/mysql:rw
+    volumes:
+      - ./data:/var/lib/mysql:rw
     environment:
       - MYSQL_ROOT_PASSWORD=12345
       - MYSQL_USER=nutzer
