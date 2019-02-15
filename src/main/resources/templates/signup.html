@@ -1,34 +1,85 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-  <meta charset="UTF-8">
-  <title>Neue User</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>sign up</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/bulma@0.7.4/css/bulma.min.css" />
+  <link rel="stylesheet" type="text/css" href="../css/login.css">
 </head>
-<body>
-<h1>Neuer User</h1>
 
-<form action="#" th:action="@{/signup}" th:object="${userForm}" method="post">
-  <table>
-    <tr>
-      <td>Name:</td>
-      <td><input type="text" th:field="*{username}" /></td>
-      <td th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Name Error</td>
-    </tr>
-    <tr>
-      <td>Lohn:</td>
-      <td><input type="text" th:field="*{email}" /></td>
-      <td th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Lohn Error</td>
-    </tr>
-    <tr>
-      <td>Kontaktdaten:</td>
-      <td><input type="text" th:field="*{password}" /></td>
-      <td th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Kontaktdaten Error</td>
-    </tr>
-    <tr>
-      <td><button type="submit">Submit</button></td>
-    </tr>
-  </table>
+<div th:insert="fragments/header :: header"></div>
+<section class="hero is-light is-fullheight">
+  <div class="hero-body">
+    <div class="container has-text-centered">
+      <div class="column is-6 is-offset-3">
+        <h3 class="title has-text-black">Sign up</h3>
+        <p class="subtitle has-text-black">Hier kannst Du deine Daten eingeben</p>
+
+<form class= action="#" th:action="@{/signup}" th:object="${userForm}" method="post">
+  <div class="box">
+
+    <div class="field">
+      <label class="label">Benutzername</label>
+      <div class="control has-icons-left has-icons-right">
+        <input class="input" type="text" placeholder="Username" th:field="*{username}">
+        <span class="icon is-small is-left">
+                          <i class="fas fa-check"></i>
+                        </span>
+        <span class="icon is-small is-right">
+                          <i class="fas fa-check"></i>
+                        </span>
+      </div>
+      <p class="help is-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">This username is invalid</p>
+    </div>
+
+    <div class="field">
+      <label class="label">Email</label>
+      <div class="control has-icons-left has-icons-right">
+        <input class="input" type="email" placeholder="Email input" th:field="*{email}">
+        <span class="icon is-small is-left">
+                          <i class="fas fa-check"></i>
+                        </span>
+        <span class="icon is-small is-right">
+                          <i class="fas fa-check"></i>
+                        </span>
+      </div>
+      <p class="help is-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">This email is invalid</p>
+    </div>
+
+    <div class="field">
+      <label class="label">Passwort</label>
+      <div class="control">
+        <input class="input" type="password" id="password" th:field="*{password}">
+      </div>
+      <p class="help is-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">This password is not safe enough</p>
+    </div>
+
+    <div class="field">
+      <div class="control">
+        <label class="checkbox">
+          <input type="checkbox">
+          Ich akzeptiere die <a href="#">LeihOrDie Conditions</a>
+        </label>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="control">
+        <button class="button is-block is-primary is-normal is-centered">Erstelle Dein Konto</button>
+      </div>
+    </div>
+
+  </div>
 </form>
+
+      </div>
+    </div>
+  </div>
+</section>
 
 </body>
 </html>
