@@ -78,7 +78,7 @@ public class UploadControllerTest {
         mvc.perform(MockMvcRequestBuilders.multipart("/image/upload")
                 .file(multipartFile)
                 .param("itemId", itemId)
-                .param("fileName", fileName))
+                .param("fileName", fileName));
     }
 
 }
