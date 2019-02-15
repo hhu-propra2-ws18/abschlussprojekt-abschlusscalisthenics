@@ -38,4 +38,8 @@ public class Item {
         this.user = user;
     }
 
+    public Item() {
+
+    }
+
 }
