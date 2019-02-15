@@ -40,10 +40,9 @@ public class ItemRepositoryTest {
         int deposit= 100;
         boolean availability = true;
         int availableTime = 10;
-        String location = "Düsseldorf";
         DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
         User user = dummyUserGenerator.generateUser();
-        Item item = new Item(name, description, cost,deposit, availability, availableTime, location, user);
+        Item item = new Item(name, description, cost,deposit, availability, availableTime, user);
 
         Assert.assertEquals(item.getName(), "Fahrrad");
         Assert.assertEquals(item.getDescription(), "Stereo Hybrid 160 Action Team 500Wh (2018)");
@@ -89,7 +88,6 @@ public class ItemRepositoryTest {
         Assertions.assertThat(firstItemFromRepo.getCost()).isEqualTo(50);
         Assertions.assertThat(firstItemFromRepo.getDeposit()).isEqualTo(100);
         Assertions.assertThat(firstItemFromRepo.getAvailableTime()).isEqualTo(10);
-        Assertions.assertThat(firstItemFromRepo.getLocation()).isEqualTo("Düsseldorf");
 
         Item secondItemFromRepo = itemList.get(0);
         Assertions.assertThat(secondItemFromRepo.getName()).isEqualTo("Kickbike");
@@ -97,7 +95,6 @@ public class ItemRepositoryTest {
         Assertions.assertThat(secondItemFromRepo.getCost()).isEqualTo(80);
         Assertions.assertThat(secondItemFromRepo.getDeposit()).isEqualTo(120);
         Assertions.assertThat(secondItemFromRepo.getAvailableTime()).isEqualTo(14);
-        Assertions.assertThat(secondItemFromRepo.getLocation()).isEqualTo("Düsseldorf");
     }
 
     @Test
