@@ -28,4 +28,6 @@ public class Loan {
         this.user = user;
         this.item = item;
     }
+
+    public Loan() {  }
 }
