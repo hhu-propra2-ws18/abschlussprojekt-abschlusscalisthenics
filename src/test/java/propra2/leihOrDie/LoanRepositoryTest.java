@@ -47,7 +47,7 @@ public class LoanRepositoryTest {
         secondUser.setUsername("Julia");
         firstUser.setUsername("Julian");
         Item item = dummyItemGenerator.generateItem(firstUser);
-        Loan loan = dummyLoanGenerator.generateLoan2(item, secondUser);
+        Loan loan = dummyLoanGenerator.generateLoan(item, secondUser);
 
         userRepository.save(firstUser);
         userRepository.save(secondUser);
@@ -72,8 +72,8 @@ public class LoanRepositoryTest {
         User secondUser = dummyUserGenerator.generateUser();
         Item firstItem = dummyItemGenerator.generateItem(firstUser);
         Item secondItem = dummyItemGenerator.generateAnotherItem(secondUser);
-        Loan firstLoan = dummyLoanGenerator.generateLoan2(firstItem, secondUser);
-        Loan secondLoan = dummyLoanGenerator.generateLoan2(secondItem, firstUser);
+        Loan firstLoan = dummyLoanGenerator.generateLoan(firstItem, secondUser);
+        Loan secondLoan = dummyLoanGenerator.generateLoan(secondItem, firstUser);
 
         userRepository.save(firstUser);
         userRepository.save(secondUser);
@@ -99,8 +99,8 @@ public class LoanRepositoryTest {
         User secondUser = dummyUserGenerator.generateUser();
         Item firstItem = dummyItemGenerator.generateItem(firstUser);
         Item secondItem = dummyItemGenerator.generateAnotherItem(firstUser);
-        Loan firstLoan = dummyLoanGenerator.generateLoan2(firstItem, secondUser);
-        Loan secondLoan = dummyLoanGenerator.generateLoan2(secondItem, secondUser);
+        Loan firstLoan = dummyLoanGenerator.generateLoan(firstItem, secondUser);
+        Loan secondLoan = dummyLoanGenerator.generateLoan(secondItem, secondUser);
 
         userRepository.save(firstUser);
         userRepository.save(secondUser);
@@ -125,8 +125,8 @@ public class LoanRepositoryTest {
         User secondUser = dummyUserGenerator.generateUser();
         Item firstItem = dummyItemGenerator.generateItem(firstUser);
         Item secondItem = dummyItemGenerator.generateItem(firstUser);
-        Loan firstLoan = dummyLoanGenerator.generateLoan2(firstItem, secondUser);
-        Loan secondLoan = dummyLoanGenerator.generateLoan2(firstItem, secondUser);
+        Loan firstLoan = dummyLoanGenerator.generateLoan(firstItem, secondUser);
+        Loan secondLoan = dummyLoanGenerator.generateLoan(firstItem, secondUser);
 
         userRepository.save(firstUser);
         userRepository.save(secondUser);
