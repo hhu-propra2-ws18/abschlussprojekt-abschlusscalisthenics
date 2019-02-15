@@ -12,4 +12,7 @@ public interface PictureRepository extends CrudRepository<Picture, Long> {
 
     @Query("SELECT p FROM Picture p WHERE p.item.id = :itemId")
     List<Picture> findPicturesOfItem(@Param("itemId") Long itemId);
+
+    @Query("SELECT max(p.item.id) FROM Picture p WHERE p.item.id = :itemId")
+    Long findLastPictureIdOfItem(@Param("itemId") Long itemId);
 }
