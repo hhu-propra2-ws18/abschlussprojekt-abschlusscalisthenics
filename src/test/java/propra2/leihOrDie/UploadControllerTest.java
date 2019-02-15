@@ -55,19 +55,16 @@ public class UploadControllerTest {
 
     @After
     public void tearDown() {
-        List<Item> itemList = itemRepository.findAll();
-        String itemId = Long.toString(itemList.get(0).getId());
-
         List<Picture> pictureList = pictureRepository.findAll();
         String pictureId = Long.toString(pictureList.get(0).getId());
 
-        File file = new File("images/" + itemId + pictureId + ".jpg");
+        File file = new File("images/" + pictureId + ".jpg");
 
         file.delete();
 
-        userRepository.deleteAll();
-        itemRepository.deleteAll();
         pictureRepository.deleteAll();
+        itemRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
 
