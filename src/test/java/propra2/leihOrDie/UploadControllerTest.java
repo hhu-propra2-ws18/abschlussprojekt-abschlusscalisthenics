@@ -48,8 +48,7 @@ public class UploadControllerTest {
         User testUser = new User("name", "email@test.de", password, address);
         userRepository.save(testUser);
 
-        Item testItem = new Item("name", "description", 314,
-                1, true, 1, "City", testUser);
+        Item testItem = new Item("name", "description", 314, 1, true, 1, testUser);
         itemRepository.save(testItem);
     }
 
