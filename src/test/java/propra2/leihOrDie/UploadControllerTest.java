@@ -82,7 +82,7 @@ public class UploadControllerTest {
                 .file(multipartFile)
                 .param("itemId", itemId)
                 .param("fileName", fileName))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/image/uploadSuccessful"));
     }
 
 }
