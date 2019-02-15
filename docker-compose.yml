@@ -12,7 +12,6 @@ services:
       - leihordie
       - leihordiedb
 
-
   leihordie:
     build: .
     image: abschlussprojekt-abschlusscalisthenics
@@ -36,10 +35,10 @@ services:
       - MYSQL_PASSWORD=1234
       - MYSQL_DATABASE=lieordiedbac
 
-  #propay:
-  #  image: propra/propay
-  #  ports:
-  #    - "8888:8888"
+  propay:
+    image: propra/propay
+    ports:
+      - "8888:8888"
     # Optional
   # volumes:
   #    - ./data:/code/data
