@@ -1,5 +1,6 @@
 install:
   - gradle wrapper --gradle-version 5.1
+  - ./gradlew
 language: java
 jdk:
   - oraclejdk8
