@@ -11,6 +11,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import propra2.leihOrDie.dataaccess.ItemRepository;
 import propra2.leihOrDie.dataaccess.PictureRepository;
 import propra2.leihOrDie.dataaccess.UserRepository;
@@ -78,7 +79,10 @@ public class UploadControllerTest {
         mvc.perform(MockMvcRequestBuilders.multipart("/image/upload")
                 .file(multipartFile)
                 .param("itemId", itemId)
-                .param("fileName", fileName));
+                .param("fileName", fileName))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/image/uploadSuccessful"));
+
+
     }
 
 }
