@@ -13,12 +13,23 @@ public class DummyLoanGenerator {
         User firstUser = dummyUserGenerator.generateUser();
         User secondUser = dummyUserGenerator.generateUser();
         DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
-        Item item = dummyItemGenerator.generatItem(firstUser);
+        Item item = dummyItemGenerator.generateItem(firstUser);
         int duration = 5;
         String state = "Laufend";
 
-
         Loan loan = new Loan(state, duration, secondUser, item);
+
+        return loan;
+    }
+
+    public Loan generateLoan2(Item item, User user) throws Exception {
+        //DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
+        //User user = dummyUserGenerator.generateUser();
+
+        int duration = 5;
+        String state = "Laufend";
+
+        Loan loan = new Loan(state, duration, user, item);
 
         return loan;
     }
@@ -30,7 +41,7 @@ public class DummyLoanGenerator {
         User firstUser = dummyUserGenerator.generateUser();
         User secondUser = dummyUserGenerator.generateUser();
         DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
-        Item item = dummyItemGenerator.generatAnotherItem(secondUser);
+        Item item = dummyItemGenerator.generateAnotherItem(secondUser);
         int duration = 3;
         String state = "Laufend";
 
