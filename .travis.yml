@@ -1,3 +1,5 @@
-before_install: gradle wrapper
+install:
+  -true
+  -gradle wrapper --gradle-version 5.1
 language: java
 jdk: oraclejdk8
