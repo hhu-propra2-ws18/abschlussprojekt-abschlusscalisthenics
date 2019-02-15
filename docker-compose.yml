@@ -8,7 +8,7 @@ services:
       - ./proxy/conf/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./proxy/conf/domain.conf:/etc/nginx/domain.conf:ro
     depends_on:
-      #- propay
+      - propay
       - leihordie
       - leihordiedb
 
