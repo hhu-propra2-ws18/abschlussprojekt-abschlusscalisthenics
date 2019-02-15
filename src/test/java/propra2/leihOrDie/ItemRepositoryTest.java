@@ -3,7 +3,6 @@ package propra2.leihOrDie;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +39,7 @@ public class ItemRepositoryTest {
         int deposit= 100;
         boolean availability = true;
         int availableTime = 10;
+
         DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
         User user = dummyUserGenerator.generateUser();
         Item item = new Item(name, description, cost,deposit, availability, availableTime, user);
@@ -57,7 +57,9 @@ public class ItemRepositoryTest {
         DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
         User user = dummyUserGenerator.generateUser();
         DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
+
         Item item= dummyItemGenerator.generateItem(user);
+
         userRepository.save(user);
         itemRepository.save(item);
         List<Item> itemList = itemRepository.findAll();
@@ -103,6 +105,7 @@ public class ItemRepositoryTest {
         User user = dummyUserGenerator.generateUser();
         DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
         Item item= dummyItemGenerator.generateItem(user);
+
         userRepository.save(user);
         itemRepository.save(item);
 

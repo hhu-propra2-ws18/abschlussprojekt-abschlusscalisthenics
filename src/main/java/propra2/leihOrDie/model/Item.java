@@ -37,5 +37,4 @@ public class Item {
         this.availableTime = availableTime;
         this.user = user;
     }
-
 }
