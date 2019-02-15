@@ -2,9 +2,7 @@ package propra2.leihOrDie.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import propra2.leihOrDie.dataaccess.ItemRepository;
@@ -28,15 +26,14 @@ public class UploadController {
     @Autowired
     private PictureRepository pictureRepository;
 
-    @GetMapping("/")
-    public String index() {
-        return "upload";
-    }
 
-    @PostMapping("/upload")
-    public String singleFileUpload(@RequestParam("file")MultipartFile file,
-                                   @RequestParam("itemId") Long itemId,
+    @RequestMapping(value="/image/upload", method=RequestMethod.POST)
+    public String singleFileUpload(@RequestParam("file") MultipartFile file,
+                                   @RequestParam("fileName") String fileName,
+                                   @RequestParam("itemId") String itemIdString,
                                    RedirectAttributes redirectAttributes) {
+
+        Long itemId = Long.parseLong(itemIdString);
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("message", "Bitte Datei zum Hochladen auswählen.");
             return "redirect:uploadStatus";
@@ -50,47 +47,38 @@ public class UploadController {
         Item item = itemRepository.findById(itemId).get();
 
         Picture picture = new Picture(item);
-        Long pictureId = picture.getId();
-        String fileName = file.getName();
+        pictureRepository.save(picture);
+        Long pictureId = pictureRepository.findLastPictureIdOfItem(itemId);
 
         try {
-            Path path = buildPath(pictureId, itemId, fileName);
-            write(path, file);
+            Path path = buildPath(pictureId, fileName);
+            Files.write(path, file.getBytes());
 
             redirectAttributes.addFlashAttribute("message", "Datei erfolgreich hochgeladen.");
 
         } catch (IOException error) {
             error.printStackTrace();
+            redirectAttributes.addFlashAttribute("message", "Fehler beim Upload.");
         }
 
-        return "redirect:/uploadStatus";
+        return "redirect:/image/uploadStatus";
     }
 
-    private Path buildPath(Long pictureId, Long itemId, String fileName) {
-        String itemIdString = itemId.toString();
+    private Path buildPath(Long pictureId, String fileName) {
         String pictureIdString = pictureId.toString();
         String extensionString = fileName.substring(fileName.indexOf("."));
 
-        return Paths.get(UPLOADFOLDER + "/" + itemIdString + "/" + pictureIdString +
-                "." + extensionString);
-    }
-
-    private void write(Path path, MultipartFile file) throws IOException {
-        byte[] bytes = file.getBytes();
-
-        Files.write(path, bytes);
+        return Paths.get(UPLOADFOLDER + "/" + pictureIdString
+                + extensionString);
     }
 
     private boolean checkPictureCount(Long itemId) {
         List<Picture> pictureList = pictureRepository.findPicturesOfItem(itemId);
-        if (pictureList.size() > 10) {
-            return false;
-        } else {
-            return false;
-        }
+
+        return pictureList.size() > 10;
     }
 
-    @GetMapping("/uploadStatus")
+    @GetMapping("/image/uploadStatus")
     public String uploadStatus() {
         return "uploadStatus";
     }
