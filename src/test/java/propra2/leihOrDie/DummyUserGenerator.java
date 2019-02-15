@@ -7,6 +7,8 @@ import java.security.SecureRandom;
 import java.util.UUID;
 
 public class DummyUserGenerator {
+    public DummyUserGenerator() { }
+
     public User generateUser() {
         User user = new User();
 
