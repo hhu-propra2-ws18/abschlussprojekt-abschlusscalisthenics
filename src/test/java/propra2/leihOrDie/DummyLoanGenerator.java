@@ -5,7 +5,6 @@ import propra2.leihOrDie.model.Loan;
 import propra2.leihOrDie.model.User;
 
 public class DummyLoanGenerator {
-
     public Loan generateLoan(Item item, User user) throws Exception {
         int duration = 5;
         String state = "Laufend";
