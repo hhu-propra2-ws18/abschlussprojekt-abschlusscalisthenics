@@ -60,7 +60,7 @@ public class UploadControllerTest {
         File file = new File("images/" + pictureId + ".jpg");
 
         file.delete();
-
+        
         pictureRepository.deleteAll();
         itemRepository.deleteAll();
         userRepository.deleteAll();
