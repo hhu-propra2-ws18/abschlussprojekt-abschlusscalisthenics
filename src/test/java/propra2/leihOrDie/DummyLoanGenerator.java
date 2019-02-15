@@ -6,7 +6,7 @@ import propra2.leihOrDie.model.User;
 
 public class DummyLoanGenerator {
 
-    
+    // TODO: change the generator in a way that it will recieve in the constructor the Item to be loaned, so that the user hat the item is his- will be extractable for use and test
     public Loan generateLoan() throws Exception {
         // secondUser leiht item (Fahrrad) von firstUser aus.
         DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
