@@ -12,6 +12,7 @@
 !*.gradle
 !*.bat
 !gradlew
+!/gradle/wrapper/*
 
 # Java Files
 !*.java
