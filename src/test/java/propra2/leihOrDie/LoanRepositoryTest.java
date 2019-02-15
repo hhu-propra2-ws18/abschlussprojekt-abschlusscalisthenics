@@ -13,7 +13,6 @@ import propra2.leihOrDie.dataaccess.UserRepository;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.User;
 import propra2.leihOrDie.model.Loan;
-
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -113,31 +112,5 @@ public class LoanRepositoryTest {
         Assertions.assertThat(loansOfFirstUser.size()).isEqualTo(0);
         List<Loan> loansOfsecondUser = loanRepository.findLoansOfUser(secondUser.getUsername());
         Assertions.assertThat(loansOfsecondUser.size()).isEqualTo(2);
-    }
-
-    @Test
-    public void testAllLoansOfAnItem() throws Exception {
-        DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
-        DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
-        DummyLoanGenerator dummyLoanGenerator = new DummyLoanGenerator();
-
-        User firstUser = dummyUserGenerator.generateUser();
-        User secondUser = dummyUserGenerator.generateUser();
-        Item firstItem = dummyItemGenerator.generateItem(firstUser);
-        Item secondItem = dummyItemGenerator.generateItem(firstUser);
-        Loan firstLoan = dummyLoanGenerator.generateLoan(firstItem, secondUser);
-        Loan secondLoan = dummyLoanGenerator.generateLoan(firstItem, secondUser);
-
-        userRepository.save(firstUser);
-        userRepository.save(secondUser);
-        itemRepository.save(firstItem);
-        itemRepository.save(secondItem);
-        loanRepository.save(firstLoan);
-        loanRepository.save(secondLoan);
-
-        List<Loan> loansFirstItem = loanRepository.findLoansOfItem(firstItem.getId());
-        Assertions.assertThat(loansFirstItem.size()).isEqualTo(2);
-        List<Loan> loansSecondItem = loanRepository.findLoansOfItem(secondItem.getId());
-        Assertions.assertThat(loansSecondItem.size()).isEqualTo(0);
     }
 }
