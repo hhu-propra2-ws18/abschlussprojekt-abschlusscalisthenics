@@ -30,6 +30,7 @@ public class ItemRepositoryTest {
     @After
     public void deleteAllTestItems() {
         itemRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
