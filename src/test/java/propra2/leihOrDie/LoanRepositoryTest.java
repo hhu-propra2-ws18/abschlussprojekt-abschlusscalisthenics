@@ -31,17 +31,10 @@ public class LoanRepositoryTest {
 
     @After
     public void deleteAllTestItems() {
+        loanRepository.deleteAll();
         itemRepository.deleteAll();
         userRepository.deleteAll();
-        //loanRepository.deleteAll();
     }
-
-    /*
-    @Test
-    public void testCreatLoan() throws Exception {
-        Assertions.assertThat(1).isEqualTo(1);
-    }
-    */
 
     @Test
     public void saveOneLoan() throws Exception {
@@ -78,9 +71,9 @@ public class LoanRepositoryTest {
         User firstUser = dummyUserGenerator.generateUser();
         User secondUser = dummyUserGenerator.generateUser();
         Item firstItem = dummyItemGenerator.generateItem(firstUser);
-        Item secondItem = dummyItemGenerator.generateAnotherItem(firstUser);
+        Item secondItem = dummyItemGenerator.generateAnotherItem(secondUser);
         Loan firstLoan = dummyLoanGenerator.generateLoan2(firstItem, secondUser);
-        Loan secondLoan = dummyLoanGenerator.generateLoan2(secondItem, secondUser);
+        Loan secondLoan = dummyLoanGenerator.generateLoan2(secondItem, firstUser);
 
         userRepository.save(firstUser);
         userRepository.save(secondUser);
