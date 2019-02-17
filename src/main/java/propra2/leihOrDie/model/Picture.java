@@ -7,7 +7,6 @@ import java.io.Serializable;
 
 @Data
 @Entity
-//@IdClass(PictureKey.class)
 public class Picture {
     @ManyToOne
     @JoinColumn(name="item_id")
@@ -22,7 +21,6 @@ public class Picture {
 
     public Picture(Item item) {
         this.item = item;
-        //this.composedKey = new ComposedKey(item);
     }
 }
 
