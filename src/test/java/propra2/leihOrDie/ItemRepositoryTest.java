@@ -80,10 +80,10 @@ public class ItemRepositoryTest {
         List<Item> itemList = itemRepository.findAll();
 
         Assertions.assertThat(itemList.size()).isEqualTo(2);
-        Assertions.assertThat(itemList.get(0).getName()).isEqualTo("Fahrrad");
-        Assertions.assertThat(itemList.get(1).getName()).isEqualTo("Kickbike");
+        Assertions.assertThat(itemList.get(1).getName()).isEqualTo("Fahrrad");
+        Assertions.assertThat(itemList.get(0).getName()).isEqualTo("Kickbike");
 
-        Item firstItemFromRepo = itemList.get(0);
+        Item firstItemFromRepo = itemList.get(1);
         Assertions.assertThat(firstItemFromRepo.getName()).isEqualTo("Fahrrad");
         Assertions.assertThat(firstItemFromRepo.getDescription()).isEqualTo("Stereo Hybrid 160 Action Team 500Wh (2018)");
         Assertions.assertThat(firstItemFromRepo.getCost()).isEqualTo(50);
@@ -91,7 +91,7 @@ public class ItemRepositoryTest {
         Assertions.assertThat(firstItemFromRepo.getAvailableTime()).isEqualTo(10);
         Assertions.assertThat(firstItemFromRepo.getLocation()).isEqualTo("Düsseldorf");
 
-        Item secondItemFromRepo = itemList.get(1);
+        Item secondItemFromRepo = itemList.get(0);
         Assertions.assertThat(secondItemFromRepo.getName()).isEqualTo("Kickbike");
         Assertions.assertThat(secondItemFromRepo.getDescription()).isEqualTo("Kickbike Cross MAX 29er – Offroad. Farbe: Schwartz");
         Assertions.assertThat(secondItemFromRepo.getCost()).isEqualTo(80);
