@@ -11,14 +11,8 @@ import java.security.MessageDigest;
 
 public class ItemTest {
     @Test
-    public void testPicture() throws Exception {
-        Address address = new Address(12345, "Teststr", 1, "Kuhlstadt");
-
-        byte[] bytesOfMessage = "passwort1".getBytes("UTF-8");
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        byte[] encryptedPw = md.digest(bytesOfMessage);
-
-        User user = new User("testuser", "test@email.de", encryptedPw, address);
+    public void testPicture() {
+        User user = (new DummyUserGenerator()).generateUser();
         Item item = new Item("testitem", "das ist ein test", 200, 10,
                 true, 20, user);
 
