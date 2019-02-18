@@ -85,8 +85,8 @@ public class LoanRepositoryTest {
         List<Loan> loanList = loanRepository.findAll();
 
         Assertions.assertThat(loanList.size()).isEqualTo(2);
-        Assertions.assertThat(loanList.get(0).getItem().getName()).isEqualTo("Fahrrad");
-        Assertions.assertThat(loanList.get(1).getItem().getName()).isEqualTo("Kickbike");
+        Assertions.assertThat(loanList.get(1).getItem().getName()).isEqualTo("Fahrrad");
+        Assertions.assertThat(loanList.get(0).getItem().getName()).isEqualTo("Kickbike");
     }
 
     @Test
