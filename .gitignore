@@ -1,48 +1,33 @@
-## Blacklist
-*
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
 
-## Whitelist
+/bin/
 
-# Git
-!.gitignore
-!.gitkeep
-!.gitattributes
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
 
-# Gradle Files
-!*.gradle
-!*.bat
-!gradlew
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+/out/
 
-# Java Files
-!*.java
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+.vscode
 
-# Shell scripts
-!*.sh
-
-# Frontend
-!src/main/resources/templates/*.html
-!src/main/resources/templates/fragments/*.html
-!src/main/resources/templates/ArtikelEinstellen.html
-
-# Conf files
-!*.conf
-
-# CI/CD
-!*.yml
-
-# Docker files
-!Dockerfile
-!.dockerignore
-
-# Readme
-!*.md
-!*.adoc
-
-# Json files
-!*.json
-
-# Properties
-!*.properties
-
-# Images via lsf
-!*.jpg
+*.class
+*.jar
+*.DS_Store
