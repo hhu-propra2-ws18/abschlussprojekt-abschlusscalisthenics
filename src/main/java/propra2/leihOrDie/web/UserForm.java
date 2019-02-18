@@ -17,6 +17,7 @@ public class UserForm {
     private String username;
 
     @NotNull
+    @Size(min = 1, message = "Dieses Feld darf nicht leer bleiben")
     @Email(message = "Gib eine gültige Email-Adresse ein")
     private String email;
 
