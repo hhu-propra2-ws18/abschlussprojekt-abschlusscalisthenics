@@ -18,12 +18,17 @@ public class UserController {
     private UserRepository userRepository;
 
     @GetMapping("/login")
-    public String user() {
+    public String user(Model model, UserForm form) {
         return "login";
     }
 
     @PostMapping("/login")
-    public String logUser() {
+    public String logUser(Model model, @Valid UserForm form, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "login";
+        }
+
+        // proceed with right data...
         return "login";
     }
 
