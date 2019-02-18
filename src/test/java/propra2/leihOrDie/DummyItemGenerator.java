@@ -14,9 +14,8 @@ public class DummyItemGenerator {
         int deposit= 100;
         boolean availability = true;
         int availableTime = 10;
-        String location = user.getAddress().getCity();
 
-        Item item = new Item(name, description, cost,deposit, availability, availableTime, location, user);
+        Item item = new Item(name, description, cost,deposit, availability, availableTime, user);
         return item;
     }
 
@@ -27,9 +26,8 @@ public class DummyItemGenerator {
         int deposit= 120;
         boolean availability = true;
         int availableTime = 14;
-        String location = user.getAddress().getCity();
 
-        Item item = new Item(name, description, cost,deposit, availability, availableTime, location, user);
+        Item item = new Item(name, description, cost,deposit, availability, availableTime, user);
         return item;
     }
 }
