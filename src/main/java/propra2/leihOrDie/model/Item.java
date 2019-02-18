@@ -23,15 +23,18 @@ public class Item {
     @JoinColumn(name="username")
     private User user;
 
+    public Item() {
+
+    }
+
     public Item(String name, String description, int cost, int deposit, boolean availability, int availableTime,
-                String location, User user) {
+                User user) {
         this.name = name;
         this.description = description;
         this.cost = cost;
         this.deposit = deposit;
         this.availability = availability;
         this.availableTime = availableTime;
-        this.location = location;
         this.user = user;
     }
 

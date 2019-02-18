@@ -20,4 +20,10 @@ public class Address {
         this.houseNumber = houseNumber;
         this.city = city;
     }
+
+    public boolean equals(Address address) {
+        return postcode == address.postcode && street.equals(address.street) && houseNumber == address.houseNumber &&
+                city.equals(address.city);
+
+    }
 }
