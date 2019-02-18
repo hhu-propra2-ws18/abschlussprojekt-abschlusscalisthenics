@@ -39,7 +39,7 @@ public class ItemRepositoryTest {
         int deposit= 100;
         boolean availability = true;
         int availableTime = 10;
-        
+
         DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
         User user = dummyUserGenerator.generateUser();
         Item item = new Item(name, description, cost,deposit, availability, availableTime, user);
