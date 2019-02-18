@@ -29,7 +29,7 @@ public class UserController {
         }
 
         // proceed with right data...
-        return "login";
+        return "redirect:/";
     }
 
     @GetMapping("/signup")
