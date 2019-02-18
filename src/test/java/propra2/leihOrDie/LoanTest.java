@@ -11,16 +11,9 @@ import java.security.MessageDigest;
 
 public class LoanTest {
     @Test
-    public void testLoan() throws Exception {
-        Address address = new Address(12345, "Teststr", 1, "Kuhlstadt");
-
-        byte[] bytesOfMessage = "passwort1".getBytes("UTF-8");
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        byte[] encryptedPw = md.digest(bytesOfMessage);
-
-        User user = new User("testuser", "test@email.de", encryptedPw, address);
-        Item item = new Item("testitem", "das ist ein test", 200, 10,
-                true, 20, user);
+    public void testLoan() {
+        User user = (new DummyUserGenerator()).generateUser();
+        Item item = (new DummyItemGenerator()).generateItem(user);
 
         Loan loan = new Loan("abgeschlossen", 19, user, item);
 
