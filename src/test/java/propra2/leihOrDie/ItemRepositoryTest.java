@@ -39,7 +39,7 @@ public class ItemRepositoryTest {
         int deposit= 100;
         boolean availability = true;
         int availableTime = 10;
-
+        
         DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
         User user = dummyUserGenerator.generateUser();
         Item item = new Item(name, description, cost,deposit, availability, availableTime, user);
@@ -49,7 +49,6 @@ public class ItemRepositoryTest {
         Assert.assertEquals(item.getCost(), 50);
         Assert.assertEquals(item.getDeposit(), 100);
         Assert.assertEquals(item.getAvailableTime(), 10);
-        Assert.assertEquals(item.getLocation(), "Düsseldorf");
     }
 
     @Test
