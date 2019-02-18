@@ -1,117 +1,76 @@
 <!DOCTYPE html>
-<html>
-
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>sign up</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
-    <!-- Bulma Version 0.7.4-->
-    <link rel="stylesheet" href="https://unpkg.com/bulma@0.7.4/css/bulma.min.css" />
-    <link rel="stylesheet" type="text/css" href="../css/login.css">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>signup</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/bulma@0.7.4/css/bulma.min.css" />
+  <link rel="stylesheet" type="text/css" href="../css/login.css">
 </head>
-<body>
-    
-  <section class="hero is-light is-fullheight">
-      <div class="hero-body">
-          <div class="container has-text-centered">
-              <div class="column is-6 is-offset-3">
-                  <h3 class="title has-text-black">Sign up</h3>
-                  <p class="subtitle has-text-black">Please fill in your personal information</p>
-                  <div class="box">
 
-                    <div class="field">
-                      <label class="label">Name</label>
-                      <div class="control">
-                        <input class="input" type="text" placeholder="Name">
-                      </div>
-                    </div>
+<div th:insert="fragments/header :: header"></div>
 
-                    <div class="field">
-                      <label class="label">Username</label>
-                      <div class="control has-icons-left has-icons-right">
-                        <input class="input is-success" type="text" placeholder="Username">
-                        <span class="icon is-small is-left">
-                          <i class="fas fa-user"></i>
-                        </span>
-                        <span class="icon is-small is-right">
-                          <i class="fas fa-check"></i>
-                        </span>
-                      </div>
-                      <p class="help is-success">This username is available</p>
-                    </div>
+<section class="hero is-light is-fullheight">
+  <div class="hero-body">
+    <div class="container has-text-centered">
+      <div class="column is-6 is-offset-3">
+        <h1 class="title has-text-black">Sign up</h1>
+        <p class="subtitle has-text-grey">Hier kannst Du deine Daten eingeben</p>
 
-                    <div class="field">
-                      <label class="label">Password</label>
-                      <div class="control">
-                        <input class="input" type="password" id="password">
-                      </div>
-                    </div>
+        <form class= action="#" th:action="@{/signup}" th:object="${userForm}" method="post">
+          <div class="box">
 
-                    <div class="field">
-                      <label class="label">Email</label>
-                      <div class="control has-icons-left has-icons-right">
-                        <input class="input is-danger" type="email" placeholder="Email input">
-                        <span class="icon is-small is-left">
-                          <i class="fas fa-envelope"></i>
-                        </span>
-                        <span class="icon is-small is-right">
-                          <i class="fas fa-exclamation-triangle"></i>
-                        </span>
-                      </div>
-                      <p class="help is-danger">This email is invalid</p>
-                    </div>
+            <div class="field">
+              <label class="label">Benutzername</label>
+              <div class="control has-icons-left has-icons-right">
+                <input class="input" type="text" placeholder="Dein Benutzername" th:field="*{username}">
+              </div>
+              <p class="help is-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Benutzername ungültig</p>
+            </div>
 
-                    <div class="field">
-                      <label class="label">Gender</label>
-                      <div class="control">
-                        <div class="select">
-                          <select>
-                            <option>Female</option>
-                            <option>Male</option>
-                            <option>Don't want to specify</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
+            <div class="field">
+              <label class="label">Email</label>
+              <div class="control has-icons-left has-icons-right">
+                <input class="input" type="email" placeholder="Deine Email" th:field="*{email}">
+              </div>
+              <p class="help is-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email ungültig</p>
+            </div>
 
-                    <div class="field">
-                      <label class="label">About yourself</label>
-                      <div class="control">
-                        <textarea class="textarea" placeholder="Textarea"></textarea>
-                      </div>
-                    </div>
+            <div class="field">
+              <label class="label">Passwort</label>
+              <div class="control">
+                <input class="input" type="password" id="password" th:field="*{password}">
+              </div>
+              <p class="help is-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Dieses Passwort ist nicht sicher genug</p>
+            </div>
 
-                    <div class="field">
-                      <div class="control">
-                        <label class="checkbox">
-                          <input type="checkbox">
-                          I agree to the <a href="#">terms and conditions</a>
-                        </label>
-                      </div>
-                    </div>
+            <div class="field">
+              <div class="control">
+                <label class="checkbox">
+                  <input type="checkbox">
+                  Ich akzeptiere die <a href="#">LeihOrDie Conditions</a>
+                </label>
+              </div>
+            </div>
 
-                    <div class="field">
-                      <div class="control">
-                        <label class="checkbox">
-                          <input type="checkbox">
-                          I DON'T agree to the <a href="#">terms and conditions</a>!! :(
-                        </label>
-                      </div>
-                    </div>
+            <div class="field">
+              <div class="control">
+                <button class="button is-block is-primary is-normal is-fullwidth">Erstelle Dein Konto</button>
+              </div>
+            </div>
 
-                    <div class="field is-grouped">
-                      <div class="control">
-                        <button class="button is-block is-primary is-normal is-fullwidth">Submit</button>
-                      </div>
-                      <div class="control">
-                        <button class="button is-text">Cancel</button>
-                      </div>
-                    </div>
-  </section>
-  <script async type="text/javascript" src="../js/bulma.js"></script>
+          </div>
+        </form>
+      </div>
+      <p class="has-text-grey">
+        <a href="../">Startseite</a> &nbsp;·&nbsp;
+        <a href="../">Brauchst Du Hilfe?</a>
+      </p>
+    </div>
+  </div>
+</section>
 </body>
-
 </html>
