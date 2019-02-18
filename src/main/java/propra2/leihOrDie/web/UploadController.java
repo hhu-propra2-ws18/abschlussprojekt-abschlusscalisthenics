@@ -48,7 +48,8 @@ public class UploadController {
 
         Picture picture = new Picture(item);
         pictureRepository.save(picture);
-        Long pictureId = pictureRepository.findLastPictureIdOfItem(itemId);
+        //Long pictureId = pictureRepository.findLastPictureIdOfItem(itemId);
+        Long pictureId = picture.getId();
 
         try {
             Path path = buildPath(pictureId, fileName);
