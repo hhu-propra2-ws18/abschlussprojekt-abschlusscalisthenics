@@ -25,3 +25,4 @@ public class UserForm {
     @Size(min = 6, max = 50, message="Bitte gib ein (sicheres) Passwort zwischen 6-50 Zeichen ein.")
     private byte[] password;
 }
+
