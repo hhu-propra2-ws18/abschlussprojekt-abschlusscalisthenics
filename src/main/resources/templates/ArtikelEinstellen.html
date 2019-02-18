@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="">
 
 <head>
     <meta charset="utf-8">
@@ -14,80 +14,86 @@
 </head>
 <body>
 
-  <section class="hero is-light is-fullheight">
-      <div class="hero-body">
-          <div class="container has-text-centered">
-              <div class="column is-6 is-offset-3">
-                  <h3 class="title has-text-black">Artikel einstellen</h3>
-                  <br></br>
-                  <div class="box">
-
-                    <!--- TODO: must changethe action and the object --->
+<section class="hero is-light is-fullheight">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <div class="column is-6 is-offset-3">
+                <h3 class="title has-text-black">Artikel einstellen</h3>
+                <br></br>
 
                     <form action="#" th:action="@{/new}" th:object="${itemForm}" method="post">
-                    <div class="field">
-                      <label class="label">Produkt Name</label>
-                      <div class="control">
-                        <input class="input" type="text" th:field="*{name}" placeholder="Wähle einen Produkttitel">
-                          <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
-                      </div>
-                    </div>
+                    <div class="box">
 
-                    <div class="field">
-                      <label class="label">Beschreibung</label>
-                      <div class="control">
-                        <input class="input" type="text" th:field="*{descrption}" placeholder="Wähle eine aussagekräftige Beschreibung">
-                          <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}">description Error</div>
-                      </div>
-                    </div>
+                        <div class="field">
+                            <label class="label">Titel</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Wähle einen Produkttitel" th:field="*{name}">
+                            </div>
+                            <p class="help is-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Titel falsch eingegeben</p>
+                        </div>
 
-                    <div class="field">
-                      <label class="label">Abholort</label>
-                      <div class="control">
-                        <input class="input" type="text" th:field="*{location}" placeholder="Wo soll dein Artikel abgeholt werden?">
-                          <div th:if="${#fields.hasErrors('location')}" th:errors="*{location}">location Error</div>
-                      </div>
-                    </div>
 
-                    <div class="field">
-                      <label class="label">Verfügbarkeit</label>
-                      <div class="control">
-                        <input class="input" type="text" th:field="*{availableTime}" placeholder="Wie lange am Stück willst du deinen Artikel ausleihen?">
-                          <div th:if="${#fields.hasErrors('availableTime')}" th:errors="*{availableTime}">availableTime Error</div>
-                      </div>
-                    </div>
+                        <div class="field">
+                            <label class="label">Beschreibung</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Wähle eine aussagekräftige Beschreibung" th:field="*{description}">
+                            </div>
+                            <p class="help is-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Beschreibung falsch eingegeben</p>
+                        </div>
 
-                    <div class="field">
-                      <label class="label">Kaution</label>
-                      <div class="control">
-                        <input class="input" th:field="*{deposit}" type="text" placeholder="in Euro">
-                          <div th:if="${#fields.hasErrors('deposit')}" th:errors="*{deposit}">deposit Error</div>
-                      </div>
-                    </div>
 
-                    <div class="field">
-                      <label class="label">Preis</label>
-                      <div class="control">
-                        <input class="input" type="text" th:field="*{cost}" placeholder="in Euro / pro Tag">
-                          <div th:if="${#fields.hasErrors('cost')}" th:errors="*{cost}">cost Error</div>
-                      </div>
-                    </div>
+                        <div class="field">
+                            <label class="label">Preis</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="in Euro / pro Tag" th:field="*{cost}">
+                            </div>
+                            <p class="help is-danger" th:if="${#fields.hasErrors('cost')}" th:errors="*{cost}">Preis falsch eingegeben</p>
+                        </div>
 
-                    <div class="field is-grouped">
-                      <div class="control">
-                        <button class="button is-block is-primary is-normal is-fullwidth" type="submit">Artikel einstellen</button>
-                      </div>
-                      <div class="control">
-                        <button class="button is-text">abbrechen</button>
-                      </div>
-                    </div>
+
+                        <div class="field">
+                            <label class="label">Kaution</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="in Euro" th:field="*{deposit}">
+                            </div>
+                            <p class="help is-danger" th:if="${#fields.hasErrors('deposit')}" th:errors="*{deposit}"> Abholort falsch eingegeben</p>
+                        </div>
+
+
+                        <div class="field">
+                            <label class="label">Verfügbarkeit</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Wie lange am Stück willst du deinen Artikel ausleihen?" th:field="*{availableTime}">
+                            </div>
+                            <p class="help is-danger" th:if="${#fields.hasErrors('availableTime')}" th:errors="*{availableTime}">Verfügbarkeit falsch eingegeben</p>
+                        </div>
+
+
+                        <div class="field">
+                            <label class="label">Abholort</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="Wo soll dein Artikel abgeholt werden?" th:field="*{location}">
+                            </div>
+                            <p class="help is-danger" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"> Abholort falsch eingegeben</p>
+                        </div>
+
+
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button is-block is-primary is-normal is-fullwidth" type="submit">Artikel einstellen</button>
+                            </div>
+                            <div class="control">
+                                <button class="button is-text">abbrechen</button>
+                            </div>
+                        </div>
+
                     </form>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </section>
-  <script async type="text/javascript" src="../js/bulma.js"></script>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script async type="text/javascript" src="../js/bulma.js"></script>
 </body>
 
 </html>
