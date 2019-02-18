@@ -19,7 +19,7 @@ services:
       - DB_HOST=leihordiedb
       - DB_USER=nutzer
       - DB_PASSWORD=1234
-      - DB_DATABASE=lieordiedbac
+      - DB_DATABASE=liehordiedbac
     depends_on:
       - leihordiedb
     links:
@@ -33,7 +33,7 @@ services:
       - MYSQL_ROOT_PASSWORD=12345
       - MYSQL_USER=nutzer
       - MYSQL_PASSWORD=1234
-      - MYSQL_DATABASE=lieordiedbac
+      - MYSQL_DATABASE=liehordiedbac
 
   propay:
     image: propra/propay
