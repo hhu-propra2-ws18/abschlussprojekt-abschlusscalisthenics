@@ -23,7 +23,6 @@ public class UserController {
     }
 
     @PostMapping("/login")
-
     public String logUser(Model model, @Valid UserForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "login";
