@@ -59,3 +59,13 @@ nach den Fremdschlüsseln filtern kann.
 .arbeit an LoanRepository Test
 . 2 Controller geschrieben: UserController, HomepageController
 . arbeit an html Seiten
+
+## Tag 6
+. Formvalidation für das Login und Signup wurde fertiggestellt
+. Arbeit an der Formvalidation vom ItemController
+. Arbeit am ErrorController wurde begonnen
+. Man hat sich darauf geeinigt für das Login Spring Security zu verwenden
+. docker-compose ist fertig, man sich für die Entwicklung entschieden eine "Testdatenbank" zu benutzen,
+da das Aufsetzen Zeit kostet und für das Testen den Workflow behindert
+
+## Tag 7
