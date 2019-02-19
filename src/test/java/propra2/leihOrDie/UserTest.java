@@ -16,7 +16,9 @@ public class UserTest {
         MessageDigest md = MessageDigest.getInstance("MD5");
         byte[] encryptedPw = md.digest(bytesOfMessage);
 
-        User user = new User("testuser", "test@email.de", encryptedPw, address);
+        CharSequence password = new StringBuffer("qwerty");
+
+        User user = new User("testuser", "test@email.de", password, address);
 
         Assert.assertEquals(user.getUsername(), "testuser");
         Assert.assertEquals(user.getAddress(), address);
