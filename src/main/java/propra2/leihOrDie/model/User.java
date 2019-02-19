@@ -35,6 +35,10 @@ public class User {
         this.password = passwordEncoder.encode(password);
         this.address = address;
     }
+
+    public void setPassword(String password) {
+        this.password = passwordEncoder.encode(password);
+    }
 }
 
 

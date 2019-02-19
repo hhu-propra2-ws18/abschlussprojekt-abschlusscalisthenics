@@ -35,7 +35,7 @@ public class SignUpController {
         return "redirect:/";
     }
 
-    private void saveUser(User user, String name, String email, byte[] password) {
+    private void saveUser(User user, String name, String email, String password) {
         user.setUsername(name);
         user.setPassword(password);
         user.setEmail(email);
