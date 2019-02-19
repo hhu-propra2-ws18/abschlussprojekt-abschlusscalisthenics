@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,9 +19,7 @@
                    </div>
                    <div class="column is-6 is-offset-1">
                      <p class="has-text-right">
-                       <h1 class="title is-2">
-                           ArtikelName
-                       </h1>
+                       <h1 th:text="${artikel.name}" class="title is-2"> ArtikelName </h1>
                      </p>
                        <h2 class="subtitle is-4">
                            Beschreibung:
@@ -68,6 +66,7 @@
                        </p>
                        <br>
                    </div>
+                   </>
                </div>
            </div>
        </div>
