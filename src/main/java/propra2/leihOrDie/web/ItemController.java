@@ -36,7 +36,7 @@ public class ItemController {
         adr.setPostcode(40225);
         adr.setStreet("Universitätsstraße");
         adr.setHouseNumber(1);
-        User dummyUser = new User("lala", "kk@dd", pass, adr);
+        User dummyUser = new User("Max Mustermann", "kk@dd", pass, adr);
         userRepository.save(dummyUser);
         ////////
 
@@ -100,8 +100,19 @@ public class ItemController {
         itemRepository.save(item);
     }
 
-    //private void updateItem(Item item, String name, String description, int cost, int deposit, int availableTime, String location, User user ){
+    @GetMapping("/artikel/{id}")
+    public String show_item_get(Model model, @PathVariable Long id) {
+        Item item = itemRepository.findById(id).get();
 
-    //}
+        model.addAttribute("name", item.getName());
+        model.addAttribute("description", item.getDescription());
+        model.addAttribute("location", item.getLocation());
+        model.addAttribute("availableTime", item.getAvailableTime());
+        model.addAttribute("deposit", item.getDeposit());
+        model.addAttribute("cost", item.getCost());
+        model.addAttribute("user", item.getUser().getUsername());
+
+        return "productsite.html";
+    }
 
 }
