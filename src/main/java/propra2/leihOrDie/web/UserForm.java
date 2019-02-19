@@ -2,13 +2,16 @@ package propra2.leihOrDie.web;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
+import propra2.leihOrDie.model.Address;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.validation.constraints.NotEmpty;
 
 @Data
 public class UserForm {
@@ -24,5 +27,21 @@ public class UserForm {
     @NotNull
     @Size(min = 6, max = 50, message="Bitte gib ein (sicheres) Passwort zwischen 6-50 Zeichen ein.")
     private byte[] password;
+
+    @NotNull
+    @Size(min = 5, message="Straßennamen müssen mindestens 5 Zeichen lang sein.")
+    private String street;
+
+    @NotEmpty
+    @Size(min = 1, message="Dieses Feld darf nicht leer bleiben.")
+    private int houseNumber;
+
+    @NotNull
+    @Size(min = 5, message="Stadtnamen müssen mindestens 5 Zeichen lang sein.")
+    private String city;
+
+    @NotNull
+    @Size(min = 5, message="Eine Postleitzahl hat mindestens 5 Ziffern.")
+    private int postcode;
 }
 
