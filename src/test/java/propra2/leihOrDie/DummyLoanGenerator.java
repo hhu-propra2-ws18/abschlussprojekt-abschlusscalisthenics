@@ -9,7 +9,7 @@ public class DummyLoanGenerator {
         int duration = 5;
         String state = "Laufend";
 
-        Loan loan = new Loan(state, duration, user, item);
+        Loan loan = new Loan(state, duration, user, item, 20);
         return loan;
     }
 }

@@ -13,6 +13,7 @@ public class Loan {
 
     private String state;
     private int duration;
+    private long propayReservationId;
 
     @ManyToOne
     @JoinColumn(name="username")
@@ -22,7 +23,8 @@ public class Loan {
     @JoinColumn(name="item_id")
     private Item item;
 
-    public Loan(String state, int duration, User user, Item item) {
+    public Loan(String state, int duration, User user, Item item, long propayReservationId) {
+        this.propayReservationId = propayReservationId;
         this.state = state;
         this.duration = duration;
         this.user = user;
