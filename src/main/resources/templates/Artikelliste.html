@@ -1,39 +1,42 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hello Bulma!</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-  </head>
-  <body>
-  <section class="section">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Artikelliste</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+  <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+</head>
+<body>
+<div th:insert="fragments/header :: header"></div>
+<br></br>
+<section class="section">
+  <div class="container">
 
-    <table class="table" align=center style="width:95%">
-      <thead>
-        <tr class="is-primary is-selected ">
-          <th><abbr title="ArtikelNr.">ArtikelNr.</abbr></th>
-          <th><abbr title="ArtikelName.">ArtikelName</abbr></th>
-          <th><abbr title="Anbieter">Anbieter</abbr></th>
-          <th><abbr title="Preis(pro Tag)">Preis(pro Tag)</abbr></th>
-          <th><abbr title="Kaution">Kaution</abbr></th>
-          <th><abbr title="Beschreibung">Beschreibung</abbr></th>
-        </tr>
-      </thead>
+  <table class="table" align=center style="width:95%">
+    <thead>
+    <tr class="is-primary is-selected">
+      <th><abbr title="ArtikelName.">Artikelname</abbr></th>
+      <th><abbr title="Anbieter">Anbieter</abbr></th>
+      <th><abbr title="Preis(pro Tag)">Preis(pro Tag)</abbr></th>
+      <th><abbr title="Kaution">Kaution</abbr></th>
+      <th><abbr title="Beschreibung">Beschreibung</abbr></th>
+    </tr>
+    </thead>
 
-      <tbody>
-        <tr>
-          <th>1</th>
-          <th>Tefal Grill
-          <td><a href="https://en.wikipedia.org/wiki/Leicester_City_F.C." title="Max Mustermann">Max Mustermann </td>
-          <td>5 Euro </td>
-          <td>65 Euro </td>
-          <td>Tefal Markengrill. Funktioniert einwandfrei <a href="https://en.wikipedia.org/wiki/Leicester_City_F.C." title=weiter> <u> weiter lesen </u><a> </td>
-        </tr>
+    <tbody>
+    <tr th:each="item: ${items}">
+      <!-- change link when productsite ready -->
+      <th><a href="https://en.wikipedia.org/wiki/Leicester_City_F.C." th:text="${item.getName()}"></a></th>
+      <td th:text="${user.getUsername()}">></td>
+      <td th:text="${item.getCost()}"></td>
+      <td th:text="${item.getDeposit()}"></td>
+      <td th:text="${item.getDescription()}"></td>
+    </tr>
 
-      </tbody>
-    </table>
-  </section>
-  </body>
+    </tbody>
+  </table>
+  </div>
+</section>
+</body>
 </html>
