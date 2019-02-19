@@ -26,7 +26,7 @@ public class UserForm {
 
     @NotNull
     @Size(min = 6, max = 50, message="Bitte gib ein (sicheres) Passwort zwischen 6-50 Zeichen ein.")
-    private byte[] password;
+    private String password;
 
     @NotNull
     @Size(min = 5, message="Straßennamen müssen mindestens 5 Zeichen lang sein.")
@@ -34,7 +34,7 @@ public class UserForm {
 
     @NotEmpty
     @Size(min = 1, message="Dieses Feld darf nicht leer bleiben.")
-    private int houseNumber;
+    private String houseNumber;
 
     @NotNull
     @Size(min = 5, message="Stadtnamen müssen mindestens 5 Zeichen lang sein.")
@@ -42,6 +42,6 @@ public class UserForm {
 
     @NotNull
     @Size(min = 5, message="Eine Postleitzahl hat mindestens 5 Ziffern.")
-    private int postcode;
+    private String postcode;
 }
 

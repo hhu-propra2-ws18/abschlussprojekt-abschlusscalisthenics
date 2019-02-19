@@ -10,9 +10,11 @@ import propra2.leihOrDie.model.User;
 import java.security.MessageDigest;
 
 public class ItemTest {
+
     @Test
     public void testPicture() {
         User user = (new DummyUserGenerator()).generateUser();
+
         Item item = new Item("testitem", "das ist ein test", 200, 10,
                 true, 20, user);
 

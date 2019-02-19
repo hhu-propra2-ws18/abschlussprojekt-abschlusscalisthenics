@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
-import propra2.leihOrDie.WebSecurityConfig;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
@@ -13,7 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Entity
 public class User {
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    @Transient
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
     @Size(max=100)

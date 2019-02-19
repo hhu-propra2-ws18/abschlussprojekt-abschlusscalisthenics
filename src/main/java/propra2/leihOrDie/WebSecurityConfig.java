@@ -22,7 +22,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(
                         "/",
-                        "/user/registration"
+                        "/user/registration",
+                        "/image/upload",
+                        "/image/uploadFailed",
+                        "/image/uploadSuccessful"
                 ).permitAll()
                 .anyRequest().authenticated()
                 .and()
