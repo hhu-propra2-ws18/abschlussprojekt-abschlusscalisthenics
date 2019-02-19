@@ -13,7 +13,7 @@ import propra2.leihOrDie.dataaccess.UserRepository;
 import javax.validation.Valid;
 
 @Controller
-public class SignUpController {
+public class AuthenticationController {
 
     @Autowired
     private UserRepository userRepository;
@@ -48,6 +48,15 @@ public class SignUpController {
         user.setEmail(email);
         user.setAddress(address);
         userRepository.save(user);
+    }
+
+    @GetMapping("/login")
+    public String login(Model model, @Valid UserForm form, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "login";
+        }
+
+        return "/";
     }
 
 
