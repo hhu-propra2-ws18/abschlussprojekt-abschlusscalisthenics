@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import propra2.leihOrDie.model.Address;
 import propra2.leihOrDie.model.User;
 import propra2.leihOrDie.dataaccess.UserRepository;
 
@@ -28,17 +29,24 @@ public class SignUpController {
             return "registration";
         }
 
+        Address address = new Address();
+        address.setStreet(form.getStreet());
+        address.setHouseNumber(Integer.parseInt(form.getHouseNumber()));
+        address.setPostcode(Integer.parseInt(form.getPostcode()));
+        address.setCity(form.getCity());
+
         User user = new User();
 
-        saveUser(user, form.getUsername(), form.getEmail(), form.getPassword());
+        saveUser(user, form.getUsername(), form.getEmail(), form.getPassword(), address);
 
         return "redirect:/";
     }
 
-    private void saveUser(User user, String name, String email, String password) {
+    private void saveUser(User user, String name, String email, String password, Address address) {
         user.setUsername(name);
         user.setPassword(password);
         user.setEmail(email);
+        user.setAddress(address);
         userRepository.save(user);
     }
 

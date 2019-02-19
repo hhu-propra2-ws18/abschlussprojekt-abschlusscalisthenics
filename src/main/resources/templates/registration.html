@@ -57,14 +57,14 @@
 
               <div class="field">
               <div class="control">
-                <input class="input" type="number" pattern="\d*" placeholder="Postleitzahl" th:field="*{postcode}">
+                <input class="input" type="text" pattern="\d*" placeholder="Postleitzahl" th:field="*{postcode}">
               </div>
               <p class="help is-danger" th:if="${#fields.hasErrors('postcode')}" th:errors="*{postcode}">Postleitzahl ungültig</p>
               </div>
 
             <div class="field">
               <div class="control">
-                <input class="input" type="number" pattern="\d*" placeholder="Hausnummer" th:field="*{houseNumber}">
+                <input class="input" type="text" pattern="\d*" placeholder="Hausnummer" th:field="*{houseNumber}">
               </div>
               <p class="help is-danger" th:if="${#fields.hasErrors('houseNumber')}" th:errors="*{houseNumber}">Hausnummer ungültig</p>
             </div>

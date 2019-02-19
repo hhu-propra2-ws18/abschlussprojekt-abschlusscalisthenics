@@ -14,11 +14,9 @@ public class LoanTest {
     public void testLoan() throws Exception {
         Address address = new Address(12345, "Teststr", 1, "Kuhlstadt");
 
-        byte[] bytesOfMessage = "passwort1".getBytes("UTF-8");
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        byte[] encryptedPw = md.digest(bytesOfMessage);
+        CharSequence clearPassword = new StringBuffer("SuperSave");
 
-        User user = new User("testuser", "test@email.de", encryptedPw, address);
+        User user = new User("testuser", "test@email.de", clearPassword, address);
         Item item = new Item("testitem", "das ist ein test", 200, 10,
                 true, 20, user);
 
