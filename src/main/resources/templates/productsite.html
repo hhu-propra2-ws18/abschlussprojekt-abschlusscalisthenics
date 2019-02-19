@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
   </head>
-  <body>
+  <body th:href="@{|/artikel/{id}|}">
       <section class="hero is-fullheight is-default is-bold">
        <div class="hero-body">
            <div class="container has-text-left">
@@ -19,29 +19,29 @@
                    </div>
                    <div class="column is-6 is-offset-1">
                      <p class="has-text-right">
-                       <h1 th:text="${artikel.name}" class="title is-2"> ArtikelName </h1>
+                       <h1 th:text="'Artikelname: ' + ${name}" class="title is-2"> ArtikelName </h1>
                      </p>
-                       <h2 class="subtitle is-4">
+                       <h2 th:text="'Beschreibung: ' + ${description}" class="subtitle is-4">
                            Beschreibung:
 
                        </h2>
-                       <h3 class="subtitle is-4">
+                       <h3 th:text="'Abholort: ' + ${location}" class="subtitle is-4">
                            Abholort:
 
                        </h3>
-                       <h4 class="subtitle is-4">
+                       <h4 th:text="'Verfügbarkeit: ' + ${avaliableTime}" class="subtitle is-4">
                            Verfügbarkeit:
 
                        </h4>
-                       <h5 class="subtitle is-4">
+                       <h5 th:text="'Kaution: ' + ${deposit} + '€' " class="subtitle is-4">
                            Kaution (€):
 
                        </h5>
-                       <h6 class="subtitle is-4">
+                       <h6 th:text="'Preis pro Tag: ' + ${cost} + '€'" class="subtitle is-4">
                            Preis pro Tag (€):
 
                        </h6>
-                       <h7 class="subtitle is-4">
+                       <h7 th:text="'Ausleiher: ' + ${user}" class="subtitle is-4">
                            Ausleiher:
 
 
@@ -66,7 +66,6 @@
                        </p>
                        <br>
                    </div>
-                   </>
                </div>
            </div>
        </div>
