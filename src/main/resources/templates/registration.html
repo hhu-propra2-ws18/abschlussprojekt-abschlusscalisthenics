@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>signup</title>
+  <title>Registrierung</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/bulma@0.7.4/css/bulma.min.css" />
@@ -17,10 +17,10 @@
   <div class="hero-body">
     <div class="container has-text-centered">
       <div class="column is-6 is-offset-3">
-        <h1 class="title has-text-black">Sign up</h1>
+        <h1 class="title has-text-black">Registrierung</h1>
         <p class="subtitle has-text-grey">Hier kannst Du deine Daten eingeben</p>
 
-        <form class= action="#" th:action="@{/signup}" th:object="${userForm}" method="post">
+        <form class= action="/" th:action="@{/user/registration}" th:object="${userForm}" method="POST" enctype="utf8">
           <div class="box">
 
             <div class="field">

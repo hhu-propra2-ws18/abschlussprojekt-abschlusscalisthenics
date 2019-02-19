@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.WebRequest;
 import propra2.leihOrDie.UserDto;
 
-public class RegistrationController {
+public class SignupController {
 
     @RequestMapping(value="/user/registration", method=RequestMethod.GET)
     public String showRegistrationForm(WebRequest request, Model model) {

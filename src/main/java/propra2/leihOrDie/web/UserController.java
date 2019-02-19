@@ -6,7 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import propra2.leihOrDie.dataaccess.UserRepository;
 import propra2.leihOrDie.model.User;
 
@@ -34,13 +33,13 @@ public class UserController {
 
     @GetMapping("/signup")
     public String see(Model model, UserForm form) {
-        return "signup";
+        return "registration";
     }
 
     @PostMapping("/signup")
     public String newUser(Model model, @Valid UserForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "signup";
+            return "registration";
         }
 
         User user = new User();
