@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Data
 public class UserForm {
     @NotNull
-    @Size(min = 5, max = 50, message="Benutzernamen müssen 1-50 Zeichen lang sein")
+    @Size(min = 1, max = 50, message="Benutzernamen müssen 1-50 Zeichen lang sein")
     private String username;
 
     @NotNull

@@ -6,39 +6,23 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import propra2.leihOrDie.dataaccess.UserRepository;
 import propra2.leihOrDie.model.User;
+import propra2.leihOrDie.dataaccess.UserRepository;
 
 import javax.validation.Valid;
 
 @Controller
-public class UserController {
+public class SignUpController {
+
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/login")
-    public String user(Model model, UserForm form) {
-        return "login";
-    }
-
-    @PostMapping("/login")
-    public String logUser(Model model, @Valid UserForm form, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "login";
-        }
-
-        // proceed with right data...
-        return "redirect:/";
-    }
-/*
     @GetMapping("/user/registration")
     public String see(Model model, UserForm form) {
         return "registration";
     }
-*/
 
-/*
-    @PostMapping("/signup")
+    @PostMapping("/user/registration")
     public String newUser(Model model, @Valid UserForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "registration";
@@ -58,7 +42,5 @@ public class UserController {
         userRepository.save(user);
     }
 
-*/
 
 }
-
