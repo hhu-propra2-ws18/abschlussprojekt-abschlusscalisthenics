@@ -25,7 +25,7 @@
                     <ul class="menu-list">
                         <li><a href="/Profilverwalten">Profil verwalten</a></li>
                     </ul>
-                    <p class="menu-label">
+<!--                    <p class="menu-label">
                         Produkte
                     </p>
                     <ul class="menu-list">
@@ -33,7 +33,7 @@
                         <li><a href="ausgelieheneProdukte">ausgeliehene Produkte</a></li>
 
                     </ul>
-                    <p class="menu-label">
+-->                    <p class="menu-label">
                         Einstellungen
                     </p>
                     <ul class="menu-list">
@@ -81,12 +81,15 @@
                         </div>
                     </div>
                 </section>
+
+                <!-- HIER TABELLE VON DEN ANGEBOTENEN PRODUKTEN DES USERS -->
+
                 <div class="columns">
                     <div class="column is-6">
                         <div class="card events-card">
                             <header class="card-header">
                                 <p class="card-header-title">
-                                    Produkte
+                                    Ich leihe zur Zeit aus:
                                 </p>
                                 <a href="#" class="card-header-icon" aria-label="more options">
                   <span class="icon">
@@ -94,28 +97,56 @@
                   </span>
                 </a>
                             </header>
-
-                            <!-- HIER TABELLE VON DEN ANGEBOTENEN PRODUKTEN DES USERS -->
-
                             <div class="card-table">
                                 <div class="content">
                                     <table class="table is-fullwidth is-striped">
                                         <tbody>
                                             <tr>
                                                 <td width="5%"><i class="fa fa-bell-o"></i></td>
-                                                <td>Gartenschere</td>
+                                                <td>Produktname</td>
                                                 <td><a class="button is-small is-primary" >Artikel zurück geben</a></td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
 
-                            <!-- HIER TABELLE VON DEN ARTIKELN, WELCHE JEMAND VOM USER AUSLEIHEN MÖCHTE -->
+                <!-- HIER TABELLE VON DEN ARTIKELN, WELCHE JEMAND VOM USER AUSLEIHEN MÖCHTE -->
+
+                <div class="columns">
+                    <div class="column is-6">
+                        <div class="card events-card">
+                            <header class="card-header">
+                                <p class="card-header-title">
+                                    Anfragen zum Verleihen:
+                                </p>
+                                <a href="#" class="card-header-icon" aria-label="more options">
+                  <span class="icon">
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                                </a>
+                            </header>
+                            <div class="card-table">
+                                <div class="content">
+                                    <table class="table is-fullwidth is-striped">
+                                        <tbody>
+                                        <tr>
+                                            <td width="5%"><i class="fa fa-bell-o"></i></td>
+                                            <td>Produktname</td>
+                                            <td><a class="button is-small is-primary" >verleihen</a> <a class="button is-small is primary" >ablehnen</a> </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
 
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>

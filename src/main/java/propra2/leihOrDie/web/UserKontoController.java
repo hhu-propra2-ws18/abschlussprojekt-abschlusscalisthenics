@@ -9,18 +9,16 @@ import propra2.leihOrDie.dataaccess.ItemRepository;
 import propra2.leihOrDie.dataaccess.LoanRepository;
 import propra2.leihOrDie.dataaccess.PictureRepository;
 import propra2.leihOrDie.dataaccess.UserRepository;
+import propra2.leihOrDie.model.Item;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class UserKontoController {
 
     @Autowired
     private ItemRepository itemRepository;
-
-    @Autowired
-    private LoanRepository loanRepository;
-
-    @Autowired
-    private PictureRepository pictureRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -40,8 +38,22 @@ public class UserKontoController {
         return "Artikelliste";
     }
 
-    private void loadArtikelTabelle(Model model){
-      //  model.addAttribute();
+    private List<Item> collectArtikel(Long[] itemID){
+        List<Item> items = new ArrayList<>();
+        if (itemID == null)
+            return items;
+        for (int i=0; i<itemID.length; i++){
+    //        items.add(ItemRepository.findById(itemID[i].get());
+        }
+        return items;
+    }
 
+    private void loadAusgelieheneArtikel(Model model, Item item){
+        model.addAttribute("id", item.getId());
+        model.addAttribute("name", item.getName());
+    }
+    private void loadArtikelAnfragen(Model model, Item item){
+        model.addAttribute("id", item.getId());
+        model.addAttribute("Name", item.getName());
     }
 }
