@@ -23,10 +23,10 @@ public class ItemController {
     @Autowired
     UserRepository userRepository;
 
-    @PostMapping("/new")
+    @PostMapping("/item/create")
     public String new_item_post(Model model, @Valid ItemForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "ArtikelEinstellen";
+            return "create-item";
         }
 
         /////// dummy User erstellen und in DB speichern
@@ -43,17 +43,16 @@ public class ItemController {
         Item item = new Item();
         saveItem(item, form.getName(), form.getDescription(), form.getCost(), form.getDeposit(), form.getAvailableTime(), form.getLocation(), dummyUser);
 
-        return "redirect:/artikel";
+        return "redirect:/borrowall";
     }
 
     @GetMapping("/new")
     public String new_item_get(Model model, ItemForm form) {
-        return "ArtikelEinstellen";
+        return "create-item";
     }
 
 
-
-    @GetMapping("/editItem/{id}")
+    @GetMapping("/item/edit/{id}")
     public String edit_item_get(Model model, @PathVariable Long id, ItemForm form) {
         Item item = itemRepository.findById(id).get();
 

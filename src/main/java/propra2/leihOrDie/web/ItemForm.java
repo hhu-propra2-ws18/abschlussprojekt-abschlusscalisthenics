@@ -1,7 +1,6 @@
 package propra2.leihOrDie.web;
 
 import lombok.Data;
-import lombok.NonNull;
 import org.hibernate.validator.constraints.Range;
 import propra2.leihOrDie.model.User;
 
