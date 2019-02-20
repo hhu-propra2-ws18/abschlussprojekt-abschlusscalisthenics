@@ -15,7 +15,17 @@ public class LoanTest {
         User user = (new DummyUserGenerator()).generateUser();
         Item item = (new DummyItemGenerator()).generateItem(user);
 
+<<<<<<< HEAD
         Loan loan = new Loan("abgeschlossen", 19, user, item, 20);
+=======
+        CharSequence clearPassword = new StringBuffer("SuperSave");
+
+        User user = new User("testuser", "test@email.de", clearPassword, address);
+        Item item = new Item("testitem", "das ist ein test", 200, 10,
+                true, 20, user);
+
+        Loan loan = new Loan("abgeschlossen", 19, user, item);
+>>>>>>> 8e6ae6568cff0f4ecd3590f4e6941630d926399e
 
         Assert.assertEquals("abgeschlossen", loan.getState());
         Assert.assertEquals(19, loan.getDuration());

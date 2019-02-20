@@ -11,10 +11,16 @@ import java.security.MessageDigest;
 
 public class ItemTest {
 
+<<<<<<< HEAD
     @Test
     public void testPicture() {
         User user = (new DummyUserGenerator()).generateUser();
 
+=======
+        CharSequence clearPassword = new StringBuffer("SuperSave");
+
+        User user = new User("testuser", "test@email.de", clearPassword, address);
+>>>>>>> 8e6ae6568cff0f4ecd3590f4e6941630d926399e
         Item item = new Item("testitem", "das ist ein test", 200, 10,
                 true, 20, user);
 
