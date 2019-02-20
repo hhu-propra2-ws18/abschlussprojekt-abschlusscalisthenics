@@ -43,7 +43,7 @@ public class ItemController {
         Item item = new Item();
         saveItem(item, form.getName(), form.getDescription(), form.getCost(), form.getDeposit(), form.getAvailableTime(), form.getLocation(), dummyUser);
 
-        return "redirect:/";
+        return "redirect:/artikel";
     }
 
     @GetMapping("/new")
