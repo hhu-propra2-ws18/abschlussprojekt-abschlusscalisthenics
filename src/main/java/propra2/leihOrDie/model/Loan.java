@@ -1,6 +1,7 @@
 package propra2.leihOrDie.model;
 
 import lombok.Data;
+
 import javax.persistence.*;
 
 @Data
@@ -23,6 +24,8 @@ public class Loan {
     @JoinColumn(name="item_id")
     private Item item;
 
+    public Loan() {}
+
     public Loan(String state, int duration, User user, Item item, long propayReservationId) {
         this.propayReservationId = propayReservationId;
         this.state = state;
@@ -30,6 +33,4 @@ public class Loan {
         this.user = user;
         this.item = item;
     }
-
-    public Loan() {  }
 }
