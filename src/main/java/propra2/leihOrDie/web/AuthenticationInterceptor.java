@@ -17,16 +17,20 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
         Cookie[] cookies = request.getCookies();
         if(cookies != null) {
              for(Cookie cookie: cookies) {
-                 if(cookie.getName().equals("SessionID") && checkSessionCookie(cookie.getValue())) {
-                     return true;
+                 if(cookie.getName().equals("SessionID")) {
+                     if(checkSessionCookie(cookie.getValue())) {
+                         return true;
+                     }
                  }
              }
         }
+        System.out.println("IN INTERCEPTOR BEFORE REDIRECT");
         response.sendRedirect("login");
         return false;
     }
 
     public boolean checkSessionCookie(String sessionId) {
+        System.out.println(sessionId);
         return sessionRepository.findById(sessionId).isPresent();
     }
 }
