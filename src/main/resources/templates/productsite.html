@@ -11,10 +11,11 @@
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
   </head>
   <body th:href="@{|/artikel/{id}|}">
+  <div th:insert="fragments/header :: header"></div>
       <section class="hero is-fullheight is-default is-bold">
        <div class="hero-body">
            <div class="container has-text-left">
-               <h1 th:text="'Artikelname: ' + ${name}" class="title is-bold has-text-centered"  > ArtikelName </h1>
+               <h1 th:text="${name}" class="title is-bold has-text-centered"  > Artikelname </h1>
                <br></br>
                <div class="columns is-vcentered">
 
@@ -87,11 +88,10 @@
                        </h7>
                        <br>
                        <p class="has-text-centered">
-                           <a class="button is-medium is-primary is-outlined">
+                           <a class="button is-large is-primary">
               ausleihen
              </a>
                        </p>
-                       <br>
                        <p class="has-text-centered">
                        <h8 class="subtitle is-6">
                            Schickt eine Anfrage an den Besitzer des Artikels.
@@ -99,8 +99,8 @@
                        </h8>
                        <br>
                        <p class="has-text-right">
-                           <a class="button is-little is-primary is-outlined">
-              zurueck
+                           <a class="button is-medium is-primary is-outlined">
+              zurück
              </a>
                        </p>
                        <br>
