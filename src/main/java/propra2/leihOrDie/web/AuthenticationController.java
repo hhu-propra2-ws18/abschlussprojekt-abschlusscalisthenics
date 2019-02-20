@@ -62,10 +62,7 @@ public class AuthenticationController {
     public boolean authentificateUser(String usermail, String password) {
         try {
             User user = userRepository.findUserByEMail(usermail).get(0);
-            if (user.verifyPassword(password)) {
-                return true;
-            }
-            return false;
+            return user.verifyPassword(password);
         } catch (Exception e){
             return false;
         }
