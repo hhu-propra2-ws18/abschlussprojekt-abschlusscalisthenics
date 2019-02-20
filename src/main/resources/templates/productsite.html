@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -45,9 +45,20 @@
                        </h6>
                        <h7 class="subtitle is-4">
                            Ausleiher:
-
-
                        </h7>
+                       <br></br>
+
+
+
+                       <div class="field">
+                           <label class="label">Wieviele Tage möchtest du den Artikel ausleihen?</label>
+                           <div class="control">
+                               <input class="input" type="number" pattern="\d*" placeholder="Wie lange am Stück willst du deinen Artikel ausleihen?" >
+                           </div>
+                           <p class="help is-danger" th:if="${#fields.hasErrors('ausleihTage')}" th:errors="*{ausleihTage}">Verfügbarkeit falsch eingegeben</p>
+                       </div>
+
+
                        <br>
                        <p class="has-text-centered">
                            <a class="button is-medium is-primary is-outlined">
