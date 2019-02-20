@@ -26,9 +26,8 @@
 
     <tbody>
     <tr th:each="item: ${items}">
-      <!-- change link when productsite ready -->
-      <th><a href="https://en.wikipedia.org/wiki/Leicester_City_F.C." th:text="${item.getName()}"></a></th>
-      <td th:text="${user.getUsername()}">></td>
+      <th><a th:href="@{'/artikel/' + ${item.id}}" th:text="${item.getName()}"></a></th>
+      <td th:text="${item.user.getUsername()}">></td>
       <td th:text="${item.getCost()}"></td>
       <td th:text="${item.getDeposit()}"></td>
       <td th:text="${item.getDescription()}"></td>
