@@ -21,16 +21,4 @@ public class WebController {
         return "homepage";
     }
 
-
-    @GetMapping("/artikel")
-    public String showItems(Model model) {
-        // User is missing has to be added
-        User dummy = new User();
-        dummy.setUsername("dummy");
-        model.addAttribute("user", dummy);
-        model.addAttribute("items", itemRepository.findAll());
-        return "Artikelliste";
-    }
-
-
 }
