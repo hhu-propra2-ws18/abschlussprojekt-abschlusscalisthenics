@@ -61,6 +61,7 @@
                      <p class="has-text-right">
                        
                        <h1 th:text="${artikel.name}" class="title is-2"> ArtikelName </h1>
+
                      </p>
                        <h2 th:text="'Beschreibung: ' + ${description}" class="subtitle is-4">
                            Beschreibung:
@@ -75,11 +76,11 @@
 
                        </h4>
                        <h5 th:text="'Kaution: ' + ${deposit} + '€' " class="subtitle is-4">
-                           Kaution(€):
+                           Kaution (€):
 
                        </h5>
                        <h6 th:text="'Preis pro Tag: ' + ${cost} + '€'" class="subtitle is-4">
-                           Preis/Tag (€):
+                           Preis pro Tag (€):
 
                        </h6>
                        <h7 th:text="'Ausleiher: ' + ${user}" class="subtitle is-4">
