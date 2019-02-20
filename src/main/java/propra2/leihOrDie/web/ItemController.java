@@ -115,4 +115,11 @@ public class ItemController {
         return "productsite.html";
     }
 
+    @GetMapping("/artikel")
+    public String showItems(Model model) {
+        // User is missing has to be added
+        model.addAttribute("items", itemRepository.findAll());
+        return "Artikelliste";
+    }
+
 }
