@@ -93,7 +93,7 @@ public class AuthenticationController {
     }
 
 
-    public boolean authentificateUser(String usermail, String password) {
+    public boolean authenticateUser(String usermail, String password) {
         try {
             User user = userRepository.findUserByEMail(usermail).get(0);
             return user.verifyPassword(password);
