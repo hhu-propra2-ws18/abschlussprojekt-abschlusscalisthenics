@@ -1,21 +1,14 @@
 package propra2.leihOrDie.model;
 
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mindrot.jbcrypt.BCrypt;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @Data
 @Entity
 public class User {
-    @Autowired
-    @Transient
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
 
     @Size(max=100)
     @Id
@@ -30,15 +23,19 @@ public class User {
 
     public User() {}
 
-    public User(String username, String email, CharSequence password, Address address) {
+    public User(String username, String email, String password, Address address) {
         this.username = username;
         this.email = email;
-        this.password = passwordEncoder.encode(password);
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt());
         this.address = address;
     }
 
     public void setPassword(String password) {
-        this.password = passwordEncoder.encode(password);
+        this.password = BCrypt.hashpw(password, BCrypt.gensalt());
+    }
+
+    public boolean verifyPassword(String password) {
+        return BCrypt.checkpw(password, this.password);
     }
 }
 

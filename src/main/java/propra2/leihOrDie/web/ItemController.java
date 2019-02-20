@@ -30,7 +30,7 @@ public class ItemController {
         }
 
         /////// dummy User erstellen und in DB speichern
-        CharSequence pass = new StringBuffer("password");
+        String pass = "pass";
         Address adr = new Address();
         adr.setCity("Düsseldorf");
         adr.setPostcode(40225);
