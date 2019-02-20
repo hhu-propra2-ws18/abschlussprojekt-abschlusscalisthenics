@@ -12,6 +12,7 @@ import propra2.leihOrDie.model.Address;
 import propra2.leihOrDie.model.Session;
 import propra2.leihOrDie.model.User;
 import propra2.leihOrDie.dataaccess.UserRepository;
+import sun.rmi.runtime.Log;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -65,31 +66,26 @@ public class AuthenticationController {
             return "login";
         }
 
-        return "/";
+        return "redirect:/";
     }
 
     @PostMapping("/login")
-    public String login(Model model, @Valid UserForm form, BindingResult bindingResult, HttpServletResponse response,
+    public String login(Model model, @Valid LoginForm form, HttpServletResponse response,
                         @CookieValue(value="SessionId", defaultValue="") String sessionId) {
-        if (bindingResult.hasErrors()) {
+        String usermail = form.getEmail();
+        String password = form.getPassword();
+        if(!authenticateUser(usermail, password)) {
             return "login";
         }
-
         response.addCookie(createSessionCookie());
 
-
-
-        return "/";
+        return "redirect:/";
     }
 
     public Cookie createSessionCookie() {
         String sessionId = UUID.randomUUID().toString();
         sessionRepository.save(new Session(sessionId));
         return new Cookie("SessionID", sessionId);
-    }
-
-    public boolean checkSessionCookie(String sessionId) {
-        return sessionRepository.findById(sessionId).isPresent();
     }
 
 
