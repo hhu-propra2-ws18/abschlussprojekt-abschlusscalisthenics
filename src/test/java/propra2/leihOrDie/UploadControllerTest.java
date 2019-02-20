@@ -43,7 +43,7 @@ public class UploadControllerTest {
 
     @Before
     public void setUp() {
-        byte[] password = new byte[0];
+        String password= "password";
         Address address = new Address(1337, "TestStreet", 42, "TestCity");
         User testUser = new User("name", "email@test.de", password, address);
         userRepository.save(testUser);
@@ -81,8 +81,5 @@ public class UploadControllerTest {
                 .param("itemId", itemId)
                 .param("fileName", fileName))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/image/uploadSuccessful"));
-
-
     }
-
 }

@@ -20,9 +20,7 @@ public class DummyUserGenerator {
             user.setUsername(username);
         user.setEmail(UUID.randomUUID().toString());
 
-        byte[] password = new byte[20];
-        SecureRandom random = new SecureRandom();
-        random.nextBytes(password);
+        String password = "qwerty";
         user.setPassword(password);
 
         user.setAddress(generateAddress());

@@ -25,9 +25,9 @@
                       <form class= action="#" th:action="@{/login}" th:object="${userForm}" method="post">
                           <div class="field">
                               <div class="control">
-                                  <input class="input is-large" type="email" placeholder="Deine Email" th:field="*{email}">
+                                  <input class="input is-large" type="email" placeholder="Deine Email" th:field="*{username}">
                               </div>
-                              <p class="help is-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email ist ungültig</p>
+                              <p class="help is-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{username}">Email ist ungültig</p>
                           </div>
 
                           <div class="field">

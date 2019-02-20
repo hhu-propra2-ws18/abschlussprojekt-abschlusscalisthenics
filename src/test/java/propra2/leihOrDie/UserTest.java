@@ -12,16 +12,15 @@ public class UserTest {
     public void testCreateUser() throws Exception {
         Address address = new Address(12345, "Teststr", 1, "Kuhlstadt");
 
-        byte[] bytesOfMessage = "passwort1".getBytes("UTF-8");
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        byte[] encryptedPw = md.digest(bytesOfMessage);
+        String password = "qwerty";
 
-        User user = new User("testuser", "test@email.de", encryptedPw, address);
+        User user = new User("testuser", "test@email.de", password, address);
 
-        Assert.assertEquals(user.getUsername(), "testuser");
-        Assert.assertEquals(user.getAddress(), address);
-        Assert.assertEquals(user.getPassword(), encryptedPw);
-        Assert.assertEquals(user.getEmail(), "test@email.de");
-
+        Assert.assertEquals("testuser", user.getUsername());
+        Assert.assertEquals(address, user.getAddress());
+        Assert.assertNotEquals("qwerty", user.getPassword());
+        Assert.assertEquals("test@email.de", user.getEmail());
+        Assert.assertTrue(user.verifyPassword("qwerty"));
+        Assert.assertFalse(user.verifyPassword("qwertz"));
     }
 }

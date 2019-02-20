@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>signup</title>
+  <title>Registrierung</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/bulma@0.7.4/css/bulma.min.css" />
@@ -17,10 +17,10 @@
   <div class="hero-body">
     <div class="container has-text-centered">
       <div class="column is-6 is-offset-3">
-        <h1 class="title has-text-black">Sign up</h1>
+        <h1 class="title has-text-black">Registrierung</h1>
         <p class="subtitle has-text-grey">Hier kannst Du deine Daten eingeben</p>
 
-        <form class= action="#" th:action="@{/signup}" th:object="${userForm}" method="post">
+        <form class= action="#" th:action="@{/user/registration}" th:object="${userForm}" method="POST" enctype="utf8">
           <div class="box">
 
             <div class="field">
@@ -46,6 +46,38 @@
               </div>
               <p class="help is-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Dieses Passwort ist nicht sicher genug</p>
             </div>
+
+            <div class="field">
+              <label class="label">Adresse</label>
+              <div class="control">
+                <input class="input" type="text" placeholder="Straße" th:field="*{street}">
+              </div>
+              <p class="help is-danger" th:if="${#fields.hasErrors('street')}" th:errors="*{street}">Straßenname ungültig</p>
+            </div>
+
+              <div class="field">
+              <div class="control">
+                <input class="input" type="text" pattern="\d*" placeholder="Postleitzahl" th:field="*{postcode}">
+              </div>
+              <p class="help is-danger" th:if="${#fields.hasErrors('postcode')}" th:errors="*{postcode}">Postleitzahl ungültig</p>
+              </div>
+
+            <div class="field">
+              <div class="control">
+                <input class="input" type="text" pattern="\d*" placeholder="Hausnummer" th:field="*{houseNumber}">
+              </div>
+              <p class="help is-danger" th:if="${#fields.hasErrors('houseNumber')}" th:errors="*{houseNumber}">Hausnummer ungültig</p>
+            </div>
+
+
+              <div class="field">
+              <div class="control">
+                <input class="input" type="text" placeholder="Stadt" th:field="*{city}">
+              </div>
+              <p class="help is-danger" th:if="${#fields.hasErrors('city')}" th:errors="*{city}">Gibt es diese Stadt?</p>
+            </div>
+
+
 
             <div class="field">
               <div class="control">
