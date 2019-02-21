@@ -89,11 +89,22 @@
 
                        </h7>
                        <br>
-                       <p class="has-text-centered">
-                           <a class="button is-large is-primary">
-                                ausleihen
-                            </a>
+
+                       <form class="action = #" th:action="@{|/request/${id}|}" th:object="${LoanForm}" method="post"}>
+                           <div class="field">
+                               <label class="label">Wie viel Tagen:</label>
+                               <div class="control">
+                                   <input class="input" type="number" pattern="\d*" placeholder="Wie lange am Stück willst du deinen Artikel ausleihen?" th:field="*{loanDuration}">
+                               </div>
+                               <p class="help is-danger" th:if="${#fields.hasErrors('loanDuration')}" th:errors="*{loanDuration}">Falsch eingegeben</p>
+                           </div>
+                           <div class="field is-grouped">
+                            <div class="control">
+                               <button class="button is-block is-primary is-normal " type="submit">Ausleih!! :)</button>
+                            </div>
+                           </div>
                        </p>
+                       </form>
                        <p class="has-text-centered">
                        <h8 class="subtitle is-6">
                            Schickt eine Anfrage an den Besitzer des Artikels.
