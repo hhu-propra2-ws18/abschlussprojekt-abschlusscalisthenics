@@ -7,6 +7,7 @@ import propra2.leihOrDie.dataaccess.SessionRepository;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
     @Autowired
@@ -24,13 +25,12 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
                  }
              }
         }
-        System.out.println("IN INTERCEPTOR BEFORE REDIRECT");
         response.sendRedirect("login");
         return false;
     }
 
-    public boolean checkSessionCookie(String sessionId) {
-        System.out.println(sessionId);
-        return sessionRepository.findById(sessionId).isPresent();
+    private boolean checkSessionCookie(String sessionId) {
+        Optional optional = sessionRepository.findById(sessionId);
+        return optional.isPresent();
     }
 }

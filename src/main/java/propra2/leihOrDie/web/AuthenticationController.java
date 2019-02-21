@@ -61,17 +61,16 @@ public class AuthenticationController {
     }
 
     @GetMapping("/login")
-    public String login(Model model, @Valid UserForm form, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "login";
-        }
-
-        return "redirect:/";
+    public String login(Model model, LoginForm form) {
+        return "login";
     }
 
     @PostMapping("/login")
-    public String login(Model model, @Valid LoginForm form, HttpServletResponse response,
-                        @CookieValue(value="SessionId", defaultValue="") String sessionId) {
+    public String login(Model model, @Valid LoginForm form, BindingResult bindingResult,
+                        HttpServletResponse response) {
+        if(bindingResult.hasErrors()) {
+            return "login";
+        }
         String usermail = form.getEmail();
         String password = form.getPassword();
         if(!authenticateUser(usermail, password)) {

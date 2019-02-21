@@ -1,5 +1,6 @@
 package propra2.leihOrDie.web;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -10,11 +11,14 @@ import java.util.Arrays;
 @Configuration
 @EnableWebMvc
 public class WebMvcConfig implements WebMvcConfigurer {
+    @Bean
+    AuthenticationInterceptor authenticationInterceptor() {
+        return new AuthenticationInterceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        /*
-        registry.addInterceptor(new AuthenticationInterceptor())
-                .excludePathPatterns(Arrays.asList("/login", "/", "/registration"));
-                */
+        registry.addInterceptor(authenticationInterceptor())
+                .excludePathPatterns(Arrays.asList("/login", "/"));
     }
 }
