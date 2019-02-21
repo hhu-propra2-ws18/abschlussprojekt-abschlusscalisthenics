@@ -24,18 +24,8 @@ public class UserKontoController {
     private UserRepository userRepository;
 
     @GetMapping("/Userkonto")
-    public String Konto(){
+    public String Konto(Model model){
         return "Userkonto";
-    }
-
-    @GetMapping("ArtikelEinstellen")
-    public String Artikeleinstellen(){
-        return "ArtikelEinstellen";
-    }
-
-    @GetMapping("Artikelliste")
-    public String Artikelliste(){
-        return "Artikelliste";
     }
 
     private List<Item> collectArtikel(Long[] itemID){
