@@ -7,6 +7,7 @@ import propra2.leihOrDie.dataaccess.SessionRepository;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
     @Autowired
@@ -17,8 +18,10 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
         Cookie[] cookies = request.getCookies();
         if(cookies != null) {
              for(Cookie cookie: cookies) {
-                 if(cookie.getName().equals("SessionID") && checkSessionCookie(cookie.getValue())) {
-                     return true;
+                 if(cookie.getName().equals("SessionID")) {
+                     if(checkSessionCookie(cookie.getValue())) {
+                         return true;
+                     }
                  }
              }
         }
@@ -26,7 +29,8 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
         return false;
     }
 
-    public boolean checkSessionCookie(String sessionId) {
-        return sessionRepository.findById(sessionId).isPresent();
+    private boolean checkSessionCookie(String sessionId) {
+        Optional optional = sessionRepository.findById(sessionId);
+        return optional.isPresent();
     }
 }

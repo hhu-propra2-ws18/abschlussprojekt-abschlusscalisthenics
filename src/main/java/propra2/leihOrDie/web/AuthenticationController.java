@@ -12,6 +12,7 @@ import propra2.leihOrDie.model.Address;
 import propra2.leihOrDie.model.Session;
 import propra2.leihOrDie.model.User;
 import propra2.leihOrDie.dataaccess.UserRepository;
+import sun.rmi.runtime.Log;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -27,12 +28,12 @@ public class AuthenticationController {
     @Autowired
     private SessionRepository sessionRepository;
 
-    @GetMapping("/user/registration")
-    public String see(Model model, UserForm form) {
+    @GetMapping("/registration")
+    public String show(Model model, UserForm form) {
         return "registration";
     }
 
-    @PostMapping("/user/registration")
+    @PostMapping("/registration")
     public String newUser(Model model, @Valid UserForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "registration";
@@ -60,40 +61,34 @@ public class AuthenticationController {
     }
 
     @GetMapping("/login")
-    public String login(Model model, @Valid UserForm form, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "login";
-        }
-
-        return "/";
+    public String login(Model model, LoginForm form) {
+        return "login";
     }
 
     @PostMapping("/login")
-    public String login(Model model, @Valid UserForm form, BindingResult bindingResult, HttpServletResponse response,
-                        @CookieValue(value="SessionId", defaultValue="") String sessionId) {
-        if (bindingResult.hasErrors()) {
+    public String login(Model model, @Valid LoginForm form, BindingResult bindingResult,
+                        HttpServletResponse response) {
+        if(bindingResult.hasErrors()) {
             return "login";
         }
-
+        String usermail = form.getEmail();
+        String password = form.getPassword();
+        if(!authenticateUser(usermail, password)) {
+            return "login";
+        }
         response.addCookie(createSessionCookie());
 
-
-
-        return "/";
+        return "redirect:/";
     }
 
-    public Cookie createSessionCookie() {
+    private Cookie createSessionCookie() {
         String sessionId = UUID.randomUUID().toString();
         sessionRepository.save(new Session(sessionId));
         return new Cookie("SessionID", sessionId);
     }
 
-    public boolean checkSessionCookie(String sessionId) {
-        return sessionRepository.findById(sessionId).isPresent();
-    }
 
-
-    public boolean authenticateUser(String usermail, String password) {
+    private boolean authenticateUser(String usermail, String password) {
         try {
             User user = userRepository.findUserByEMail(usermail).get(0);
             return user.verifyPassword(password);

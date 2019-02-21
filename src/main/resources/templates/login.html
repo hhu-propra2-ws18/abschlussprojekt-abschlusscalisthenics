@@ -9,12 +9,11 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/bulma@0.7.4/css/bulma.min.css" />
-    <link rel="stylesheet" type="text/css" href="../css/login.css">
 </head>
 <body>
 
 <div th:insert="fragments/header :: header"></div>
-      
+
   <section class="hero is-light is-fullheight">
       <div class="hero-body">
           <div class="container has-text-centered">
@@ -22,12 +21,12 @@
                   <h3 class="title has-text-black">Login</h3>
                   <p class="subtitle has-text-grey">Bitte melde Dich an</p>
                   <div class="box">
-                      <form class= action="#" th:action="@{/login}" th:object="${userForm}" method="post">
+                      <form class= action="#" th:action="@{/login}" th:object="${loginForm}" method="post">
                           <div class="field">
                               <div class="control">
-                                  <input class="input is-large" type="email" placeholder="Deine Email" th:field="*{username}">
+                                  <input class="input is-large" type="email" placeholder="Deine Email" th:field="*{email}">
                               </div>
-                              <p class="help is-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{username}">Email ist ungültig</p>
+                              <p class="help is-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email ist ungültig</p>
                           </div>
 
                           <div class="field">
