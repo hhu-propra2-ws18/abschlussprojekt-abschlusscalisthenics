@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+<<<<<<< HEAD
 import org.springframework.web.bind.annotation.CookieValue;
+=======
+>>>>>>> Add AuthenticationController
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import propra2.leihOrDie.dataaccess.SessionRepository;
@@ -12,8 +15,11 @@ import propra2.leihOrDie.model.Address;
 import propra2.leihOrDie.model.Session;
 import propra2.leihOrDie.model.User;
 import propra2.leihOrDie.dataaccess.UserRepository;
+<<<<<<< HEAD
 import sun.rmi.runtime.Log;
 
+=======
+>>>>>>> Add AuthenticationController
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
