@@ -82,14 +82,14 @@ public class AuthenticationController {
         return "redirect:/";
     }
 
-    public Cookie createSessionCookie() {
+    private Cookie createSessionCookie() {
         String sessionId = UUID.randomUUID().toString();
         sessionRepository.save(new Session(sessionId));
         return new Cookie("SessionID", sessionId);
     }
-    
 
-    public boolean authenticateUser(String usermail, String password) {
+
+    private boolean authenticateUser(String usermail, String password) {
         try {
             User user = userRepository.findUserByEMail(usermail).get(0);
             return user.verifyPassword(password);

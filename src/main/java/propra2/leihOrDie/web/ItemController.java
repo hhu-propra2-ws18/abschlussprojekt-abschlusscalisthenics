@@ -46,7 +46,7 @@ public class ItemController {
         return "redirect:/borrowall";
     }
 
-    @GetMapping("/new")
+    @GetMapping("/item/create")
     public String new_item_get(Model model, ItemForm form) {
         return "create-item";
     }
@@ -64,19 +64,35 @@ public class ItemController {
         form.setAvailableTime(item.getAvailableTime());
         form.setLocation(item.getLocation());
 
-        return "ItemEdit";
+        return "edit-item";
     }
 
-    @PostMapping("/editItem/{id}")
+    @PostMapping("/item/edit/{id}")
     public String edit_item_post(Model model, @PathVariable Long id, @Valid ItemForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "ItemEdit";
+            return "edit-item";
         }
         Item item = itemRepository.findById(id).get();
         loadItemIntoForm(model, item);
         saveItem(item, form.getName(), form.getDescription(), form.getCost(), form.getDeposit(), form.getAvailableTime(), form.getLocation(), item.getUser());
 
         return "redirect:/";
+    }
+
+    @GetMapping("/borrowall/{id}")
+    public String show_item_get(Model model, @PathVariable Long id) {
+        Item item = itemRepository.findById(id).get();
+
+        loadItemIntoForm(model, item);
+
+        return "item-detail.html";
+    }
+
+    @GetMapping("/borrowall")
+    public String showItems(Model model) {
+        // User is missing has to be added
+        model.addAttribute("items", itemRepository.findAll());
+        return "item-list";
     }
 
     private void loadItemIntoForm(Model model, Item item) {
@@ -98,27 +114,4 @@ public class ItemController {
         item.setUser(user);
         itemRepository.save(item);
     }
-
-    @GetMapping("/artikel/{id}")
-    public String show_item_get(Model model, @PathVariable Long id) {
-        Item item = itemRepository.findById(id).get();
-
-        model.addAttribute("name", item.getName());
-        model.addAttribute("description", item.getDescription());
-        model.addAttribute("location", item.getLocation());
-        model.addAttribute("availableTime", item.getAvailableTime());
-        model.addAttribute("deposit", item.getDeposit());
-        model.addAttribute("cost", item.getCost());
-        model.addAttribute("user", item.getUser().getUsername());
-
-        return "productsite.html";
-    }
-
-    @GetMapping("/artikel")
-    public String showItems(Model model) {
-        // User is missing has to be added
-        model.addAttribute("items", itemRepository.findAll());
-        return "Artikelliste";
-    }
-
 }

@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
-public class LoginForm {
+class LoginForm {
     @NotNull
     @Size(min = 1, message = "Dieses Feld darf nicht leer bleiben")
     @Email(message = "Gib eine gültige Email-Adresse ein")

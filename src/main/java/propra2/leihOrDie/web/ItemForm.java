@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
-public class ItemForm {
+class ItemForm {
 
  @NotNull
  @Size(min=2, max=50, message="Namen müssen 2-50 Buchstaben lang sein.")
