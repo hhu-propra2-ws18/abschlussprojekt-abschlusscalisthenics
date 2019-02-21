@@ -28,12 +28,12 @@ public class AuthenticationController {
     @Autowired
     private SessionRepository sessionRepository;
 
-    @GetMapping("/user/registration")
-    public String see(Model model, UserForm form) {
+    @GetMapping("/registration")
+    public String show(Model model, UserForm form) {
         return "registration";
     }
 
-    @PostMapping("/user/registration")
+    @PostMapping("/registration")
     public String newUser(Model model, @Valid UserForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "registration";
@@ -81,14 +81,14 @@ public class AuthenticationController {
         return "redirect:/";
     }
 
-    public Cookie createSessionCookie() {
+    private Cookie createSessionCookie() {
         String sessionId = UUID.randomUUID().toString();
         sessionRepository.save(new Session(sessionId));
         return new Cookie("SessionID", sessionId);
     }
 
 
-    public boolean authenticateUser(String usermail, String password) {
+    private boolean authenticateUser(String usermail, String password) {
         try {
             User user = userRepository.findUserByEMail(usermail).get(0);
             return user.verifyPassword(password);

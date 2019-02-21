@@ -16,12 +16,8 @@
 <section class="hero is-fullheight is-default">
     <div class="hero-body">
         <div class="container has-text-centered">
-            <h1 class="title is-1">
-                500 Error
-            </h1>
-            <h2 class="subtitle is-3">
-                Der Server hat ein internes Problem. Versuche es später nocheinmal!
-            </h2>
+            <h1 class="title is-1" th:text="${error}"></h1>
+            <h2 class="subtitle is-3" th:text="${message}"></h2>
             <p class="has-text-centered">
                 <a class="button is-rounded is-primary is-outlined is-medium">
                     Startseite

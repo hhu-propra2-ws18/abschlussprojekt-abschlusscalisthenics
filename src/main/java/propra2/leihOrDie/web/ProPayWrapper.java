@@ -50,11 +50,8 @@ public class ProPayWrapper {
     public static Account punishAccount(String username, Long reservationId) throws Exception {
         RestTemplate rt = new RestTemplate();
         String url = "http://localhost:8888/reservation/punish/" + username;
-        MultiValueMap<String, Object> postParams = new LinkedMultiValueMap<>();
-        postParams.add("reservationId", reservationId);
-        ResponseEntity<Account> result = rt.postForEntity(url, postParams, Account.class);
 
-        return result.getBody();
+        return request(reservationId, url, rt).getBody();
     }
 
     public static Account freeReservationOfUser(String username, Long reservationId) throws Exception {
@@ -64,7 +61,7 @@ public class ProPayWrapper {
         postParams.add("reservationId", reservationId);
         ResponseEntity<Account> result = rt.postForEntity(url, postParams, Account.class);
 
-        return result.getBody();
+        return request(reservationId, url, rt).getBody();
     }
 
     public static Reservation reserve(String senderUsername, String recipientUsername,
@@ -78,11 +75,17 @@ public class ProPayWrapper {
         return result.getBody();
     }
 
-    public static Account getAccountOfUser(String username) throws Exception {
+    private static Account getAccountOfUser(String username) throws Exception {
         RestTemplate rt = new RestTemplate();
         String url = "http://localhost:8888/account/" + username;
         ResponseEntity<Account> result = rt.getForEntity(url, Account.class);
         return result.getBody();
+    }
+
+    private static ResponseEntity<Account> request(Long reservationId, String url, RestTemplate restTemplate) {
+        MultiValueMap<String, Object> postParams = new LinkedMultiValueMap<>();
+        postParams.add("reservationId", reservationId);
+        return restTemplate.postForEntity(url, postParams, Account.class);
     }
 
 }

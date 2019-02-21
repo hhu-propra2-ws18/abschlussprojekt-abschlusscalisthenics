@@ -12,6 +12,4 @@ public interface ItemRepository extends CrudRepository<Item, Long> {
 
     @Query("SELECT i FROM Item i WHERE i.user.username = :username")
     List<Item> findItemsOfUser(@Param("username") String username);
-
-
 }

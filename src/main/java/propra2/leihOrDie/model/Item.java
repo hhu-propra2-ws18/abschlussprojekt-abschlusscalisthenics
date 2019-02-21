@@ -1,6 +1,7 @@
 package propra2.leihOrDie.model;
 
 import lombok.Data;
+
 import javax.persistence.*;
 
 @Data
@@ -23,9 +24,7 @@ public class Item {
     @JoinColumn(name="username")
     private User user;
 
-    public Item() {
-
-    }
+    public Item() {}
 
     public Item(String name, String description, int cost, int deposit, boolean availability, int availableTime,
                 User user) {
