@@ -4,24 +4,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import propra2.leihOrDie.dataaccess.ItemRepository;
+import propra2.leihOrDie.dataaccess.LoanRepository;
+import propra2.leihOrDie.dataaccess.PictureRepository;
 import propra2.leihOrDie.dataaccess.UserRepository;
 import propra2.leihOrDie.model.Address;
 import propra2.leihOrDie.model.Item;
+import propra2.leihOrDie.model.Picture;
 import propra2.leihOrDie.model.User;
 
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class ItemController {
+
+    private static String UPLOADFOLDER = "images/";
+
     @Autowired
     ItemRepository itemRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    PictureRepository pictureRepository;
 
     @PostMapping("/item/create")
     public String new_item_post(Model model, @Valid ItemForm form, BindingResult bindingResult) {
@@ -85,6 +99,16 @@ public class ItemController {
 
         loadItemIntoForm(model, item);
 
+        //List<Picture> pictureList = pictureRepository.findPicturesOfItem(id);
+
+
+        //List<String> urlList = buildUrls(pictureList);
+        List<String> urlList = new ArrayList<>();
+        urlList.add("https://images.pexels.com/photos/730896/pexels-photo-730896.jpeg?cs=srgb&dl=adorable-animal-cat-730896.jpg");
+        urlList.add("https://images.pexels.com/photos/96938/pexels-photo-96938.jpeg?cs=srgb&dl=animal-animal-photography-cat-96938.jpg");
+        model.addAttribute("pictures", urlList);
+        model.addAttribute("numOfPictures", urlList.size());
+
         return "item-detail.html";
     }
 
@@ -93,6 +117,41 @@ public class ItemController {
         // User is missing has to be added
         model.addAttribute("items", itemRepository.findAll());
         return "item-list";
+    }
+
+    /*
+    @RequestMapping(value ="/borrowall/{id}", method=RequestMethod.GET)
+    public String retrieveAllImages(@RequestParam("itemId") String itemIdString,
+                                    RedirectAttributes redirectAttributes) {
+        Long itemId = Long.parseLong(itemIdString);
+
+        List<Picture> pictureList = pictureRepository.findPicturesOfItem(itemId);
+
+        List<String> urlList = buildUrls(pictureList);
+
+        return "dummy";
+    }
+    */
+
+    private List<String> buildUrls(List<Picture> pictureList) {
+        List<String> urlList = new ArrayList<>();
+
+        if(pictureList.size() == 0) {
+            return urlList;
+        }
+
+        for(Picture picture: pictureList) {
+            urlList.add(buildUrl(picture));
+        }
+
+        return urlList;
+    }
+
+    private String buildUrl(Picture picture) {
+        String raw = "/images/";
+        String idString = picture.getId().toString();
+
+        return raw + idString;
     }
 
     private void loadItemIntoForm(Model model, Item item) {
