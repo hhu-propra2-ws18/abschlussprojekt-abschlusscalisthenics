@@ -58,19 +58,28 @@
                 </div>
             </div>
 
-            <div class="navbar-end">
+            <div class="navbar-end" th:if="${isLoggedIn} == false">
                 <div class="navbar-item">
                     <div class="buttons">
-                        <a class="button is-dark">
+                        <a class="button is-dark" href="/registration">
                             <strong>Sign up</strong>
                         </a>
-                        <a class="button is-light">
+                        <a class="button is-light" href="/login">
                             Log in
                         </a>
                     </div>
                 </div>
             </div>
 
+            <div class="navbar-end" th:if="${isLoggedIn} == true">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-light" href="/signout">
+                            Sign Out
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </nav>
 </body>

@@ -16,9 +16,17 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return new AuthenticationInterceptor();
     }
 
+    @Bean
+    SignOutButtonInterceptor signOutButtonInterceptor() {
+        return new SignOutButtonInterceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor())
-                .excludePathPatterns(Arrays.asList("/login", "/"));
+                .excludePathPatterns(Arrays.asList("/", "/borrowall/*", "/signout"));
+
+        registry.addInterceptor(signOutButtonInterceptor())
+                .excludePathPatterns("/signout");
     }
 }
