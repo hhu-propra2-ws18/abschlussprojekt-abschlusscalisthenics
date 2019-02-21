@@ -1,13 +1,11 @@
 package propra2.leihOrDie.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-<<<<<<< HEAD
 import org.springframework.web.bind.annotation.CookieValue;
-=======
->>>>>>> Add AuthenticationController
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import propra2.leihOrDie.dataaccess.SessionRepository;
@@ -15,11 +13,6 @@ import propra2.leihOrDie.model.Address;
 import propra2.leihOrDie.model.Session;
 import propra2.leihOrDie.model.User;
 import propra2.leihOrDie.dataaccess.UserRepository;
-<<<<<<< HEAD
-import sun.rmi.runtime.Log;
-
-=======
->>>>>>> Add AuthenticationController
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -27,7 +20,6 @@ import java.util.UUID;
 
 @Controller
 public class AuthenticationController {
-
     @Autowired
     private UserRepository userRepository;
 
@@ -71,6 +63,16 @@ public class AuthenticationController {
         return "login";
     }
 
+    @GetMapping("/signout")
+    public String signout(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        try {
+            sessionRepository.deleteById(sessionId);
+        } catch (EmptyResultDataAccessException e) {
+
+        }
+        return "redirect:/";
+    }
+
     @PostMapping("/login")
     public String login(Model model, @Valid LoginForm form, BindingResult bindingResult,
                         HttpServletResponse response) {
@@ -82,17 +84,17 @@ public class AuthenticationController {
         if(!authenticateUser(usermail, password)) {
             return "login";
         }
-        response.addCookie(createSessionCookie());
 
+        User user = userRepository.findUserByEMail(usermail).get(0);
+        response.addCookie(createSessionCookie(user));
         return "redirect:/";
     }
 
-    private Cookie createSessionCookie() {
+    private Cookie createSessionCookie(User user) {
         String sessionId = UUID.randomUUID().toString();
-        sessionRepository.save(new Session(sessionId));
+        sessionRepository.save(new Session(sessionId, user));
         return new Cookie("SessionID", sessionId);
     }
-
 
     private boolean authenticateUser(String usermail, String password) {
         try {
