@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Artikel einstellen</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+    <!-- Bulma Version 0.7.4-->
+    <link rel="stylesheet" href="https://unpkg.com/bulma@0.7.4/css/bulma.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/login.css">
+</head>
+<div th:insert="fragments/header :: header"></div>
+<body>
+
+  <section class="hero is-light is-fullheight">
+      <div class="hero-body">
+          <div class="container has-text-centered">
+              <div class="column is-6 is-offset-3">
+                  <h3 class="title has-text-black">Artikel einstellen</h3>
+                  <br></br>
+                  <div class="box">
+
+                    <!--- TODO: must changethe action and the object --->
+
+                    <form action="#" th:action="@{???????}" th:object="${?????}" method="post">
+                    <div class="field">
+                      <label class="label">Titel</label>
+                      <div class="control">
+                        <input class="input" type="text" th:field="*{username}" placeholder="Wähle einen Produkttitel">
+                      </div>
+                    </div>
+
+                    <div class="field">
+                      <label class="label">Beschreibung</label>
+                      <div class="control">
+                        <input class="input" type="password" th:field="*{password}" placeholder="Wähle eine aussagekräftige Beschreibung">
+                      </div>
+                    </div>
+
+                    <div class="field">
+                      <label class="label">Abholort</label>
+                      <div class="control">
+                        <input class="input" th:field="*{email}" placeholder="Wo soll dein Artikel abgeholt werden?">
+                      </div>
+                    </div>
+
+                    <div class="field">
+                      <label class="label">Verfügbarkeit</label>
+                      <div class="control">
+                        <input class="input" type="password" th:field="*{password}" placeholder="Wie lange am Stück willst du deinen Artikel ausleihen?">
+                      </div>
+                    </div>
+
+                    <div class="field">
+                      <label class="label">Kaution</label>
+                      <div class="control">
+                        <input class="input" th:field="*{email}" placeholder="in Euro">
+                      </div>
+                    </div>
+
+                    <div class="field">
+                      <label class="label">Preis</label>
+                      <div class="control">
+                        <input class="input" type="password" th:field="*{password}" placeholder="in Euro / pro Tag">
+                      </div>
+                    </div>
+
+                    <div class="field is-grouped">
+                      <div class="control">
+                        <button class="button is-block is-primary is-normal is-fullwidth" type="submit">Artikel einstellen</button>
+                      </div>
+                      <div class="control">
+                        <button class="button is-text">abbrechen</button>
+                      </div>
+                    </div>
+                    </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+  <script async type="text/javascript" src="../js/bulma.js"></script>
+</body>
+
+</html>
