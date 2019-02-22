@@ -4,18 +4,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import propra2.leihOrDie.dataaccess.ItemRepository;
 import propra2.leihOrDie.dataaccess.LoanRepository;
 import propra2.leihOrDie.dataaccess.PictureRepository;
 import propra2.leihOrDie.dataaccess.UserRepository;
 import propra2.leihOrDie.model.Item;
+import propra2.leihOrDie.model.Loan;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class UserKontoController {
+public class UserController {
 
     @Autowired
     private ItemRepository itemRepository;
@@ -23,8 +25,12 @@ public class UserKontoController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/userkonto")
-    public String Konto(Model model){
+    @Autowired
+    private LoanRepository loanRepository;
+
+    @GetMapping("/user/{username}")
+    public String showUser(Model model, @PathVariable String username) {
+        model.addAttribute(1);
         return "user";
     }
 
@@ -45,5 +51,14 @@ public class UserKontoController {
     private void loadArtikelAnfragen(Model model, Item item){
         model.addAttribute("id", item.getId());
         model.addAttribute("Name", item.getName());
+    }
+
+    private List<Loan> getPendingItems(String username) {
+        List<Item> itemsOfUser = itemRepository.findItemsOfUser(username);
+        List<Loan> loans = new ArrayList<>();
+        for (Item i: itemsOfUser) {
+            loans.add(loanRepository.findPendingLoans(i.getId()).get(0));
+        }
+        return loans;
     }
 }
