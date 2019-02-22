@@ -14,7 +14,7 @@ import java.util.*;
 @Controller
 public class DetailPageController {
 
-    private static String UPLOADFOLDER = "images/";
+    /*private static String UPLOADFOLDER = "images/";
 
     @Autowired
     private PictureRepository pictureRepository;
@@ -51,5 +51,5 @@ public class DetailPageController {
         String idString = picture.getId().toString();
 
         return raw + idString;
-    }
+    }*/
 }
