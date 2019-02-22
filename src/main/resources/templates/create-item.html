@@ -68,15 +68,6 @@
                         </div>
 
 
-                        <div class="field">
-                            <label class="label">Abholort</label>
-                            <div class="control">
-                                <input class="input" type="text" placeholder="Wo soll dein Artikel abgeholt werden?" th:field="*{location}">
-                            </div>
-                            <p class="help is-danger" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"> Abholort falsch eingegeben</p>
-                        </div>
-
-
                         <div class="field is-grouped">
                             <div class="control">
                                 <button class="button is-block is-primary is-normal is-fullwidth" type="submit">Artikel einstellen</button>

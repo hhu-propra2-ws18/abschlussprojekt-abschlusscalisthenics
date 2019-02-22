@@ -30,10 +30,6 @@ class ItemForm {
  @Range(min = 1 ,message="Verfügbarkeit muss einer positiven Zahl größer 1 entsprechen.")
  private int availableTime;
 
- @NotNull
- @Size(min=2, max=50, message="Abholort muss 2-50 Buchstaben lang sein.")
- private String location;
-
  private boolean availability;
 
  private User user;
