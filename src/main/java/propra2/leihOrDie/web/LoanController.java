@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import propra2.leihOrDie.dataaccess.ItemRepository;
 import propra2.leihOrDie.dataaccess.LoanRepository;
@@ -30,7 +31,7 @@ public class LoanController {
     @PostMapping("/request/{id}")
     public String requestLoan(Model model, @Valid LoanForm form, @CookieValue(value="SessionID", defaultValue="") String sessionId, @PathVariable Long itemId) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
-        Item item = itemRepository.findItemById(itemId).get(0);
+        Item item = itemRepository.findById(itemId).get();
 
         if (!item.isAvailability() && form.getLoanDuration() > item.getAvailableTime()) {
             return "";

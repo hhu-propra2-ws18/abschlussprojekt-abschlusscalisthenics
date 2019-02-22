@@ -10,7 +10,7 @@
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
   </head>
-  <body th:href="@{|/artikel/{id}|}">
+  <body th:href="@{|/borrowall/{id}|}">
   <div th:insert="fragments/header :: header"></div>
       <section class="hero is-fullheight is-default is-bold">
        <div class="hero-body">
@@ -22,25 +22,27 @@
 
                    <div class="container">
                        <div id="myCarousel" class="carousel slide" data-ride="carousel">
-                           <!-- Indicators -->
+
+
+                           <!-- Indicators-->
                            <ol class="carousel-indicators">
-                               <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                               <li data-target="#myCarousel" data-slide-to="1"></li>
-                               <li data-target="#myCarousel" data-slide-to="2"></li>
+                               <th:block th:each="num : ${numOfPictures}">
+                                   <li data-target="#myCarousel" th:attr="data-slide-to=${num}" class=""></li>
+                               </th:block>
                            </ol>
 
-                           <!-- Wrapper for slides -->
+
+
+                           <!--
+                          <ol class="carousel-indicators">
+                              <li data-target="#myCarousel" th:attr="data-slide-to=0" class="active'"></li>
+                              <li data-target="#myCarousel" th:attr="data-slide-to=1"></li>
+                          </ol>-->
+
+                           <!-- Wrapper for slides-->
                            <div class="carousel-inner">
-                               <div class="item active">
-                                   <img src="la.jpg" alt="Los Angeles" style="width:100%;">
-                               </div>
-
-                               <div class="item">
-                                   <img src="chicago.jpg" alt="Chicago" style="width:100%;">
-                               </div>
-
-                               <div class="item">
-                                   <img src="ny.jpg" alt="New york" style="width:100%;">
+                               <div th:each= "picture : ${pictures}" class="item active">
+                                   <img th:src="${picture}" alt="cats" style="width:100%;">
                                </div>
                            </div>
 
@@ -60,7 +62,7 @@
                    <div class="column is-6 is-offset-1">
                      <p class="has-text-right">
                        
-                       <h1 th:text="${artikel.name}" class="title is-2"> ArtikelName </h1>
+                       <h1 th:text="${name}" class="title is-2"> ArtikelName </h1>
 
                      </p>
                        <h2 th:text="'Beschreibung: ' + ${description}" class="subtitle is-4">
@@ -89,7 +91,7 @@
 
                        </h7>
                        <br>
-
+<!---
                        <form class="action = #" th:action="@{|/request/${id}|}" th:object="${LoanForm}" method="post"}>
                            <div class="field">
                                <label class="label">Wie viel Tagen:</label>
@@ -105,6 +107,7 @@
                            </div>
                        </p>
                        </form>
+                       --->
                        <p class="has-text-centered">
                        <h8 class="subtitle is-6">
                            Schickt eine Anfrage an den Besitzer des Artikels.
@@ -120,6 +123,5 @@
            </div>
        </div>
    </section>
-
   </body>
 </html>
