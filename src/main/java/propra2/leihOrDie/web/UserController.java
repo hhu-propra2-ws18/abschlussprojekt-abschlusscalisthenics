@@ -73,7 +73,7 @@ public class UserController {
         for (Item i: itemsOfUser) {
             Loan temp = null;
             temp = loanRepository.findLoansOfItem(i.getId()).get(0);
-            if (temp.getState() == "pending") {
+            if (temp.getState().equals("pending")) {
                 loans.add(temp);
             }
         }

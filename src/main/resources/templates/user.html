@@ -46,7 +46,7 @@
             <div class="column is-9">
 
                 <section class="hero is-primary welcome is-small">
-                    <div class="hero-body">git
+                    <div class="hero-body">
                         <div class="container">
                             <h1 th:text="'Hallo, ' + ${user} +'!'"class="title">
                             </h1>
@@ -132,7 +132,7 @@
 
                                         <tbody>
                                         <tr th:each="item: ${pendingitems}">
-                                            <th th:text="${item.getName()}">></th>
+                                            <th th:text="${item.getItem().getName()}">></th>
                                             <td><a th:href="@{'/user/${user}'}" class="button is-medium is-primary">bestätigen</a></td>
                                             <td><a th:href="@{'/user/${user}'}" class="button is-medium is-primary is-outlined">ablehnen</a></td>
                                         </tr>
