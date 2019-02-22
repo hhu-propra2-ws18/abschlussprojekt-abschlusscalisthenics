@@ -23,9 +23,9 @@ public class UserKontoController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/Userkonto")
+    @GetMapping("/userkonto")
     public String Konto(Model model){
-        return "Userkonto";
+        return "user";
     }
 
     private List<Item> collectArtikel(Long[] itemID){
