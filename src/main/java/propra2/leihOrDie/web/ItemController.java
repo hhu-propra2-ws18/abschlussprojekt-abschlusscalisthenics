@@ -4,24 +4,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import propra2.leihOrDie.dataaccess.ItemRepository;
-import propra2.leihOrDie.dataaccess.LoanRepository;
 import propra2.leihOrDie.dataaccess.PictureRepository;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import propra2.leihOrDie.dataaccess.SessionRepository;
 import propra2.leihOrDie.dataaccess.UserRepository;
-import propra2.leihOrDie.model.Address;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Picture;
 import propra2.leihOrDie.model.User;
 
 
 import javax.validation.Valid;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,14 +32,18 @@ public class ItemController {
     UserRepository userRepository;
     @Autowired
     PictureRepository pictureRepository;
+    @Autowired
+    SessionRepository sessionRepository;
 
     @PostMapping("/item/create")
-    public String new_item_post(Model model, @Valid ItemForm form, BindingResult bindingResult) {
+    public String new_item_post(Model model, @Valid ItemForm form, BindingResult bindingResult, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+
         if (bindingResult.hasErrors()) {
             return "create-item";
         }
 
-        /////// dummy User erstellen und in DB speichern
+        /*////// dummy User erstellen und in DB speichern
         String pass = "pass";
         Address adr = new Address();
         adr.setCity("Düsseldorf");
@@ -52,10 +52,11 @@ public class ItemController {
         adr.setHouseNumber(1);
         User dummyUser = new User("Max Mustermann", "kk@dd", pass, adr);
         userRepository.save(dummyUser);
-        ////////
+        ///////*/
 
         Item item = new Item();
-        saveItem(item, form.getName(), form.getDescription(), form.getCost(), form.getDeposit(), form.getAvailableTime(), form.getLocation(), dummyUser);
+        saveItem(item, form.getName(), form.getDescription(), form.getCost(), form.getDeposit(),
+                form.getAvailableTime(), form.getLocation(), user);
 
         return "redirect:/borrowall";
     }
