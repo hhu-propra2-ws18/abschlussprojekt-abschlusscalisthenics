@@ -50,12 +50,12 @@ public class DatabaseInitializer implements ServletContextInitializer {
         userRepository.saveAll(Arrays.asList(user1, user2, user3, user4, user5, user6, user7, user8,
                 user9, user10));
 
-        Item item1 = new Item("Säge", "Sehr scharf", 5, 30, true, 4, user1);
-        Item item2 = new Item("Hammer", "Super schwer", 2, 15, true, 3, user2);
-        Item item3 = new Item("Rasenmäher", "Schön schnell", 10, 60, true, 2, user6);
-        Item item4 = new Item("Stift", "schreibt sehr angenehm", 1, 3, true, 6, user1);
-        Item item5 = new Item("Fahrrad", "Quitscht beim Fahren", 6, 50, true, 10, user2);
-        Item item6 = new Item("Whiteboard", "Super cool", 4, 40, true, 3, user1);
+        Item item1 = new Item("Säge", "Sehr scharf", 5, 30, true, 4, user1.getAddress(), user1);
+        Item item2 = new Item("Hammer", "Super schwer", 2, 15, true, 3, user2.getAddress(), user2);
+        Item item3 = new Item("Rasenmäher", "Schön schnell", 10, 60, true, 2, user6.getAddress(), user6);
+        Item item4 = new Item("Stift", "schreibt sehr angenehm", 1, 3, true, 6, user1.getAddress(), user1);
+        Item item5 = new Item("Fahrrad", "Quitscht beim Fahren", 6, 50, true, 10, user2.getAddress(), user2);
+        Item item6 = new Item("Whiteboard", "Super cool", 4, 40, true, 3, user1.getAddress(), user1);
 
         itemRepository.saveAll(Arrays.asList(item1, item2, item3, item4, item5, item6));
 
