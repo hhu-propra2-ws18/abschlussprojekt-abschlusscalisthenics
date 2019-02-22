@@ -1,12 +1,7 @@
 package propra2.leihOrDie.web;
 
-import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import propra2.leihOrDie.dataaccess.SessionRepository;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +29,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
         }
 
         if(pageRequiresLogin) {
-            response.sendRedirect("login");
+            response.sendRedirect("/login");
             return false;
         }
 
