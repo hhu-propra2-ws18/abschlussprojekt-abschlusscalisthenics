@@ -45,7 +45,7 @@ public class LoanController {
             raiseBalanceOfUser(user.getEmail(), 10000);
             propayReservationId = reserve(user.getEmail(), item.getUser().getEmail(), item.getDeposit()).getId();
         } catch (Exception e) {
-            return "redirect:/borrowall/" + itemId.toString();
+            return "redirect:/sourceAndTargetMustBeDifferent/";
         }
 
         Loan loan = new Loan("pending", form.getLoanDuration(), user, item, propayReservationId);
