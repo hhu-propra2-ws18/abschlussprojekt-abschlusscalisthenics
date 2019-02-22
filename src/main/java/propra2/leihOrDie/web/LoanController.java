@@ -1,6 +1,7 @@
 package propra2.leihOrDie.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,8 +17,10 @@ import propra2.leihOrDie.model.User;
 
 import javax.validation.Valid;
 
+import static propra2.leihOrDie.web.ProPayWrapper.raiseBalanceOfUser;
 import static propra2.leihOrDie.web.ProPayWrapper.reserve;
 
+@Controller
 public class LoanController {
     @Autowired
     ItemRepository itemRepository;
@@ -39,9 +42,10 @@ public class LoanController {
 
         Long propayReservationId;
         try {
+            raiseBalanceOfUser(user.getEmail(), 10000);
             propayReservationId = reserve(user.getEmail(), item.getUser().getEmail(), item.getDeposit()).getId();
         } catch (Exception e) {
-            return "";
+            return "redirect:/borrowall/" + itemId.toString();
         }
 
         Loan loan = new Loan("pending", form.getLoanDuration(), user, item, propayReservationId);
@@ -49,7 +53,7 @@ public class LoanController {
 
         item.setAvailability(false);
 
-        return "";
+        return "redirect:/request/success";
     }
 
     private void saveLoan(Loan loan) {
