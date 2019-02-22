@@ -44,7 +44,7 @@ public class ItemController {
         }
 
         Item item = new Item(form.getName(), form.getDescription(), form.getCost(), form.getDeposit(), true,
-                form.getAvailableTime(), form.getLocation(), user);
+                form.getAvailableTime(), user.getAddress(), user);
         saveItem(item);
 
         return "redirect:/borrowall";
@@ -66,7 +66,6 @@ public class ItemController {
         form.setDeposit(item.getDeposit());
         form.setAvailability(item.isAvailability());
         form.setAvailableTime(item.getAvailableTime());
-        form.setLocation(item.getLocation());
 
         return "edit-item";
     }
@@ -148,7 +147,7 @@ public class ItemController {
     private void loadItemIntoForm(Model model, Item item) {
         model.addAttribute("name", item.getName());
         model.addAttribute("description", item.getDescription());
-        model.addAttribute("location", item.getLocation());
+        model.addAttribute("location", item.getUser().getAddress().getCity());
         model.addAttribute("availableTime", item.getAvailableTime());
         model.addAttribute("deposit", item.getDeposit());
         model.addAttribute("cost", item.getCost());
