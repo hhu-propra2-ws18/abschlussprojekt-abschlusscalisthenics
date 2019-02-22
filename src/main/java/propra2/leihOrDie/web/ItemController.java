@@ -43,17 +43,6 @@ public class ItemController {
             return "create-item";
         }
 
-        /*////// dummy User erstellen und in DB speichern
-        String pass = "pass";
-        Address adr = new Address();
-        adr.setCity("Düsseldorf");
-        adr.setPostcode(40225);
-        adr.setStreet("Universitätsstraße");
-        adr.setHouseNumber(1);
-        User dummyUser = new User("Max Mustermann", "kk@dd", pass, adr);
-        userRepository.save(dummyUser);
-        ///////*/
-
         Item item = new Item();
         saveItem(item, form.getName(), form.getDescription(), form.getCost(), form.getDeposit(),
                 form.getAvailableTime(), form.getLocation(), user);

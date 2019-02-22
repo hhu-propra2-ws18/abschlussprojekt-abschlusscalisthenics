@@ -31,7 +31,7 @@ public class LoanController {
     @PostMapping("/request/{id}")
     public String requestLoan(Model model, @Valid LoanForm form, @CookieValue(value="SessionID", defaultValue="") String sessionId, @PathVariable Long itemId) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
-        Item item = itemRepository.findItemById(itemId).get(0);
+        Item item = itemRepository.findById(itemId).get();
 
         if (!item.isAvailability() && form.getLoanDuration() > item.getAvailableTime()) {
             return "";
