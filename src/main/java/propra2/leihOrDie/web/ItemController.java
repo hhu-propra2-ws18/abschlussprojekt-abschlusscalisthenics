@@ -36,28 +36,28 @@ public class ItemController {
     SessionRepository sessionRepository;
 
     @PostMapping("/item/create")
-    public String new_item_post(Model model, @Valid ItemForm form, BindingResult bindingResult, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+    public String newItem(Model model, @Valid ItemForm form, BindingResult bindingResult, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
 
         if (bindingResult.hasErrors()) {
             return "create-item";
         }
 
-        Item item = new Item();
-        saveItem(item, form.getName(), form.getDescription(), form.getCost(), form.getDeposit(),
+        Item item = new Item(form.getName(), form.getDescription(), form.getCost(), form.getDeposit(), true,
                 form.getAvailableTime(), form.getLocation(), user);
+        saveItem(item);
 
         return "redirect:/borrowall";
     }
 
     @GetMapping("/item/create")
-    public String new_item_get(Model model, ItemForm form) {
+    public String newItem(Model model, ItemForm form) {
         return "create-item";
     }
 
 
     @GetMapping("/item/edit/{id}")
-    public String edit_item_get(Model model, @PathVariable Long id, ItemForm form) {
+    public String editItem(Model model, @PathVariable Long id, ItemForm form) {
         Item item = itemRepository.findById(id).get();
 
         form.setName(item.getName());
@@ -72,19 +72,19 @@ public class ItemController {
     }
 
     @PostMapping("/item/edit/{id}")
-    public String edit_item_post(Model model, @PathVariable Long id, @Valid ItemForm form, BindingResult bindingResult) {
+    public String editItem(Model model, @PathVariable Long id, @Valid ItemForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "edit-item";
         }
         Item item = itemRepository.findById(id).get();
         loadItemIntoForm(model, item);
-        saveItem(item, form.getName(), form.getDescription(), form.getCost(), form.getDeposit(), form.getAvailableTime(), form.getLocation(), item.getUser());
+        saveItem(item);
 
         return "redirect:/";
     }
 
     @GetMapping("/borrowall/{id}")
-    public String show_item_get(Model model, @PathVariable Long id) {
+    public String showItem(Model model, @PathVariable Long id) {
         Item item = itemRepository.findById(id).get();
         model.addAttribute("LoanForm", new LoanForm());
 
@@ -104,7 +104,7 @@ public class ItemController {
     }
 
     @GetMapping("/borrowall")
-    public String showItems(Model model) {
+    public String listAllItems(Model model) {
         // User is missing has to be added
         model.addAttribute("items", itemRepository.findAll());
         return "item-list";
@@ -155,14 +155,7 @@ public class ItemController {
         model.addAttribute("username", item.getUser().getUsername());
     }
 
-    private void saveItem(Item item, String name, String description, int cost, int deposit, int availableTime, String location, User user ) {
-        item.setName(name);
-        item.setDescription(description);
-        item.setCost(cost);
-        item.setDeposit(deposit);
-        item.setAvailableTime(availableTime);
-        item.setLocation(location);
-        item.setUser(user);
+    private void saveItem(Item item) {
         itemRepository.save(item);
     }
 }

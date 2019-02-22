@@ -28,16 +28,16 @@ public class LoanController {
     @Autowired
     SessionRepository sessionRepository;
 
-    @PostMapping("/request/{id}")
+    @PostMapping("/request/{itemId}")
     public String requestLoan(Model model, @Valid LoanForm form, @CookieValue(value="SessionID", defaultValue="") String sessionId, @PathVariable Long itemId) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         Item item = itemRepository.findById(itemId).get();
 
         if (!item.isAvailability() && form.getLoanDuration() > item.getAvailableTime()) {
-            return "";
+            return "redirect:/borrowall/" + itemId.toString();
         }
 
-        Long propayReservationId = null;
+        Long propayReservationId;
         try {
             propayReservationId = reserve(user.getEmail(), item.getUser().getEmail(), item.getDeposit()).getId();
         } catch (Exception e) {
