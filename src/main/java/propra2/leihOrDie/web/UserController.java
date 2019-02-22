@@ -29,8 +29,7 @@ public class UserController {
 
     @GetMapping("/user/{username}")
     public String showUser(Model model, @PathVariable String username, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
-        User user = sessionRepository.findUserBySessionCookie(sessionId);
-        if (user.getUsername() != username) {
+        if (!isAuthorized(sessionId, username)) {
             return "";
         }
         return "user";
@@ -38,12 +37,11 @@ public class UserController {
 
     @PostMapping("/user/{username}")
     public String setStatusOfLoan(Model model, @PathVariable String username, @Valid UserForm form, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
-        User user = sessionRepository.findUserBySessionCookie(sessionId);
-        if (user.getUsername() != username) {
-            return "";
+        if (!isAuthorized(sessionId, username)) {
+            return "user";
         }
 
-        return "";
+        return "user";
     }
 
     private List<Item> collectArtikel(Long[] itemID){
@@ -76,5 +74,13 @@ public class UserController {
             }
         }
         return loans;
+    }
+
+    private boolean isAuthorized(String sessionId, String username) {
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+        if (user.getUsername().equals(username)) {
+            return true;
+        }
+        return false;
     }
 }
