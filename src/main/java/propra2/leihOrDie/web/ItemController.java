@@ -86,6 +86,7 @@ public class ItemController {
     @GetMapping("/borrowall/{id}")
     public String show_item_get(Model model, @PathVariable Long id) {
         Item item = itemRepository.findById(id).get();
+        model.addAttribute("LoanForm", new LoanForm());
 
         loadItemIntoForm(model, item);
 
@@ -151,6 +152,7 @@ public class ItemController {
         model.addAttribute("availableTime", item.getAvailableTime());
         model.addAttribute("deposit", item.getDeposit());
         model.addAttribute("cost", item.getCost());
+        model.addAttribute("username", item.getUser().getUsername());
     }
 
     private void saveItem(Item item, String name, String description, int cost, int deposit, int availableTime, String location, User user ) {

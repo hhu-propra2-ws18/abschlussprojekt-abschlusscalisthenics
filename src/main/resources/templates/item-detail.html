@@ -73,7 +73,7 @@
                            Abholort:
 
                        </h3>
-                       <h4 th:text="'Verfügbarkeit: ' + ${avaliableTime}" class="subtitle is-4">
+                       <h4 th:text="'Verfügbarkeit: ' + ${availableTime}" class="subtitle is-4">
                            Verfügbarkeit:
 
                        </h4>
@@ -85,13 +85,13 @@
                            Preis pro Tag (€):
 
                        </h6>
-                       <h7 th:text="'Ausleiher: ' + ${user}" class="subtitle is-4">
+                       <h7 th:text="'Anbieter: ' + ${username}" class="subtitle is-4">
                            Ausleiher:
 
 
                        </h7>
                        <br>
-<!---
+
                        <form class="action = #" th:action="@{|/request/${id}|}" th:object="${LoanForm}" method="post"}>
                            <div class="field">
                                <label class="label">Wie viel Tagen:</label>
@@ -107,7 +107,7 @@
                            </div>
                        </p>
                        </form>
-                       --->
+
                        <p class="has-text-centered">
                        <h8 class="subtitle is-6">
                            Schickt eine Anfrage an den Besitzer des Artikels.
