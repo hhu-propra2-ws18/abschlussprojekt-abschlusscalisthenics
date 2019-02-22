@@ -7,9 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
   </head>
-  <div th:insert="fragments/header :: header"></div>
 
-  <body>
+  <body th:href="@{|/user/{username}|}">
   <div th:insert="fragments/header :: header"></div>
 <br></br>
 <br></br>
@@ -136,13 +135,15 @@
                             <div class="card-table">
                                 <div class="content">
                                     <table class="table is-fullwidth is-striped">
+
                                         <tbody>
-                                        <tr>
-                                            <td width="5%"><i class="fa fa-bell-o"></i></td>
-                                            <td>Produktname</td>
-                                            <td><a class="button is-small is-primary" >verleihen</a> <a class="button is-small is primary" >ablehnen</a> </td>
+                                        <tr th:each="item: ${pendingitems}">
+                                            <th th:text="${item.getName()}">></th>
+                                            <td><a th:href="@{'/user/${user}'}" class="button is-medium is-primary">bestätigen</a></td>
+                                            <td><a th:href="@{'/user/${user}'}" class="button is-medium is-primary is-outlined">ablehnen</a></td>
                                         </tr>
                                         </tbody>
+
                                     </table>
                                 </div>
                             </div>
