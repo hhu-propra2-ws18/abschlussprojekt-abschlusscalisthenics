@@ -32,6 +32,8 @@ public class UserController {
         if (!isAuthorized(sessionId, username)) {
             return "";
         }
+        model.addAttribute("user", username);
+        model.addAttribute("pendingitems", getPendingItems(username));
         return "user";
     }
 
