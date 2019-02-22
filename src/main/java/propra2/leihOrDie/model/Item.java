@@ -18,7 +18,7 @@ public class Item {
     private int deposit;
     private boolean availability;
     private int availableTime;
-    private String location;
+    private Address address;
 
     @ManyToOne
     @JoinColumn(name="username")
@@ -27,13 +27,14 @@ public class Item {
     public Item() {}
 
     public Item(String name, String description, int cost, int deposit, boolean availability, int availableTime,
-                User user) {
+                Address address, User user) {
         this.name = name;
         this.description = description;
         this.cost = cost;
         this.deposit = deposit;
         this.availability = availability;
         this.availableTime = availableTime;
+        this.address = address;
         this.user = user;
     }
 }
