@@ -46,13 +46,12 @@
             <div class="column is-9">
 
                 <section class="hero is-primary welcome is-small">
-                    <div class="hero-body">
+                    <div class="hero-body">git
                         <div class="container">
-                            <h1 class="title">
-                                Hallo,
+                            <h1 th:text="'Hallo, ' + ${user} +'!"class="title">
                             </h1>
                             <h2 class="subtitle">
-                                viel Spaß beim aus- und verleihen!
+                                Viel Spaß beim aus- und verleihen!
                             </h2>
                         </div>
                     </div>
@@ -62,19 +61,19 @@
                     <div class="tile is-ancestor has-text-centered">
                         <div class="tile is-parent">
                             <article class="tile is-child box">
-                                <p class="title">20</p>         <!-- HIER MUSS DIE ANZAHL DER EINGESTELLTEN PRODUKTE HIN-->
+                                <p class="title " th:text="${items.size()}"></p>         <!-- HIER MUSS DIE ANZAHL DER EINGESTELLTEN PRODUKTE HIN-->
                                 <p class="subtitle">Produkte online</p>
                             </article>
                         </div>
                         <div class="tile is-parent">
                             <article class="tile is-child box">
-                                <p class="title">2</p>          <!-- HIER MUSS DIE ANZAHL DER AUSGELIEHENEN PRODUKTE HIN-->
+                                <p class="title" th:text="${loans.size()}"></p>          <!-- HIER MUSS DIE ANZAHL DER AUSGELIEHENEN PRODUKTE HIN-->
                                 <p class="subtitle">ausgeliehene Produkte</p>
                             </article>
                         </div>
                         <div class="tile is-parent">
                             <article class="tile is-child box">
-                                <p class="title">34</p>         <!-- BEWERTUNGEN?????-->
+                                <p class="title">42</p>         <!-- BEWERTUNGEN?????-->
                                 <p class="subtitle">Bewertungen</p>
                             </article>
                         </div>
@@ -100,19 +99,14 @@
                                 <div class="content">           <!-- HIER TABELLE VON DEN ANGEBOTENEN PRODUKTEN DES USERS-->
                                     <table class="table is-fullwidth is-striped">
                                         <tbody>
-                                            <tr>
-                                                <td width="5%"><i class="fa fa-bell-o"></i></td>
-
-
-                                                <td>Produktname</td>
-                                                <td><a class="button is-small is-primary" >Artikel zurück geben</a></td>
-
-
-                                            </tr>
+                                        <tr th:each="item: ${items}">
+                                            <th><a th:href="@{'/borrowall/' + ${item.id}}" th:text="${item.getName()}"></a></th>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>

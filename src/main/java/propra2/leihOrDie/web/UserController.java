@@ -34,6 +34,8 @@ public class UserController {
         }
         model.addAttribute("user", username);
         model.addAttribute("pendingitems", getPendingItems(username));
+        model.addAttribute("loans", loanRepository.findLoansOfUser(username));
+        model.addAttribute("items", itemRepository.findItemsOfUser(username));
         return "user";
     }
 
