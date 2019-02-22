@@ -47,7 +47,8 @@ public class ItemController {
                 form.getAvailableTime(), user.getAddress(), user);
         saveItem(item);
 
-        return "redirect:/borrowall";
+        return "redirect:/item/" + item.getId() + "/uploadphoto";
+        //return "redirect:/borrowall";
     }
 
     @GetMapping("/item/create")
@@ -89,11 +90,11 @@ public class ItemController {
 
         loadItemIntoForm(model, item);
 
-        //List<Picture> pictureList = pictureRepository.findPicturesOfItem(id);
+        List<Picture> pictureList = pictureRepository.findPicturesOfItem(id);
 
 
-        //List<String> urlList = buildUrls(pictureList);
-        List<String> urlList = new ArrayList<>();
+        List<String> urlList = buildUrls(pictureList);
+        //List<String> urlList = new ArrayList<>();
         urlList.add("https://images.pexels.com/photos/730896/pexels-photo-730896.jpeg?cs=srgb&dl=adorable-animal-cat-730896.jpg");
         urlList.add("https://images.pexels.com/photos/96938/pexels-photo-96938.jpeg?cs=srgb&dl=animal-animal-photography-cat-96938.jpg");
         model.addAttribute("pictures", urlList);
