@@ -3,6 +3,8 @@ package propra2.leihOrDie.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -58,5 +60,11 @@ public class LoanController {
 
     private void saveLoan(Loan loan) {
         loanRepository.save(loan);
+    }
+
+    private String createErrorMap(String errorMessage) {
+        MultiValueMap<String, String> errorMap = new LinkedMultiValueMap<>();
+        errorMap.add("Error", errorMessage);
+        return errorMap.toString();
     }
 }
