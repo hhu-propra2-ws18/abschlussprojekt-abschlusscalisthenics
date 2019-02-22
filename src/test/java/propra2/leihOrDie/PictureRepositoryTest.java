@@ -39,7 +39,7 @@ public class PictureRepositoryTest {
     public void testSaveOnePicture() {
         User user = (new DummyUserGenerator()).generateUser();
         Item item = new Item("testitem", "das ist ein test", 200, 10,
-                true, 20, "", user);
+                true, 20, user.getAddress(), user);
         Picture pic = new Picture(item);
 
         userRepository.save(user);
