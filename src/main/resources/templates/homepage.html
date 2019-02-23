@@ -16,7 +16,13 @@
                <div class="columns is-vcentered">
                    <div class="column is-5">
                        <figure class="image is-5by4">
-                           <img alt="A picture here">
+                           <img th:src="@{/abschlussprojekt-abschlusscalisthenics/images/test.jpg}"/>
+                           <img src="/images/test.jpg"/>
+                           <img th:src="@{data:image/jpeg;base64}"/>
+                           <div class="text-center">
+                               <a href="/"><img src="/images/test.jpg" style="width: 250px;height: 250px;margin-top: 40px;"></a>
+                           </div>
+
                        </figure>
                    </div>
                    <div class="column is-6 is-offset-1">
