@@ -29,50 +29,6 @@ public class UploadController {
     @Autowired
     private PictureRepository pictureRepository;
 
-
-    /*
-    @RequestMapping(value="/item/{itemId}/uploadphoto", method=RequestMethod.POST)
-    public String singleFileUpload(@RequestParam("file") MultipartFile file,
-                                   @RequestParam("fileName") String fileName,
-                                   @RequestParam("itemId") String itemIdString,
-                                   RedirectAttributes redirectAttributes,
-                                   @PathVariable Long itemId,
-                                   Model model) {
-
-            //Long itemId = Long.parseLong(itemIdString);
-            if (file.isEmpty()) {
-                redirectAttributes.addFlashAttribute("message", "Bitte Datei zum Hochladen auswählen.");
-                return "redirect:/item/{itemId}/uploadphoto";
-            }
-
-            if (checkPictureCount(itemId)) {
-                redirectAttributes.addFlashAttribute("message", "Maximale Anzahl an Bildern ist erreicht.");
-                return "redirect:/item/{itemId}/uploadphoto";
-            }
-
-            Item item = itemRepository.findById(itemId).get();
-
-            Picture picture = new Picture(item);
-            pictureRepository.save(picture);
-            Long pictureId = picture.getId();
-
-            try {
-                Path path = buildPath(pictureId, fileName);
-                Files.write(path, file.getBytes());
-
-                redirectAttributes.addFlashAttribute("message", "Datei erfolgreich hochgeladen.");
-
-            } catch (IOException error) {
-                error.printStackTrace();
-                redirectAttributes.addFlashAttribute("message", "Fehler beim Upload.");
-
-                return "redirect:/item/{itemId}/uploadphoto";
-            }
-
-            return "redirect:/item/{itemId}/uploadphoto";
-    }
-    */
-
     @RequestMapping(value = "/item/{itemId}/uploadphoto", method = RequestMethod.POST)
     public String importParse(@RequestParam("file") MultipartFile file, @PathVariable Long itemId, RedirectAttributes redirectAttributes, Model model) {
         if (file.getSize() == 0) {
@@ -81,13 +37,20 @@ public class UploadController {
             return "redirect:/item/{itemId}/uploadphoto";
         }
 
-        else if (checkPictureCount(itemId)) {
+        if (checkPictureCount(itemId)) {
             redirectAttributes.addFlashAttribute("message", "Maximale Anzahl an Bildern ist erreicht.");
             redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
             return "redirect:/item/{itemId}/uploadphoto";
         }
 
         else {
+            int count = pictureRepository.findPicturesOfItem(itemId).size() + 1;
+            if (count > 0) {
+                redirectAttributes.addFlashAttribute("message", "Sie haben schon "
+                        + count + " Fotos hochgeladen");
+                redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
+            }
+
             Item item = itemRepository.findById(itemId).get();
 
             Picture picture = new Picture(item);
@@ -110,7 +73,6 @@ public class UploadController {
             return "redirect:/item/{itemId}/uploadphoto";
         }
 
-        //return "redirect:/";
     }
 
     @RequestMapping(value = "/item/{itemId}/uploadphoto", method = RequestMethod.GET)
@@ -130,16 +92,4 @@ public class UploadController {
         List<Picture> pictureList = pictureRepository.findPicturesOfItem(itemId);
         return (pictureList.size() > (MAX_NUMBER_OF_PICTURES - 1));
     }
-
-    /*
-    @GetMapping(value="/image/uploadSuccessful")
-    public String uploadSuccessful() {
-        return "uploadStatus";
-    }
-
-    @GetMapping(value="/image/uploadFailed")
-    public String uploadFailed() {
-        return "uploadStatus";
-    }
-    */
 }

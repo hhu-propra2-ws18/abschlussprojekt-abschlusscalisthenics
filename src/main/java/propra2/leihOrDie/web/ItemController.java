@@ -48,7 +48,6 @@ public class ItemController {
         saveItem(item);
 
         return "redirect:/item/" + item.getId() + "/uploadphoto";
-        //return "redirect:/borrowall";
     }
 
     @GetMapping("/item/create")
@@ -94,7 +93,6 @@ public class ItemController {
 
 
         List<String> urlList = buildUrls(pictureList);
-        //List<String> urlList = new ArrayList<>();
         urlList.add("https://images.pexels.com/photos/730896/pexels-photo-730896.jpeg?cs=srgb&dl=adorable-animal-cat-730896.jpg");
         urlList.add("https://images.pexels.com/photos/96938/pexels-photo-96938.jpeg?cs=srgb&dl=animal-animal-photography-cat-96938.jpg");
         model.addAttribute("pictures", urlList);
@@ -105,24 +103,9 @@ public class ItemController {
 
     @GetMapping("/borrowall")
     public String listAllItems(Model model) {
-        // User is missing has to be added
         model.addAttribute("items", itemRepository.findAll());
         return "item-list";
     }
-
-    /*
-    @RequestMapping(value ="/borrowall/{id}", method=RequestMethod.GET)
-    public String retrieveAllImages(@RequestParam("itemId") String itemIdString,
-                                    RedirectAttributes redirectAttributes) {
-        Long itemId = Long.parseLong(itemIdString);
-
-        List<Picture> pictureList = pictureRepository.findPicturesOfItem(itemId);
-
-        List<String> urlList = buildUrls(pictureList);
-
-        return "dummy";
-    }
-    */
 
     private List<String> buildUrls(List<Picture> pictureList) {
         List<String> urlList = new ArrayList<>();
