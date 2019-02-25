@@ -16,15 +16,18 @@ public class User {
     private String email;
     private String password;
 
+    private String role;
+
     @Embedded
     private Address address;
 
     public User() {}
 
-    public User(String username, String email, String password, Address address) {
+    public User(String username, String email, String password, String role, Address address) {
         this.username = username;
         this.email = email;
         this.password = BCrypt.hashpw(password, BCrypt.gensalt());
+        this.role = role;
         this.address = address;
     }
 
