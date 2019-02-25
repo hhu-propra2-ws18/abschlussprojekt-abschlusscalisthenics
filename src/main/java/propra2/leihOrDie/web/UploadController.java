@@ -22,7 +22,7 @@ public class UploadController {
 
     int MAX_NUMBER_OF_PICTURES = 10;
 
-    private static String UPLOADFOLDER = "static/images/";
+    private static String UPLOADFOLDER = "src/main/resources/static/images/";
 
     @Autowired
     private ItemRepository itemRepository;
@@ -54,6 +54,7 @@ public class UploadController {
             Item item = itemRepository.findById(itemId).get();
 
             Picture picture = new Picture(item);
+            picture.setType(file.getOriginalFilename().substring(file.getOriginalFilename().indexOf('.')));
             pictureRepository.save(picture);
             Long pictureId = picture.getId();
 
@@ -65,9 +66,6 @@ public class UploadController {
             } catch (IOException error) {
                 error.printStackTrace();
                 model.addAttribute("message", "Fehler beim Upload.");
-
-                //return "redirect:/item/{itemId}/uploadphoto";
-                return "redirect:/";
             }
 
             return "redirect:/item/{itemId}/uploadphoto";
