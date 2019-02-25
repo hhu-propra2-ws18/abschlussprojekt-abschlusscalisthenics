@@ -39,15 +39,6 @@ public class UserController {
         return "user";
     }
 
-    @PostMapping("/user/{username}")
-    public String setStatusOfLoan(Model model, @PathVariable String username, @Valid UserForm form, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
-        if (!isAuthorized(sessionId, username)) {
-            return "user";
-        }
-
-        return "user";
-    }
-
     private List<Item> collectArtikel(Long[] itemID){
         List<Item> items = new ArrayList<>();
         if (itemID == null)

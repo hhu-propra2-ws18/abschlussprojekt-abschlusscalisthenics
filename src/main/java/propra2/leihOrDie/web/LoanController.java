@@ -58,6 +58,36 @@ public class LoanController {
         return "redirect:/request/success";
     }
 
+    @PostMapping("/request/accept/{loanId}")
+    public String changeStatusToAccepted(Model model, @PathVariable Long loanId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        Loan loan = loanRepository.findById(loanId).get();
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+        Item item = itemRepository.findById(loan.getItem().getId()).get();
+
+        if (!isAuthorized(sessionId, loan.getItem().getId())) {
+            return "redirect:/request/failed";
+        }
+
+        Long propayReservationId;
+        try {
+            raiseBalanceOfUser(user.getEmail(), 10000);
+            propayReservationId = reserve(user.getEmail(), item.getUser().getEmail(), item.getDeposit()).getId();
+        } catch (Exception e) {
+            return "redirect:/sourceAndTargetMustBeDifferent/";
+        }
+
+        loan.setState("accepted");
+        loan.setPropayReservationId(propayReservationId);
+        loanRepository.save(loan);
+
+        return "redirect:/request/success";
+    }
+
+    @PostMapping("/request/decline/{itemID}")
+    public String changeStatusToDecline() {
+        return "user";
+    }
+
     private void saveLoan(Loan loan) {
         loanRepository.save(loan);
     }
@@ -66,5 +96,14 @@ public class LoanController {
         MultiValueMap<String, String> errorMap = new LinkedMultiValueMap<>();
         errorMap.add("Error", errorMessage);
         return errorMap.toString();
+    }
+
+    private boolean isAuthorized(String sessionId, Long itemId) {
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+        Item item = itemRepository.findById(itemId).get();
+        if (user.getUsername().equals(item.getUser().getUsername())) {
+            return true;
+        }
+        return false;
     }
 }
