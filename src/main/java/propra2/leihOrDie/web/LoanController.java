@@ -1,13 +1,12 @@
 package propra2.leihOrDie.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
-
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import propra2.leihOrDie.dataaccess.ItemRepository;
@@ -33,25 +32,31 @@ public class LoanController {
     @Autowired
     SessionRepository sessionRepository;
 
-    @PostMapping(value="/request/{itemId}", produces="application/json")
+    // 0 error
+
+    @PostMapping(value="/request/{itemId}")
     @ResponseBody
-    public MultiValueMap<String, String> requestLoan(Model model, @Valid LoanForm form, @CookieValue(value="SessionID", defaultValue="") String sessionId, @PathVariable Long itemId) {
+    public ResponseEntity requestLoan(Model model, @Valid LoanForm form, @CookieValue(value="SessionID", defaultValue="") String sessionId, @PathVariable Long itemId) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         Item item = itemRepository.findById(itemId).get();
 
+        if (form.getLoanDuration() == 0) {
+            return createErrorResponse("Die minimale Ausleihdauer beträgt einen Tag.");
+        }
+
         if (!item.isAvailability()) {
-           return createErrorDict("Gegenstand ist nicht verfügbar.");
+           return createErrorResponse("Dieser Gegenstand ist nicht verfügbar.");
         }
 
         if (form.getLoanDuration() > item.getAvailableTime()) {
-            return createErrorDict("Maximale Ausleihdauer ist überschritten.");
+            return createErrorResponse("Die maximale Ausleihdauer ist überschritten.");
         }
 
         if (item.getUser() == user) {
-            return createErrorDict("Du kannst deinen eigenen Gegenstand nicht ausleihen");
+            return createErrorResponse("Du kannst deinen eigenen Gegenstand nicht ausleihen.");
         }
 
-        Long proPayReservationId = null;
+        Long proPayReservationId = new Long(0);
 
         Loan loan = new Loan("pending", form.getLoanDuration(), user, item, proPayReservationId);
         saveLoan(loan);
@@ -59,7 +64,7 @@ public class LoanController {
         item.setAvailability(false);
         itemRepository.save(item);
 
-        return createSuccessDict();
+        return createSuccessResponse();
     }
 
     @PostMapping("/request/accept/{loanId}")
@@ -105,24 +110,19 @@ public class LoanController {
         loanRepository.save(loan);
     }
 
-    private MultiValueMap<String, String> createErrorDict(String errorMessage) {
-        MultiValueMap<String, String> errorMap = new LinkedMultiValueMap<>();
-        errorMap.add("Error", errorMessage);
-        return errorMap;
+    private ResponseEntity createErrorResponse(String errorMessage) {
+        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
-    private MultiValueMap<String, String> createSuccessDict() {
-        MultiValueMap<String, String> succcessMap = new LinkedMultiValueMap<>();
-        succcessMap.add("Success", "Eine Anfrage wurde gesendet.");
-        return succcessMap;
+    private ResponseEntity createSuccessResponse() {
+        String message = "Eine Anfrage wurde gesendet.";
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     private boolean isAuthorized(String sessionId, Long itemId) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         Item item = itemRepository.findById(itemId).get();
-        if (user.getUsername().equals(item.getUser().getUsername())) {
-            return true;
-        }
-        return false;
+        
+        return user.getUsername().equals(item.getUser().getUsername());
     }
 }

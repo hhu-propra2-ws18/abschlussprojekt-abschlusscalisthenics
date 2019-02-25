@@ -1,7 +1,6 @@
 package propra2.leihOrDie.model;
 
 import lombok.Data;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
@@ -15,7 +14,6 @@ public class Loan {
 
     private String state;
     private int duration;
-    @Nullable
     private long proPayReservationId;
 
     @ManyToOne
