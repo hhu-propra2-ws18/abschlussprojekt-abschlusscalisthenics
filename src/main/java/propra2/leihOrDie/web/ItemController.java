@@ -24,7 +24,7 @@ import java.util.List;
 @Controller
 public class ItemController {
 
-    private static String UPLOADFOLDER = "images/";
+    private static String UPLOADFOLDER = "static/images/";
 
     @Autowired
     ItemRepository itemRepository;
@@ -122,7 +122,7 @@ public class ItemController {
     }
 
     private String buildUrl(Picture picture) {
-        String raw = "/images/";
+        String raw = "/static/images/";
         String idString = picture.getId().toString();
 
         return raw + idString;
