@@ -1,4 +1,13 @@
 package propra2.leihOrDie.web;
 
-public class ConflictForm {
+import lombok.Data;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+
+@Data
+class ConflictForm {
+    @NotNull
+    @Email
+    private String covenanteeEmail;
 }
