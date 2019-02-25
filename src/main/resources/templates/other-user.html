@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hallo!</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+</head>
+
+<body class="has-navbar-fixed-top" th:href="@{|/user/{username}|}">
+<div th:insert="fragments/header :: header"></div>
+<br></br>
+<br></br>
+
+<div class="container has-text-centered">
+
+            <section class="hero is-primary welcome is-small is-outlined">
+                <div class="hero-body">
+                    <div class="container">
+                        <h1 th:text="'Hi, ich bins ' + ${user} +'!'" class="title">
+                        </h1>
+                        <h2 class="subtitle">
+                            Hier könnte personalisierter Text stehen (oder auch nicht).
+                        </h2>
+                    </div>
+                </div>
+            </section>
+            <br></br>
+
+    <section class="info-tiles">
+        <div class="tile is-ancestor has-text-centered">
+            <div class="tile is-parent">
+                <article class="tile is-child box">
+                    <p class="title">Kurz zu mir:</p>
+                    <p class="subtitle">Hier könnte ein Text stehen, wenn man eine Datenbank dafür hätte.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+            <section class="info-tiles">
+                <div class="tile is-ancestor has-text-centered">
+                    <div class="tile is-parent">
+                        <article class="tile is-child box">
+                            <p class="title" th:text="${items.size()}"></p>
+                            <p class="subtitle">Produkte online</p>
+                        </article>
+                    </div>
+                    <div class="tile is-parent">
+                        <article class="tile is-child box">
+                            <p class="title has-text-danger">42</p>
+                            <p class="subtitle">Bewertungen</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <div class="columns">
+                <div class="column is-6">
+                    <div class="card events-card">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                Diese Produkte biete ich momentan an:
+                            </p>
+                        </header>
+                        <div class="card-table">
+                            <div class="content">
+                                <table class="table is-fullwidth is-striped is-outlined">
+                                    <tbody>
+                                    <tr th:each="item: ${items}">
+                                        <th><a th:href="@{'/borrowall/' + ${item.id}}" th:text="${item.getName()}"></a></th>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+</body>
+
+</html>

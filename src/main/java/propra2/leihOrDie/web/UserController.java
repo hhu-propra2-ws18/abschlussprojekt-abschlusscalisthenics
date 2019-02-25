@@ -45,11 +45,12 @@ public class UserController {
         return "user";
     }
 
-    /*@GetMapping("/user/{username}")
+    @GetMapping("/user/{username}")
     public String showUser(Model model, @PathVariable String username, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
-
-        return "homepage";
-    }*/
+        model.addAttribute("user", username);
+        model.addAttribute("items", itemRepository.findItemsOfUser(username));
+        return "other-user";
+    }
 
     @GetMapping("/user/propay/{username}")
     public String showPropay(Model model, @PathVariable String username, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
