@@ -152,6 +152,7 @@ public class ItemController {
         model.addAttribute("deposit", item.getDeposit());
         model.addAttribute("cost", item.getCost());
         model.addAttribute("username", item.getUser().getUsername());
+        model.addAttribute("isAvailable", item.isAvailability());
     }
 
     private void saveItem(Item item) {
