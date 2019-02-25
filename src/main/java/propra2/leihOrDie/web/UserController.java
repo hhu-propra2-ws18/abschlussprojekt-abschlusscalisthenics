@@ -37,9 +37,11 @@ public class UserController {
     public String showUserPage(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         String username = user.getUsername();
-        if (!isAuthorized(sessionId, username)) {
+
+        if (!isAuthorized(user, username)) {
             return "";
         }
+
         model.addAttribute("user", username);
         model.addAttribute("pendingitems", getPendingItems(username));
         model.addAttribute("loans", loanRepository.findLoansOfUser(username));
@@ -57,10 +59,12 @@ public class UserController {
 
     @GetMapping("/user/propay/{username}")
     public String showPropay(Model model, @PathVariable String username, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
-        if (!isAuthorized(sessionId, username)) {
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+
+        if (!isAuthorized(user, username)) {
             return "";
         }
-        User user = userRepository.findById(username).get();
+
         double bankBalance = getBalanceOfUser(user.getEmail());
 
         //List<Long> transactionIds = getTransactionsOfUser(username);
@@ -74,7 +78,8 @@ public class UserController {
     @PostMapping("/user/propay/{username}")
     public String doTransaction(Model model, @PathVariable String username, @Valid TransactionForm form, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
-        if (!isAuthorized(sessionId, username)) {
+
+        if (!isAuthorized(user, username)) {
             return "";
         }
         raiseBalanceOfUser(user.getEmail(), form.getAmount);
@@ -104,8 +109,7 @@ public class UserController {
         return loans;
     }
 
-    private boolean isAuthorized(String sessionId, String username) {
-        User user = sessionRepository.findUserBySessionCookie(sessionId);
+    private boolean isAuthorized(User user, String username) {
         return user.getUsername().equals(username);
     }
 
