@@ -5,10 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import propra2.leihOrDie.dataaccess.ItemRepository;
 import propra2.leihOrDie.dataaccess.LoanRepository;
 import propra2.leihOrDie.dataaccess.SessionRepository;
@@ -18,6 +15,8 @@ import propra2.leihOrDie.model.Loan;
 import propra2.leihOrDie.model.User;
 
 import javax.validation.Valid;
+
+import java.util.List;
 
 import static propra2.leihOrDie.web.ProPayWrapper.*;
 
@@ -186,6 +185,18 @@ public class LoanController {
         itemRepository.save(item);
 
         return createSuccessResponse("Konflikt wurde gelöst.");
+    }
+
+    @GetMapping("/conflict/admin")
+    public String getOpenConflicts(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        if (!isAdmin(sessionId)) {
+            return "redirect:/";
+        }
+
+        List<Loan> openConflicts = loanRepository.findLoansByState("conflict");
+        model.addAttribute("conflicts", openConflicts);
+
+        return "admin";
     }
 
     private ResponseEntity createBadRequestResponse(String errorMessage) {
