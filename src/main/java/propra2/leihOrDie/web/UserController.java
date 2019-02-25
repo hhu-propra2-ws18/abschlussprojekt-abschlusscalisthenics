@@ -7,12 +7,10 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import propra2.leihOrDie.dataaccess.ItemRepository;
-import propra2.leihOrDie.dataaccess.LoanRepository;
-import propra2.leihOrDie.dataaccess.SessionRepository;
-import propra2.leihOrDie.dataaccess.UserRepository;
+import propra2.leihOrDie.dataaccess.*;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Loan;
+import propra2.leihOrDie.model.Transaction;
 import propra2.leihOrDie.model.User;
 
 import javax.validation.Valid;
@@ -31,7 +29,7 @@ public class UserController {
     @Autowired
     private SessionRepository sessionRepository;
     @Autowired
-    private UserRepository userRepository;
+    private TransactionRepository transactionRepository;
 
     @GetMapping("/myaccount")
     public String showUserPage(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
@@ -67,10 +65,10 @@ public class UserController {
 
         double bankBalance = getBalanceOfUser(user.getEmail());
 
-        //List<Long> transactionIds = getTransactionsOfUser(username);
+        List<Transaction> transactions = transactionRepository.findAllTransactionsOfUser(user.getUsername());
 
-        model.addAttribute(bankBalance);
-        //model.addAttribute(transactionIds);
+        model.addAttribute("bankBalance", bankBalance);
+        model.addAttribute("transactions", transactions);
 
         return "";
     }
@@ -84,16 +82,6 @@ public class UserController {
         }
         raiseBalanceOfUser(user.getEmail(), form.getAmount);
         return "";
-    }
-
-    private List<Item> collectArtikel(Long[] itemID){
-        List<Item> items = new ArrayList<>();
-        if (itemID == null)
-            return items;
-        for (int i=0; i<itemID.length; i++){
-    //        items.add(ItemRepository.findById(itemID[i].get());
-        }
-        return items;
     }
 
     private List<Loan> getPendingItems(String username) {
@@ -111,26 +99,5 @@ public class UserController {
 
     private boolean isAuthorized(User user, String username) {
         return user.getUsername().equals(username);
-    }
-
-    private List<Long> getTransactionsOfUser(String username) {
-        List<Item> itemsOfUser = itemRepository.findItemsOfUser(username);
-        List<Long> reservationIds = new ArrayList<>();
-
-        for (Item item: itemsOfUser) {
-            reservationIds = getReservationIdsOfItem(item, reservationIds);
-        }
-
-        return reservationIds;
-    }
-
-    private List<Long> getReservationIdsOfItem(Item item, List<Long> reservationIds) {
-        List<Loan> loansOfItem = loanRepository.findLoansOfItem(item.getId());
-
-        for (Loan loan: loansOfItem) {
-            reservationIds.add(loan.getProPayReservationId());
-        }
-
-        return reservationIds;
     }
 }
