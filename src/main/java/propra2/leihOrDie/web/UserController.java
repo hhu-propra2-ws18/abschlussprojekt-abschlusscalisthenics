@@ -30,8 +30,10 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/user/{username}")
-    public String showUser(Model model, @PathVariable String username, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+    @GetMapping("/myaccount")
+    public String showUserPage(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+        String username = user.getUsername();
         if (!isAuthorized(sessionId, username)) {
             return "";
         }
@@ -39,8 +41,15 @@ public class UserController {
         model.addAttribute("pendingitems", getPendingItems(username));
         model.addAttribute("loans", loanRepository.findLoansOfUser(username));
         model.addAttribute("items", itemRepository.findItemsOfUser(username));
+
         return "user";
     }
+
+    /*@GetMapping("/user/{username}")
+    public String showUser(Model model, @PathVariable String username, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+
+        return "homepage";
+    }*/
 
     @GetMapping("/user/propay/{username}")
     public String showPropay(Model model, @PathVariable String username, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
