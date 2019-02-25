@@ -18,6 +18,7 @@ import propra2.leihOrDie.model.User;
 
 
 import javax.validation.Valid;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,10 +123,10 @@ public class ItemController {
     }
 
     private String buildUrl(Picture picture) {
-        String raw = "/static/images/";
+        String raw = "/images/";
         String idString = picture.getId().toString();
 
-        return raw + idString;
+        return raw + idString + picture.getType();
     }
 
     private void loadItemIntoForm(Model model, Item item) {
