@@ -90,23 +90,16 @@
                    <div class="container">
                        <div id="myCarousel" class="carousel slide" data-ride="carousel">
 
-                           <!-- Indicators-->
-                           <ol class="carousel-indicators">
-                               <th:block th:each="num : ${numOfPictures}">
-                                   <li data-target="#myCarousel" th:attr="data-slide-to=${num}" class=""></li>
-                               </th:block>
-                           </ol>
 
-                           <!--
                           <ol class="carousel-indicators">
                               <li data-target="#myCarousel" th:attr="data-slide-to=0" class="active'"></li>
                               <li data-target="#myCarousel" th:attr="data-slide-to=1"></li>
-                          </ol>-->
+                          </ol>
 
                            <!-- Wrapper for slides-->
                            <div class="carousel-inner">
                                <div th:each= "picture : ${pictures}" class="item active">
-                                   <img th:src="${picture}" alt="cats" style="width:100%;">
+                                   <img th:src="${picture}" style="width:100%;">
                                </div>
                            </div>
 
@@ -129,6 +122,7 @@
                        </div>
 
                    </div>
+
 
                    <div class="column is-6 is-offset-1">
                      <p class="has-text-right">
