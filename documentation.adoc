@@ -65,7 +65,15 @@ nach den Fremdschlüsseln filtern kann.
 . Arbeit an der Formvalidation vom ItemController
 . Arbeit am ErrorController wurde begonnen
 . Man hat sich darauf geeinigt für das Login Spring Security zu verwenden
-. docker-compose ist fertig, man sich für die Entwicklung entschieden eine "Testdatenbank" zu benutzen,
+. docker-compose ist fertig, man hat sich für die Entwicklung entschieden eine "Testdatenbank" zu benutzen,
 da das Aufsetzen Zeit kostet und für das Testen den Workflow behindert
 
-## Tag 7
+## Tag 7 + 8 + 9 + 10
+. Die Idee, die Authentifizierung mit Spring Security zu implementieren, wurde verworfen, weil ...
+. der Fotoupload wurde überarbeitet und funktioniert
+.. Der Wunsch war eine Art slideshow zu implementieren, die aus irgendeinem Grund nicht funktioniert
+auf der item-detail Seite
+. Passwörter wurden implementiert, da eine Service ohne Passwörter unnatürlich ist
+. Die Templates wurden im Laufe der Tage angepasst oder umgeändert. Das Layout passt sich unter anderem der Geschäftslogik
+an, ohne dabei seine Essenz zu verlieren.
+.
