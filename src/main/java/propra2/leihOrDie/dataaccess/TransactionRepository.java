@@ -8,7 +8,10 @@ import propra2.leihOrDie.model.Transaction;
 import java.util.List;
 
 public interface TransactionRepository extends CrudRepository<Transaction, Long> {
-        List<Transaction> findAll();
+    List<Transaction> findAll();
+
+    @Query("SELECT t FROM Transaction t WHERE t.fromUser.username = :username OR t.toUser.username = :username")
+    List<Transaction> findAllTransactionsOfUser(@Param("username") String username);
 
     @Query("SELECT t FROM Transaction t WHERE t.fromUser.username = :username")
     List<Transaction> findTransactionsFromUser(@Param("username") String username);
