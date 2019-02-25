@@ -32,8 +32,6 @@ public class LoanController {
     @Autowired
     SessionRepository sessionRepository;
 
-    // 0 error
-
     @PostMapping(value="/request/{itemId}")
     @ResponseBody
     public ResponseEntity requestLoan(Model model, @Valid LoanForm form, @CookieValue(value="SessionID", defaultValue="") String sessionId, @PathVariable Long itemId) {
@@ -56,7 +54,12 @@ public class LoanController {
             return createErrorResponse("Du kannst deinen eigenen Gegenstand nicht ausleihen.");
         }
 
-        Long proPayReservationId = new Long(0);
+        Long proPayReservationId;
+        try {
+            proPayReservationId = reserve(user.getEmail(), item.getUser().getEmail(), item.getDeposit()).getId();
+        } catch (Exception e) {
+            return createErrorResponse("ProPay Fehler");
+        }
 
         Loan loan = new Loan("pending", form.getLoanDuration(), user, item, proPayReservationId);
         saveLoan(loan);
@@ -64,48 +67,39 @@ public class LoanController {
         item.setAvailability(false);
         itemRepository.save(item);
 
-        return createSuccessResponse();
+        return createSuccessResponse("Eine Anfrage wurde gesendet.");
     }
 
     @PostMapping("/request/accept/{loanId}")
-    public String changeStatusToAccepted(Model model, @PathVariable Long loanId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+    public ResponseEntity changeStatusToAccepted(Model model, @PathVariable Long loanId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         Loan loan = loanRepository.findById(loanId).get();
-        User user = sessionRepository.findUserBySessionCookie(sessionId);
-        Item item = itemRepository.findById(loan.getItem().getId()).get();
 
         if (!isAuthorized(sessionId, loan.getItem().getId())) {
-            return "";
-        }
-
-        Long propayReservationId;
-        try {
-            propayReservationId = reserve(loan.getUser().getEmail(), item.getUser().getEmail(), item.getDeposit()).getId();
-        } catch (Exception e) {
-            return "";
+            return createErrorResponse("Du bist nicht authorisiert diese Aktion durchzuführen");
         }
 
         loan.setState("accepted");
-        loan.setProPayReservationId(propayReservationId);
         loanRepository.save(loan);
 
-        item.setAvailability(true);
-        itemRepository.save(item);
-
-        return "";
+        return createSuccessResponse("Bestätigt.");
     }
 
-    @PostMapping("/request/decline/{itemID}")
-    public String changeStatusToDeclined(Model model, @PathVariable Long loanId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+    @PostMapping("/request/decline/{loanId}")
+    public ResponseEntity changeStatusToDeclined(Model model, @PathVariable Long loanId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         Loan loan = loanRepository.findById(loanId).get();
+        Item item = itemRepository.findById(loan.getItem().getId()).get();
 
         if (!isAuthorized(sessionId, loan.getItem().getId())) {
-            return "";
+            return createErrorResponse("Du bist nicht authorisiert diese Aktion durchzuführen");
         }
 
         loan.setState("declined");
         loanRepository.save(loan);
 
-        return "";
+        item.setAvailability(true);
+        itemRepository.save(item);
+
+        return createSuccessResponse("Bestätigt.");
     }
 
     private void saveLoan(Loan loan) {
@@ -116,9 +110,8 @@ public class LoanController {
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
-    private ResponseEntity createSuccessResponse() {
-        String message = "Eine Anfrage wurde gesendet.";
-        return new ResponseEntity<>(message, HttpStatus.OK);
+    private ResponseEntity createSuccessResponse(String successMessage) {
+        return new ResponseEntity<>(successMessage, HttpStatus.OK);
     }
 
     private boolean isAuthorized(String sessionId, Long itemId) {
