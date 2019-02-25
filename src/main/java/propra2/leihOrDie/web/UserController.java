@@ -6,7 +6,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import propra2.leihOrDie.dataaccess.ItemRepository;
 import propra2.leihOrDie.dataaccess.LoanRepository;
 import propra2.leihOrDie.dataaccess.SessionRepository;
@@ -14,7 +13,6 @@ import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Loan;
 import propra2.leihOrDie.model.User;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,15 +37,6 @@ public class UserController {
         return "user";
     }
 
-    @PostMapping("/user/{username}")
-    public String setStatusOfLoan(Model model, @PathVariable String username, @Valid UserForm form, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
-        if (!isAuthorized(sessionId, username)) {
-            return "user";
-        }
-
-        return "user";
-    }
-
     private List<Item> collectArtikel(Long[] itemID){
         List<Item> items = new ArrayList<>();
         if (itemID == null)
@@ -56,15 +45,6 @@ public class UserController {
     //        items.add(ItemRepository.findById(itemID[i].get());
         }
         return items;
-    }
-
-    private void loadAusgelieheneArtikel(Model model, Item item){
-        model.addAttribute("id", item.getId());
-        model.addAttribute("name", item.getName());
-    }
-    private void loadArtikelAnfragen(Model model, Item item){
-        model.addAttribute("id", item.getId());
-        model.addAttribute("Name", item.getName());
     }
 
     private List<Loan> getPendingItems(String username) {
