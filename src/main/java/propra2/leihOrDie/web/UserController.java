@@ -50,6 +50,8 @@ public class UserController {
         User user = userRepository.findById(username).get();
         double kontostand = getBalanceOfUser(user.getEmail());
 
+
+
         model.addAttribute(kontostand);
         return "";
     }
