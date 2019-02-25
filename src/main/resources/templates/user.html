@@ -133,8 +133,16 @@
                                         <tbody>
                                         <tr th:each="item: ${pendingitems}">
                                             <th th:text="${item.getItem().getName()}">></th>
-                                            <td><a th:href="@{'/user/${user}'}" class="button is-medium is-primary">bestätigen</a></td>
-                                            <td><a th:href="@{'/user/${user}'}" class="button is-medium is-primary is-outlined">ablehnen</a></td>
+                                            <td>
+                                                <form method="POST" th:action="@{'/request/accept/' + ${item.getId()}}">
+                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary">bestätigen</button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form method="POST" th:action="@{'/request/decline/' + ${item.getId()}}">
+                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">ablehnen</button>
+                                                </form>
+                                            </td>
                                         </tr>
                                         </tbody>
 
