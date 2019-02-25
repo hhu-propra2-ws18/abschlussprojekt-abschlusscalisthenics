@@ -1,8 +1,12 @@
 package propra2.leihOrDie.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Date;
 
+@Data
+@Entity
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
