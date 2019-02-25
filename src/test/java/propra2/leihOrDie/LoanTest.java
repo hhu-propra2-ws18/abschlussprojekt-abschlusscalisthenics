@@ -2,12 +2,10 @@ package propra2.leihOrDie;
 
 import org.junit.Assert;
 import org.junit.Test;
-import propra2.leihOrDie.model.Address;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Loan;
 import propra2.leihOrDie.model.User;
 
-import java.security.MessageDigest;
 
 public class LoanTest {
     @Test
@@ -21,6 +19,6 @@ public class LoanTest {
         Assert.assertEquals(19, loan.getDuration());
         Assert.assertEquals(user, loan.getUser());
         Assert.assertEquals(item, loan.getItem());
-        Assert.assertEquals(20, loan.getPropayReservationId());
+        Assert.assertEquals(20, loan.getProPayReservationId());
     }
 }

@@ -14,7 +14,7 @@ public class UserTest {
 
         String password = "qwerty";
 
-        User user = new User("testuser", "test@email.de", password, address);
+        User user = new User("testuser", "test@email.de", password, "USER", address);
 
         Assert.assertEquals("testuser", user.getUsername());
         Assert.assertEquals(address, user.getAddress());

@@ -45,7 +45,7 @@ public class UploadControllerTest {
     public void setUp() {
         String password= "password";
         Address address = new Address(1337, "TestStreet", 42, "TestCity");
-        User testUser = new User("name", "email@test.de", password, address);
+        User testUser = new User("name", "email@test.de", password, "USER", address);
         userRepository.save(testUser);
 
         Item testItem = new Item("name", "description", 314, 1, true, 1, testUser.getAddress(), testUser);
@@ -57,12 +57,13 @@ public class UploadControllerTest {
         List<Picture> pictureList = pictureRepository.findAll();
         String pictureId = Long.toString(pictureList.get(0).getId());
 
-        File file = new File("images/" + pictureId + ".jpg");
-
-        file.delete();
         pictureRepository.deleteAll();
         itemRepository.deleteAll();
         userRepository.deleteAll();
+
+        File file = new File("images/" + pictureId + ".jpg");
+
+        file.delete();
     }
 
 
