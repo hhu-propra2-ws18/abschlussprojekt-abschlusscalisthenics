@@ -51,7 +51,7 @@ public class DatabaseInitializer implements ServletContextInitializer {
         User user10 = new User("florian", "florian@web.de", "florian1234", "USER",
                 new Address(32452, "Heinrich-Heine-Allee", 3, "Nuernberg"));
 
-        userRepository.saveAll(Arrays.asList(user1, user2, user3, user4, user5, user6, user7, user8,
+        userRepository.saveAll(Arrays.asList(user0, user1, user2, user3, user4, user5, user6, user7, user8,
                 user9, user10));
 
         raiseBalanceOfUser(user1.getEmail(), 10000);
