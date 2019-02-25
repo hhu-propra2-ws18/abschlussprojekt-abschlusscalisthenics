@@ -53,14 +53,7 @@ public class LoanController {
             return createErrorDict("Du kannst deinen eigenen Gegenstand nicht ausleihen");
         }
 
-        Long proPayReservationId;
-        try {
-            raiseBalanceOfUser(user.getEmail(), 10000);
-            proPayReservationId = reserve(user.getEmail(), item.getUser().getEmail(), item.getDeposit()).getId();
-        } catch (Exception e) {
-            // TODO: Differentiate Propay error cases
-            return createErrorDict("ProPay Fehler");
-        }
+        Long proPayReservationId = null;
 
         Loan loan = new Loan("pending", form.getLoanDuration(), user, item, proPayReservationId);
         saveLoan(loan);

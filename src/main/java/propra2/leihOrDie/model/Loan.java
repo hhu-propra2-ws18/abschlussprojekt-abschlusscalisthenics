@@ -1,6 +1,7 @@
 package propra2.leihOrDie.model;
 
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
@@ -14,7 +15,8 @@ public class Loan {
 
     private String state;
     private int duration;
-    private long propayReservationId;
+    @Nullable
+    private long proPayReservationId;
 
     @ManyToOne
     @JoinColumn(name="username")
@@ -26,8 +28,8 @@ public class Loan {
 
     public Loan() {}
 
-    public Loan(String state, int duration, User user, Item item, long propayReservationId) {
-        this.propayReservationId = propayReservationId;
+    public Loan(String state, int duration, User user, Item item, long proPayReservationId) {
+        this.proPayReservationId = proPayReservationId;
         this.state = state;
         this.duration = duration;
         this.user = user;
