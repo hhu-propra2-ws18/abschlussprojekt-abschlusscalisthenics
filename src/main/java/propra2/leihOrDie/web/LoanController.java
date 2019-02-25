@@ -196,7 +196,7 @@ public class LoanController {
         List<Loan> openConflicts = loanRepository.findLoansByState("conflict");
         model.addAttribute("conflicts", openConflicts);
 
-        return "admin";
+        return "conflict-list";
     }
 
     private ResponseEntity createBadRequestResponse(String errorMessage) {
