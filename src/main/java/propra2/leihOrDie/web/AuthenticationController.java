@@ -54,6 +54,7 @@ public class AuthenticationController {
         user.setUsername(name);
         user.setPassword(password);
         user.setEmail(email);
+        user.setRole("USER");
         user.setAddress(address);
         userRepository.save(user);
     }
