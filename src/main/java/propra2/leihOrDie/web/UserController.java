@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import propra2.leihOrDie.dataaccess.ItemRepository;
 import propra2.leihOrDie.dataaccess.LoanRepository;
 import propra2.leihOrDie.dataaccess.SessionRepository;
@@ -57,13 +58,18 @@ public class UserController {
             return "";
         }
         User user = userRepository.findById(username).get();
-        double kontostand = getBalanceOfUser(user.getEmail());
+        double bankBalance = getBalanceOfUser(user.getEmail());
 
+        //List<Long> transactionIds = getTransactionsOfUser(username);
 
+        model.addAttribute(bankBalance);
+        //model.addAttribute(transactionIds);
 
-        model.addAttribute(kontostand);
         return "";
     }
+
+    //@PostMapping
+    //public String überweisung
 
     private List<Item> collectArtikel(Long[] itemID){
         List<Item> items = new ArrayList<>();
@@ -90,9 +96,27 @@ public class UserController {
 
     private boolean isAuthorized(String sessionId, String username) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
-        if (user.getUsername().equals(username)) {
-            return true;
+        return user.getUsername().equals(username);
+    }
+
+    private List<Long> getTransactionsOfUser(String username) {
+        List<Item> itemsOfUser = itemRepository.findItemsOfUser(username);
+        List<Long> reservationIds = new ArrayList<>();
+
+        for (Item item: itemsOfUser) {
+            reservationIds = getReservationIdsOfItem(item, reservationIds);
         }
-        return false;
+
+        return reservationIds;
+    }
+
+    private List<Long> getReservationIdsOfItem(Item item, List<Long> reservationIds) {
+        List<Loan> loansOfItem = loanRepository.findLoansOfItem(item.getId());
+
+        for (Loan loan: loansOfItem) {
+            reservationIds.add(loan.getProPayReservationId());
+        }
+
+        return reservationIds;
     }
 }
