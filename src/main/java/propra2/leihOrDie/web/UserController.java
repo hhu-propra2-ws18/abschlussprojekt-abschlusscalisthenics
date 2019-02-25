@@ -9,12 +9,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import propra2.leihOrDie.dataaccess.ItemRepository;
 import propra2.leihOrDie.dataaccess.LoanRepository;
 import propra2.leihOrDie.dataaccess.SessionRepository;
+import propra2.leihOrDie.dataaccess.UserRepository;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Loan;
 import propra2.leihOrDie.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static propra2.leihOrDie.web.ProPayWrapper.getBalanceOfUser;
 
 @Controller
 public class UserController {
@@ -23,7 +26,9 @@ public class UserController {
     @Autowired
     private LoanRepository loanRepository;
     @Autowired
-    SessionRepository sessionRepository;
+    private SessionRepository sessionRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/user/{username}")
     public String showUser(Model model, @PathVariable String username, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
@@ -35,6 +40,18 @@ public class UserController {
         model.addAttribute("loans", loanRepository.findLoansOfUser(username));
         model.addAttribute("items", itemRepository.findItemsOfUser(username));
         return "user";
+    }
+
+    @GetMapping("/user/propay/{username}")
+    public String showPropay(Model model, @PathVariable String username, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        if (!isAuthorized(sessionId, username)) {
+            return "";
+        }
+        User user = userRepository.findById(username).get();
+        double kontostand = getBalanceOfUser(user.getEmail());
+
+        model.addAttribute(kontostand);
+        return "";
     }
 
     private List<Item> collectArtikel(Long[] itemID){
