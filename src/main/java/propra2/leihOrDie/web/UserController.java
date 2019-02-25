@@ -15,10 +15,12 @@ import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Loan;
 import propra2.leihOrDie.model.User;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
 import static propra2.leihOrDie.web.ProPayWrapper.getBalanceOfUser;
+import static propra2.leihOrDie.web.ProPayWrapper.raiseBalanceOfUser;
 
 @Controller
 public class UserController {
@@ -68,8 +70,15 @@ public class UserController {
         return "";
     }
 
-    //@PostMapping
-    //public String überweisung
+    @PostMapping("/user/propay/{username}")
+    public String doTransaction(Model model, @PathVariable String username, @Valid TransactionForm form, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+        if (!isAuthorized(sessionId, username)) {
+            return "";
+        }
+        raiseBalanceOfUser(user.getEmail(), form.getAmount);
+        return "";
+    }
 
     private List<Item> collectArtikel(Long[] itemID){
         List<Item> items = new ArrayList<>();
