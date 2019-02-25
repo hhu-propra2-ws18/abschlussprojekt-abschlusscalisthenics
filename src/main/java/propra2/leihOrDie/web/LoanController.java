@@ -33,8 +33,6 @@ public class LoanController {
     @Autowired
     SessionRepository sessionRepository;
 
-    // 0 error
-
     @PostMapping(value="/request/{itemId}", produces="application/json")
     @ResponseBody
     public MultiValueMap<String, String> requestLoan(Model model, @Valid LoanForm form, @CookieValue(value="SessionID", defaultValue="") String sessionId, @PathVariable Long itemId) {
@@ -83,7 +81,7 @@ public class LoanController {
         }
 
         loan.setState("accepted");
-        loan.setPropayReservationId(propayReservationId);
+        loan.setProPayReservationId(propayReservationId);
         loanRepository.save(loan);
 
         return "redirect:/request/success";
