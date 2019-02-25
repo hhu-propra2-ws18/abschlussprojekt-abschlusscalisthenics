@@ -88,8 +88,17 @@ public class LoanController {
     }
 
     @PostMapping("/request/decline/{itemID}")
-    public String changeStatusToDecline() {
-        return "user";
+    public String changeStatusToDecline(Model model, @PathVariable Long loanId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        Loan loan = loanRepository.findById(loanId).get();
+
+        if (!isAuthorized(sessionId, loan.getItem().getId())) {
+            return "redirect:/request/failed";
+        }
+
+        loan.setState("declined");
+        loanRepository.save(loan);
+
+        return "redirect:/request/success";
     }
 
     private void saveLoan(Loan loan) {
