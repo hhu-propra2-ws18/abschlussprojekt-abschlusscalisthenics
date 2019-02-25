@@ -74,36 +74,38 @@ public class LoanController {
         Item item = itemRepository.findById(loan.getItem().getId()).get();
 
         if (!isAuthorized(sessionId, loan.getItem().getId())) {
-            return "redirect:/request/failed";
+            return "";
         }
 
         Long propayReservationId;
         try {
-            raiseBalanceOfUser(user.getEmail(), 10000);
-            propayReservationId = reserve(user.getEmail(), item.getUser().getEmail(), item.getDeposit()).getId();
+            propayReservationId = reserve(loan.getUser().getEmail(), item.getUser().getEmail(), item.getDeposit()).getId();
         } catch (Exception e) {
-            return "redirect:/sourceAndTargetMustBeDifferent/";
+            return "";
         }
 
         loan.setState("accepted");
         loan.setProPayReservationId(propayReservationId);
         loanRepository.save(loan);
 
-        return "redirect:/request/success";
+        item.setAvailability(true);
+        itemRepository.save(item);
+
+        return "";
     }
 
     @PostMapping("/request/decline/{itemID}")
-    public String changeStatusToDecline(Model model, @PathVariable Long loanId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+    public String changeStatusToDeclined(Model model, @PathVariable Long loanId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         Loan loan = loanRepository.findById(loanId).get();
 
         if (!isAuthorized(sessionId, loan.getItem().getId())) {
-            return "redirect:/request/failed";
+            return "";
         }
 
         loan.setState("declined");
         loanRepository.save(loan);
 
-        return "redirect:/request/success";
+        return "";
     }
 
     private void saveLoan(Loan loan) {
