@@ -16,17 +16,12 @@ import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Picture;
 import propra2.leihOrDie.model.User;
 
-
 import javax.validation.Valid;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class ItemController {
-
-    private static String UPLOADFOLDER = "static/images/";
-
     @Autowired
     ItemRepository itemRepository;
     @Autowired
@@ -94,8 +89,6 @@ public class ItemController {
 
 
         List<String> urlList = buildUrls(pictureList);
-        urlList.add("https://images.pexels.com/photos/730896/pexels-photo-730896.jpeg?cs=srgb&dl=adorable-animal-cat-730896.jpg");
-        urlList.add("https://images.pexels.com/photos/96938/pexels-photo-96938.jpeg?cs=srgb&dl=animal-animal-photography-cat-96938.jpg");
         model.addAttribute("pictures", urlList);
         model.addAttribute("numOfPictures", urlList.size());
 
