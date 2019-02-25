@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import propra2.leihOrDie.dataaccess.ItemRepository;
 import propra2.leihOrDie.dataaccess.LoanRepository;
 import propra2.leihOrDie.dataaccess.SessionRepository;
@@ -19,8 +20,7 @@ import propra2.leihOrDie.model.User;
 
 import javax.validation.Valid;
 
-import static propra2.leihOrDie.web.ProPayWrapper.raiseBalanceOfUser;
-import static propra2.leihOrDie.web.ProPayWrapper.reserve;
+import static propra2.leihOrDie.web.ProPayWrapper.*;
 
 @Controller
 public class LoanController {
@@ -33,38 +33,57 @@ public class LoanController {
     @Autowired
     SessionRepository sessionRepository;
 
-    @PostMapping("/request/{itemId}")
-    public String requestLoan(Model model, @Valid LoanForm form, @CookieValue(value="SessionID", defaultValue="") String sessionId, @PathVariable Long itemId) {
+    // 0 error
+
+    @PostMapping(value="/request/{itemId}", produces="application/json")
+    @ResponseBody
+    public MultiValueMap<String, String> requestLoan(Model model, @Valid LoanForm form, @CookieValue(value="SessionID", defaultValue="") String sessionId, @PathVariable Long itemId) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         Item item = itemRepository.findById(itemId).get();
 
-        if (!item.isAvailability() && form.getLoanDuration() > item.getAvailableTime()) {
-            return "redirect:/borrowall/" + itemId.toString();
+        if (!item.isAvailability()) {
+           return createErrorDict("Gegenstand ist nicht verfügbar.");
         }
 
-        Long propayReservationId;
+        if (form.getLoanDuration() > item.getAvailableTime()) {
+            return createErrorDict("Maximale Ausleihdauer ist überschritten.");
+        }
+
+        if (item.getUser() == user) {
+            return createErrorDict("Du kannst deinen eigenen Gegenstand nicht ausleihen");
+        }
+
+        Long proPayReservationId;
         try {
             raiseBalanceOfUser(user.getEmail(), 10000);
-            propayReservationId = reserve(user.getEmail(), item.getUser().getEmail(), item.getDeposit()).getId();
+            proPayReservationId = reserve(user.getEmail(), item.getUser().getEmail(), item.getDeposit()).getId();
         } catch (Exception e) {
-            return "redirect:/sourceAndTargetMustBeDifferent/";
+            // TODO: Differentiate Propay error cases
+            return createErrorDict("ProPay Fehler");
         }
 
-        Loan loan = new Loan("pending", form.getLoanDuration(), user, item, propayReservationId);
+        Loan loan = new Loan("pending", form.getLoanDuration(), user, item, proPayReservationId);
         saveLoan(loan);
 
         item.setAvailability(false);
+        itemRepository.save(item);
 
-        return "redirect:/request/success";
+        return createSuccessDict();
     }
 
     private void saveLoan(Loan loan) {
         loanRepository.save(loan);
     }
 
-    private String createErrorMap(String errorMessage) {
+    private MultiValueMap<String, String> createErrorDict(String errorMessage) {
         MultiValueMap<String, String> errorMap = new LinkedMultiValueMap<>();
         errorMap.add("Error", errorMessage);
-        return errorMap.toString();
+        return errorMap;
+    }
+
+    private MultiValueMap<String, String> createSuccessDict() {
+        MultiValueMap<String, String> succcessMap = new LinkedMultiValueMap<>();
+        succcessMap.add("Success", "Eine Anfrage wurde gesendet.");
+        return succcessMap;
     }
 }
