@@ -21,7 +21,6 @@ import java.util.List;
 public class UploadController {
 
     int MAX_NUMBER_OF_PICTURES = 10;
-
     private static String UPLOADFOLDER = "./img";
 
     @Autowired
@@ -30,7 +29,7 @@ public class UploadController {
     private PictureRepository pictureRepository;
 
     @RequestMapping(value = "/item/{itemId}/uploadphoto", method = RequestMethod.POST)
-    public String importParse(@RequestParam("file") MultipartFile file, @PathVariable Long itemId, RedirectAttributes redirectAttributes, Model model) {
+    public String importParse(@RequestParam("file") MultipartFile file, @PathVariable Long itemId, RedirectAttributes redirectAttributes, Model model){
         if (file.getSize() == 0) {
             redirectAttributes.addFlashAttribute("message", "Bitte eine Datei wählen :)");
             redirectAttributes.addFlashAttribute("alertClass", "alert-danger");

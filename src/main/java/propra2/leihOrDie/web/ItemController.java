@@ -4,12 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import propra2.leihOrDie.dataaccess.ItemRepository;
 import propra2.leihOrDie.dataaccess.PictureRepository;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import propra2.leihOrDie.dataaccess.SessionRepository;
 import propra2.leihOrDie.dataaccess.UserRepository;
 import propra2.leihOrDie.model.Item;
@@ -79,7 +76,7 @@ public class ItemController {
     }
 
     @GetMapping("/borrowall/{id}")
-    public String showItem(Model model, @PathVariable Long id) {
+    public String showItem(Model model, @PathVariable Long id){
         Item item = itemRepository.findById(id).get();
         model.addAttribute("LoanForm", new LoanForm());
 
@@ -89,8 +86,13 @@ public class ItemController {
 
 
         List<String> urlList = buildUrls(pictureList);
+        int size = urlList.size();
+        model.addAttribute("numOfPictures", size);
+        if(size > 1) {
+            model.addAttribute("firstPic", urlList.get(0));
+            urlList.remove(0);
+        }
         model.addAttribute("pictures", urlList);
-        model.addAttribute("numOfPictures", urlList.size());
 
         return "item-detail.html";
     }
