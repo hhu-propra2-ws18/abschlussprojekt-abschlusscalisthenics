@@ -70,9 +70,9 @@ public class UserController {
     }
 
     @PostMapping("/myaccount/propay")
-    public ResponseEntity doTransaction(Model model, @PathVariable String username, @Valid TransactionForm form, BindingResult bindingResult, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+    public ResponseEntity doTransaction(Model model, @Valid TransactionForm form, BindingResult bindingResult, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         if(bindingResult.hasErrors()) {
-
+            return responseBuilder.createErrorResponse("Der Mindestbetrag beläuft sich auf einen Euro!");
         }
 
         User user = sessionRepository.findUserBySessionCookie(sessionId);
