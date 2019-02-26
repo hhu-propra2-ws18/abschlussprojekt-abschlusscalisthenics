@@ -22,7 +22,7 @@ public class UploadController {
 
     int MAX_NUMBER_OF_PICTURES = 10;
 
-    private static String UPLOADFOLDER = "src/main/resources/static/images/";
+    private static String UPLOADFOLDER = "./img";
 
     @Autowired
     private ItemRepository itemRepository;
