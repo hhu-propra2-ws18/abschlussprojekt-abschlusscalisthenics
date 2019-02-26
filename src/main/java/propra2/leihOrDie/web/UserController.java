@@ -3,6 +3,7 @@ package propra2.leihOrDie.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,30 +56,32 @@ public class UserController {
         return "other-user";
     }
 
-    @GetMapping("/user/propay/{username}")
-    public String showPropay(Model model, @PathVariable String username, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
-        if (!isAuthorized(sessionId, username)) {
-            return "";
-        }
-        User user = userRepository.findById(username).get();
+    @GetMapping("/myaccount/propay")
+    public String showPropay(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId, TransactionForm form) {
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
         double bankBalance = getBalanceOfUser(user.getEmail());
 
         //List<Long> transactionIds = getTransactionsOfUser(username);
 
-        model.addAttribute(bankBalance);
+        model.addAttribute("bankBalance", bankBalance);
         //model.addAttribute(transactionIds);
 
-        return "";
+        return "user-propay";
     }
 
-    @PostMapping("/user/propay/{username}")
-    public String doTransaction(Model model, @PathVariable String username, @Valid TransactionForm form, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
-        User user = sessionRepository.findUserBySessionCookie(sessionId);
-        if (!isAuthorized(sessionId, username)) {
-            return "";
+    @PostMapping("/myaccount/propay")
+    public String doTransaction(Model model, @Valid TransactionForm form, BindingResult bindingResult, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        if(bindingResult.hasErrors()) {
+            User user = sessionRepository.findUserBySessionCookie(sessionId);
+            double bankBalance = getBalanceOfUser(user.getEmail());
+            model.addAttribute("bankBalance", bankBalance);
+            return "user-propay";
         }
-        raiseBalanceOfUser(user.getEmail(), form.getAmount);
-        return "";
+
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+
+        raiseBalanceOfUser(user.getEmail(), form.getAmount());
+        return "redirect:/myaccount/propay";
     }
 
     private List<Item> collectArtikel(Long[] itemID){
