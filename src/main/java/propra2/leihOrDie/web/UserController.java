@@ -8,12 +8,10 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import propra2.leihOrDie.dataaccess.ItemRepository;
-import propra2.leihOrDie.dataaccess.LoanRepository;
-import propra2.leihOrDie.dataaccess.SessionRepository;
-import propra2.leihOrDie.dataaccess.UserRepository;
+import propra2.leihOrDie.dataaccess.*;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Loan;
+import propra2.leihOrDie.model.Transaction;
 import propra2.leihOrDie.model.User;
 
 import javax.validation.Valid;
@@ -32,15 +30,17 @@ public class UserController {
     @Autowired
     private SessionRepository sessionRepository;
     @Autowired
-    private UserRepository userRepository;
+    private TransactionRepository transactionRepository;
 
     @GetMapping("/myaccount")
     public String showUserPage(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         String username = user.getUsername();
-        if (!isAuthorized(sessionId, username)) {
+
+        if (!isAuthorized(user, username)) {
             return "";
         }
+
         model.addAttribute("user", username);
         model.addAttribute("pendingitems", getPendingItems(username));
         model.addAttribute("loans", loanRepository.findLoansOfUser(username));
@@ -61,10 +61,11 @@ public class UserController {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         double bankBalance = getBalanceOfUser(user.getEmail());
 
-        //List<Long> transactionIds = getTransactionsOfUser(username);
+        List<Transaction> transactions = transactionRepository.findAllTransactionsOfUser(user.getUsername());
 
         model.addAttribute("bankBalance", bankBalance);
-        //model.addAttribute(transactionIds);
+        model.addAttribute("transactions", transactions);
+
 
         return "user-propay";
     }
@@ -79,57 +80,30 @@ public class UserController {
         }
 
         User user = sessionRepository.findUserBySessionCookie(sessionId);
+        Transaction transaction = new Transaction(user, user, form.getAmount(), "Überweisung");
+        transactionRepository.save(transaction);
 
         raiseBalanceOfUser(user.getEmail(), form.getAmount());
         return "redirect:/myaccount/propay";
     }
 
-    private List<Item> collectArtikel(Long[] itemID){
-        List<Item> items = new ArrayList<>();
-        if (itemID == null)
-            return items;
-        for (int i=0; i<itemID.length; i++){
-    //        items.add(ItemRepository.findById(itemID[i].get());
-        }
-        return items;
-    }
-
     private List<Loan> getPendingItems(String username) {
         List<Item> itemsOfUser = itemRepository.findItemsOfUser(username);
         List<Loan> loans = new ArrayList<>();
+
         for (Item i: itemsOfUser) {
             Loan temp = null;
             temp = loanRepository.findLoansOfItem(i.getId()).get(0);
+
             if (temp.getState().equals("pending")) {
                 loans.add(temp);
             }
         }
+
         return loans;
     }
 
-    private boolean isAuthorized(String sessionId, String username) {
-        User user = sessionRepository.findUserBySessionCookie(sessionId);
+    private boolean isAuthorized(User user, String username) {
         return user.getUsername().equals(username);
-    }
-
-    private List<Long> getTransactionsOfUser(String username) {
-        List<Item> itemsOfUser = itemRepository.findItemsOfUser(username);
-        List<Long> reservationIds = new ArrayList<>();
-
-        for (Item item: itemsOfUser) {
-            reservationIds = getReservationIdsOfItem(item, reservationIds);
-        }
-
-        return reservationIds;
-    }
-
-    private List<Long> getReservationIdsOfItem(Item item, List<Long> reservationIds) {
-        List<Loan> loansOfItem = loanRepository.findLoansOfItem(item.getId());
-
-        for (Loan loan: loansOfItem) {
-            reservationIds.add(loan.getProPayReservationId());
-        }
-
-        return reservationIds;
     }
 }
