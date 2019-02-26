@@ -3,7 +3,7 @@ package propra2.leihOrDie.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -23,15 +23,15 @@ public class Transaction {
 
     private double amount;
     private String comment;
-    private Date date;
+    private LocalDateTime date;
 
     public Transaction() {}
 
-    public Transaction(User fromUser, User toUser, double amount, String comment, Date date) {
+    public Transaction(User fromUser, User toUser, double amount, String comment) {
         this.fromUser = fromUser;
         this.toUser = toUser;
         this.amount = amount;
         this.comment = comment;
-        this.date = date;
+        this.date = LocalDateTime.now();
     }
 }
