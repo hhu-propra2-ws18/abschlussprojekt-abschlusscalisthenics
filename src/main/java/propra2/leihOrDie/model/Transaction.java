@@ -13,12 +13,12 @@ public class Transaction {
     @Column(name="transaction_id")
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name="username")
     private User fromUser;
 
-    @ManyToOne
-    @JoinColumn(name="username")
+    @OneToOne
+    //@JoinColumn(name="username")
     private User toUser;
 
     private double amount;
