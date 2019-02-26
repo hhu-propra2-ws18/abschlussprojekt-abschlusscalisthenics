@@ -1,9 +1,9 @@
 package propra2.leihOrDie.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +14,7 @@ import propra2.leihOrDie.model.Loan;
 import propra2.leihOrDie.model.Transaction;
 import propra2.leihOrDie.model.User;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +33,17 @@ public class UserController {
     @Autowired
     private TransactionRepository transactionRepository;
 
+    private ResponseBuilder responseBuilder = new ResponseBuilder();
+
     @GetMapping("/myaccount")
-    public String showUserPage(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+    public String showUserPage(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId,
+                               HttpServletResponse response) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         String username = user.getUsername();
 
         if (!isAuthorized(user, username)) {
-            return "";
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return "redirect:/error";
         }
 
         model.addAttribute("user", username);
@@ -50,8 +55,14 @@ public class UserController {
     }
 
     @GetMapping("/myaccount/propay")
-    public String showPropay(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId, TransactionForm form) {
+    public String showPropay(Model model, @PathVariable String username, @CookieValue(value="SessionID", defaultValue="") String sessionId, HttpServletResponse response) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
+
+        if (!isAuthorized(user, username)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return "redirect:/error";
+        }
+
         double bankBalance = getBalanceOfUser(user.getEmail());
 
         List<Transaction> transactions = transactionRepository.findAllTransactionsOfUser(user.getUsername());
@@ -63,20 +74,23 @@ public class UserController {
     }
 
     @PostMapping("/myaccount/propay")
-    public String doTransaction(Model model, @Valid TransactionForm form, BindingResult bindingResult, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
-        if(bindingResult.hasErrors()) {
-            User user = sessionRepository.findUserBySessionCookie(sessionId);
-            double bankBalance = getBalanceOfUser(user.getEmail());
-            model.addAttribute("bankBalance", bankBalance);
-            return "user-propay";
+    public ResponseEntity doTransaction(Model model, @PathVariable String username, @Valid TransactionForm form, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+
+        if (!isAuthorized(user, username)) {
+            return responseBuilder.createUnauthorizedResponse();
         }
 
-        User user = sessionRepository.findUserBySessionCookie(sessionId);
-        Transaction transaction = new Transaction(user, user, form.getAmount(), "Überweisung");
-        transactionRepository.save(transaction);
+        try {
+            raiseBalanceOfUser(user.getEmail(), form.getAmount());
 
-        raiseBalanceOfUser(user.getEmail(), form.getAmount());
-        return "redirect:/myaccount/propay";
+            Transaction transaction = new Transaction(user, user, form.getAmount(), "Überweisung");
+            transactionRepository.save(transaction);
+        } catch (Exception e) {
+            return responseBuilder.createErrorResponse("Es war nicht möglich den Betrag zu Überweisen. Bitte versuchen sie es später nochmal.");
+        }
+
+        return responseBuilder.createSuccessResponse("Überweisung erfolgreich!");
     }
 
     @GetMapping("/user/{username}")
@@ -90,12 +104,11 @@ public class UserController {
         List<Item> itemsOfUser = itemRepository.findItemsOfUser(username);
         List<Loan> loans = new ArrayList<>();
 
-        for (Item i: itemsOfUser) {
-            Loan temp = null;
-            temp = loanRepository.findLoansOfItem(i.getId()).get(0);
+        for (Item item: itemsOfUser) {
+            Loan loan = loanRepository.findLoansOfItem(item.getId()).get(0);
 
-            if (temp.getState().equals("pending")) {
-                loans.add(temp);
+            if (loan.getState().equals("pending")) {
+                loans.add(loan);
             }
         }
 
