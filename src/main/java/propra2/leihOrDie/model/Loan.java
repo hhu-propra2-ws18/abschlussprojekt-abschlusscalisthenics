@@ -26,6 +26,7 @@ public class Loan {
     private Item item;
 
     private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
     public Loan() {}
 

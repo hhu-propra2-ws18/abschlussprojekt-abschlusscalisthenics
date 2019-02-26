@@ -16,6 +16,7 @@ import propra2.leihOrDie.model.User;
 
 import javax.validation.Valid;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static propra2.leihOrDie.web.ProPayWrapper.*;
@@ -104,6 +105,51 @@ public class LoanController {
         itemRepository.save(item);
 
         return responseBuilder.createSuccessResponse("Bestätigt.");
+    }
+
+    @PostMapping("/request/activate/{loanId}")
+    public ResponseEntity changeStatusToActive(Model model, @PathVariable Long loanId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+        Loan loan = loanRepository.findById(loanId).get();
+
+        if (!isAuthorized(user.getUsername(), loan.getItem().getUser())) {
+            return responseBuilder.createUnauthorizedResponse();
+        }
+
+        loan.setState("active");
+        loan.setStartDate(LocalDateTime.now());
+        loanRepository.save(loan);
+
+        return responseBuilder.createSuccessResponse("Bestätigt");
+    }
+
+    @PostMapping("/request/return/{loanId}")
+    public ResponseEntity changeStatusToCompleted(Model model, @PathVariable Long loanId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+        Loan loan = loanRepository.findById(loanId).get();
+
+        if (!isAuthorized(user.getUsername(), loan.getItem().getUser())) {
+            return responseBuilder.createUnauthorizedResponse();
+        }
+
+        // What action should be triggered when the duration is smaller than the lend time?
+
+        double amount = loan.getDuration() * loan.getItem().getDeposit();
+
+        try {
+            transferMoney(loan.getUser().getEmail(), user.getEmail(), amount);
+        } catch (Exception e) {
+            loan.setState("completed");
+            loan.setEndDate(LocalDateTime.now());
+            loanRepository.save(loan);
+            return responseBuilder.createBadRequestResponse("Es war nicht möglich den Betrag zu überweisen.");
+        }
+
+        loan.setState("completed");
+        loan.setEndDate(LocalDateTime.now());
+        loanRepository.save(loan);
+
+        return responseBuilder.createSuccessResponse("Erfolgreich!");
     }
 
     @PostMapping("/conflict/open/{loanId}")
@@ -199,8 +245,6 @@ public class LoanController {
 
         return "conflict-list";
     }
-
-
 
     private boolean isAuthorized(String sessionId, Item item) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
