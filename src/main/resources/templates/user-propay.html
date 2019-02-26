@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Benutzerkonto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+</head>
+
+<body>
+<div th:insert="fragments/header :: header"></div>
+<br></br>
+<br></br>
+
+<div class="container">
+    <div class="columns">
+        <div class="column is-3 ">
+            <aside class="menu is-hidden-mobile">
+
+                <p class="menu-label">
+                    Profil
+                </p>
+                <ul class="menu-list">
+                    <li><a href="/Profilverwalten">Profil verwalten</a></li>
+                </ul>
+                <p class="menu-label">
+                    Einstellungen
+                </p>
+                <ul class="menu-list">
+                    <li><a href="/myaccount/propay">Propay</a></li>
+                    <li><a href="Kundenservice">Kundenservice</a></li>
+                    <li><a href="Fragen">häufige Fragen</a></li>
+                </ul>
+            </aside>
+        </div>
+
+        <div class="column is-9">
+
+            <section class="hero is-primary is-small">
+                <div class="hero-body">
+                    <div class="container">
+                        <h1 class="title">
+                            Hier findest du deine Propay-Angelegenheiten
+                        </h1>
+                    </div>
+                </div>
+            </section>
+            <br></br>
+            <section class="info-tiles">
+                <div class="tile is-ancestor has-text-centered">
+                    <div class="tile is-parent">
+                        <article class="tile is-child box">
+                            <p class="title has-text-success" th:text="${bankBalance} + ' €'"></p>
+                            <p class="subtitle">Kontostand</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <form class= action="#" th:action="@{/myaccount/propay}" th:object="${transactionForm}" method="POST" enctype="utf8">
+            <section class="info-tiles">
+                <div class="tile is-ancestor has-text-centered">
+                    <div class="tile is-parent">
+                        <article class="tile is-child box">
+                            <div class="field">
+                                <label class="label">Überweisung</label>
+                                <div class="control">
+                                    <input class="input" type="text" placeholder="Hier Überweisung angeben" th:field="*{amount}">
+                                </div>
+                                <p class="help is-danger" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">Überweisung ungültig</p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+            </form>
+
+            <!-- Hier Transaktionen -->
+
+            <div class="columns">
+                <div class="column is-6">
+                    <div class="card events-card">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                Ich leihe zur Zeit aus:
+                            </p>
+                        </header>
+                        <div class="card-table">
+                            <div class="content">           <!-- HIER TABELLE VON DEN ANGEBOTENEN PRODUKTEN DES USERS-->
+                                <table class="table is-fullwidth is-striped">
+                                    <tbody>
+                                    <tr th:each="item: ${items}">
+                                        <th><a th:href="@{'/borrowall/' + ${item.id}}" th:text="${item.getName()}"></a></th>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
