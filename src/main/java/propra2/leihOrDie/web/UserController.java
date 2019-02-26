@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -55,13 +56,8 @@ public class UserController {
     }
 
     @GetMapping("/myaccount/propay")
-    public String showPropay(Model model, @PathVariable String username, @CookieValue(value="SessionID", defaultValue="") String sessionId, HttpServletResponse response) {
+    public String showPropay(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId, HttpServletResponse response, TransactionForm form) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
-
-        if (!isAuthorized(user, username)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return "redirect:/error";
-        }
 
         double bankBalance = getBalanceOfUser(user.getEmail());
 
@@ -74,12 +70,12 @@ public class UserController {
     }
 
     @PostMapping("/myaccount/propay")
-    public ResponseEntity doTransaction(Model model, @PathVariable String username, @Valid TransactionForm form, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
-        User user = sessionRepository.findUserBySessionCookie(sessionId);
+    public ResponseEntity doTransaction(Model model, @PathVariable String username, @Valid TransactionForm form, BindingResult bindingResult, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        if(bindingResult.hasErrors()) {
 
-        if (!isAuthorized(user, username)) {
-            return responseBuilder.createUnauthorizedResponse();
         }
+
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
 
         try {
             raiseBalanceOfUser(user.getEmail(), form.getAmount());
