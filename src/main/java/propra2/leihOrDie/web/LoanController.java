@@ -200,9 +200,7 @@ public class LoanController {
 
         return "conflict-list";
     }
-
-
-
+    
     private boolean isAuthorized(String sessionId, Item item) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
 
