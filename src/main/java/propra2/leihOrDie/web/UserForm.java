@@ -1,13 +1,7 @@
 package propra2.leihOrDie.web;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.Range;
-import propra2.leihOrDie.model.Address;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
