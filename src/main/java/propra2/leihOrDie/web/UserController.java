@@ -41,7 +41,7 @@ public class UserController {
                                HttpServletResponse response) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         String userName = user.getUsername();
-
+        
         model.addAttribute("user", userName);
         model.addAttribute("pendingloans", getPendingLoans(userName));
         model.addAttribute("activeloans", getActiveLoans(userName));
