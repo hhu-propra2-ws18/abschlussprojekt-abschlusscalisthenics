@@ -49,13 +49,6 @@ public class UserController {
         return "user";
     }
 
-    @GetMapping("/user/{username}")
-    public String showUser(Model model, @PathVariable String username, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
-        model.addAttribute("user", username);
-        model.addAttribute("items", itemRepository.findItemsOfUser(username));
-        return "other-user";
-    }
-
     @GetMapping("/myaccount/propay")
     public String showPropay(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId, TransactionForm form) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
@@ -65,7 +58,6 @@ public class UserController {
 
         model.addAttribute("bankBalance", bankBalance);
         model.addAttribute("transactions", transactions);
-
 
         return "user-propay";
     }
@@ -85,6 +77,13 @@ public class UserController {
 
         raiseBalanceOfUser(user.getEmail(), form.getAmount());
         return "redirect:/myaccount/propay";
+    }
+
+    @GetMapping("/user/{username}")
+    public String showUser(Model model, @PathVariable String username, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        model.addAttribute("user", username);
+        model.addAttribute("items", itemRepository.findItemsOfUser(username));
+        return "other-user";
     }
 
     private List<Loan> getPendingItems(String username) {
