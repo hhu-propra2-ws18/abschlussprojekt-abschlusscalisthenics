@@ -42,11 +42,6 @@ public class UserController {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         String username = user.getUsername();
 
-        if (!isAuthorized(user, username)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return "redirect:/error";
-        }
-
         model.addAttribute("user", username);
         model.addAttribute("pendingitems", getPendingItems(username));
         model.addAttribute("loans", loanRepository.findLoansOfUser(username));
@@ -79,7 +74,7 @@ public class UserController {
     @PostMapping("/myaccount/propay")
     public ResponseEntity doTransaction(Model model, @Valid TransactionForm form, BindingResult bindingResult, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         if(bindingResult.hasErrors()) {
-            return responseBuilder.createErrorResponse("Der Mindestbetrag beläuft sich auf einen Euro!");
+            return responseBuilder.createBadRequestResponse("Der Mindestbetrag beläuft sich auf einen Euro!");
         }
 
         User user = sessionRepository.findUserBySessionCookie(sessionId);
@@ -90,7 +85,7 @@ public class UserController {
             Transaction transaction = new Transaction(user, user, form.getAmount(), "Überweisung");
             transactionRepository.save(transaction);
         } catch (Exception e) {
-            return responseBuilder.createErrorResponse("Es war nicht möglich den Betrag zu Überweisen. Bitte versuchen sie es später nochmal.");
+            return responseBuilder.createBadRequestResponse("Es war nicht möglich den Betrag zu Überweisen. Bitte versuchen sie es später nochmal.");
         }
 
         return responseBuilder.createSuccessResponse("Überweisung erfolgreich!");
