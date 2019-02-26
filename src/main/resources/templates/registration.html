@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/bulma@0.7.4/css/bulma.min.css" />
-  <link rel="stylesheet" type="text/css" href="../css/login.css">
 </head>
 
 <div th:insert="fragments/header :: header"></div>
@@ -25,16 +24,16 @@
 
             <div class="field">
               <label class="label">Benutzername</label>
-              <div class="control has-icons-left has-icons-right">
-                <input class="input" type="text" placeholder="Dein Benutzername" th:field="*{username}">
+              <div class="control">
+                <input class="input" type="text" placeholder="Benutzername" th:field="*{username}">
               </div>
               <p class="help is-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Benutzername ungültig</p>
             </div>
 
             <div class="field">
               <label class="label">Email</label>
-              <div class="control has-icons-left has-icons-right">
-                <input class="input" type="email" placeholder="Deine Email" th:field="*{email}">
+              <div class="control">
+                <input class="input" type="email" placeholder="Email" th:field="*{email}">
               </div>
               <p class="help is-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email ungültig</p>
             </div>
