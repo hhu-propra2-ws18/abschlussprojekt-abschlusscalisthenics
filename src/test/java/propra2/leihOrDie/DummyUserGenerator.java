@@ -22,7 +22,7 @@ public class DummyUserGenerator {
 
         String password = "qwerty";
         user.setPassword(password);
-
+        user.setRole("USER");
         user.setAddress(generateAddress());
 
         return user;

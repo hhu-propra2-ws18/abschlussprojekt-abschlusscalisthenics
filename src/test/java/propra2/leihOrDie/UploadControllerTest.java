@@ -14,12 +14,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import propra2.leihOrDie.dataaccess.ItemRepository;
 import propra2.leihOrDie.dataaccess.PictureRepository;
+import propra2.leihOrDie.dataaccess.SessionRepository;
 import propra2.leihOrDie.dataaccess.UserRepository;
-import propra2.leihOrDie.model.Address;
-import propra2.leihOrDie.model.Item;
-import propra2.leihOrDie.model.Picture;
-import propra2.leihOrDie.model.User;
+import propra2.leihOrDie.model.*;
 
+import javax.servlet.http.Cookie;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
@@ -41,30 +40,38 @@ public class UploadControllerTest {
     @Autowired
     PictureRepository pictureRepository;
 
+    @Autowired
+    SessionRepository sessionRepository;
+
     @Before
     public void setUp() {
         String password= "password";
         Address address = new Address(1337, "TestStreet", 42, "TestCity");
-        User testUser = new User("name", "email@test.de", password, address);
+        User testUser = new User("name", "email@test.de", password, "USER", address);
         userRepository.save(testUser);
 
         Item testItem = new Item("name", "description", 314, 1, true, 1, testUser.getAddress(), testUser);
         itemRepository.save(testItem);
+
+        sessionRepository.save(new Session("1", testUser));
     }
 
     @After
     public void tearDown() {
         List<Picture> pictureList = pictureRepository.findAll();
-        String pictureId = Long.toString(pictureList.get(0).getId());
+        if (!pictureList.isEmpty()) {
+            String pictureId = Long.toString(pictureList.get(0).getId());
+            File file = new File("images/" + pictureId + ".jpg");
 
-        File file = new File("images/" + pictureId + ".jpg");
+            file.delete();
 
-        file.delete();
+        }
+
         pictureRepository.deleteAll();
         itemRepository.deleteAll();
         userRepository.deleteAll();
-    }
 
+    }
 
     @Test
     public void testUploadImage() throws Exception {
@@ -78,6 +85,7 @@ public class UploadControllerTest {
 
         mvc.perform(MockMvcRequestBuilders.multipart("/image/upload")
                 .file(multipartFile)
+                .cookie(new Cookie("SessionID", "1"))
                 .param("itemId", itemId)
                 .param("fileName", fileName))
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/image/uploadSuccessful"));

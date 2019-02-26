@@ -32,7 +32,7 @@ public class AuthenticationControllerTest {
 
     @Test
     public void testNewUserRegistration() throws Exception {
-        mvc.perform(post("/user/registration")
+        mvc.perform(post("/registration")
                     .param("username", "max123")
                     .param("email", "maxmustar@gmail.com")
                     .param("password", "123456789123")

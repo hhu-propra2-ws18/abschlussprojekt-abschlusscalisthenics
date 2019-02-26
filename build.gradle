@@ -43,4 +43,6 @@ dependencies {
 	testCompile('org.mockito:mockito-core:2.7.22')
 	annotationProcessor("org.projectlombok:lombok")
 	compile group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
+	compile group: 'org.springframework.retry', name: 'spring-retry', version: '1.2.4.RELEASE'
+
 }
