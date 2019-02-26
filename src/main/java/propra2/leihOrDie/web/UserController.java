@@ -15,6 +15,7 @@ import propra2.leihOrDie.model.User;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static propra2.leihOrDie.web.ProPayWrapper.getBalanceOfUser;
@@ -80,6 +81,10 @@ public class UserController {
         if (!isAuthorized(user, username)) {
             return "";
         }
+
+        Transaction transaction = new Transaction(user, user, form.getAmount, "Überweisung");
+        transactionRepository.save(transaction);
+
         raiseBalanceOfUser(user.getEmail(), form.getAmount);
         return "";
     }
@@ -87,13 +92,16 @@ public class UserController {
     private List<Loan> getPendingItems(String username) {
         List<Item> itemsOfUser = itemRepository.findItemsOfUser(username);
         List<Loan> loans = new ArrayList<>();
+
         for (Item i: itemsOfUser) {
             Loan temp = null;
             temp = loanRepository.findLoansOfItem(i.getId()).get(0);
+
             if (temp.getState().equals("pending")) {
                 loans.add(temp);
             }
         }
+
         return loans;
     }
 
