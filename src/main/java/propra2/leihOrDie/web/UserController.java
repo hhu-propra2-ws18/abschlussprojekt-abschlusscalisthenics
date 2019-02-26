@@ -40,17 +40,18 @@ public class UserController {
     public String showUserPage(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId,
                                HttpServletResponse response) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
-        String username = user.getUsername();
+        String userName = user.getUsername();
 
-        if (!isAuthorized(user, username)) {
+        if (!isAuthorized(user, userName)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return "redirect:/error";
         }
 
-        model.addAttribute("user", username);
-        model.addAttribute("pendingitems", getPendingItems(username));
-        model.addAttribute("loans", loanRepository.findLoansOfUser(username));
-        model.addAttribute("items", itemRepository.findItemsOfUser(username));
+        model.addAttribute("user", userName);
+        model.addAttribute("pendingloans", getPendingLoans(userName));
+        model.addAttribute("activeloans", getActiveLoans(userName));
+        model.addAttribute("loans", loanRepository.findLoansOfUser(userName));
+        model.addAttribute("items", itemRepository.findItemsOfUser(userName));
 
         return "user";
     }
@@ -96,14 +97,29 @@ public class UserController {
         return responseBuilder.createSuccessResponse("Überweisung erfolgreich!");
     }
 
-    private List<Loan> getPendingItems(String username) {
-        List<Item> itemsOfUser = itemRepository.findItemsOfUser(username);
+    private List<Loan> getPendingLoans(String userName) {
+        List<Item> itemsOfUser = itemRepository.findItemsOfUser(userName);
         List<Loan> loans = new ArrayList<>();
 
         for (Item item: itemsOfUser) {
             Loan loan = loanRepository.findLoansOfItem(item.getId()).get(0);
 
             if (loan.getState().equals("pending")) {
+                loans.add(loan);
+            }
+        }
+
+        return loans;
+    }
+
+    private List<Loan> getActiveLoans(String userName) {
+        List<Item> itemsOfUser = itemRepository.findItemsOfUser(userName);
+        List<Loan> loans = new ArrayList<>();
+
+        for (Item item: itemsOfUser) {
+            Loan loan = loanRepository.findLoansOfItem(item.getId()).get(0);
+
+            if (loan.getState().equals("active")) {
                 loans.add(loan);
             }
         }
