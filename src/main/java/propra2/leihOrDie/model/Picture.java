@@ -16,6 +16,8 @@ public class Picture {
     @Column(name="picture_id")
     private Long id;
 
+    private String type;
+
     public Picture() {}
 
     public Picture(Item item) {
