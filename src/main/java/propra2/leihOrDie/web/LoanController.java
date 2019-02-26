@@ -42,26 +42,26 @@ public class LoanController {
         Item item = itemRepository.findById(itemId).get();
 
         if (form.getLoanDuration() == 0) {
-            return responseBuilder.createErrorResponse("Die minimale Ausleihdauer beträgt einen Tag.");
+            return responseBuilder.createBadRequestResponse("Die minimale Ausleihdauer beträgt einen Tag.");
         }
 
         if (!item.isAvailability()) {
-           return responseBuilder.createErrorResponse("Dieser Gegenstand ist nicht verfügbar.");
+           return responseBuilder.createBadRequestResponse("Dieser Gegenstand ist nicht verfügbar.");
         }
 
         if (form.getLoanDuration() > item.getAvailableTime()) {
-            return responseBuilder.createErrorResponse("Die maximale Ausleihdauer ist überschritten.");
+            return responseBuilder.createBadRequestResponse("Die maximale Ausleihdauer ist überschritten.");
         }
 
         if (item.getUser() == user) {
-            return responseBuilder.createErrorResponse("Du kannst deinen eigenen Gegenstand nicht ausleihen.");
+            return responseBuilder.createBadRequestResponse("Du kannst deinen eigenen Gegenstand nicht ausleihen.");
         }
 
         Long proPayReservationId;
         try {
             proPayReservationId = reserve(user.getEmail(), item.getUser().getEmail(), item.getDeposit()).getId();
         } catch (Exception e) {
-            return responseBuilder.createErrorResponse("ProPay Fehler");
+            return responseBuilder.createBadRequestResponse("ProPay Fehler");
         }
 
         Loan loan = new Loan("pending", form.getLoanDuration(), user, item, proPayReservationId);
@@ -110,17 +110,17 @@ public class LoanController {
     public ResponseEntity openConflict(Model model, @PathVariable Long loanId,
                                        @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         if (!loanRepository.findById(loanId).isPresent()) {
-            return createBadRequestResponse("Die angefragte Ausleihe existiert nicht.");
+            return responseBuilder.createBadRequestResponse("Die angefragte Ausleihe existiert nicht.");
         }
 
         Loan loan = loanRepository.findById(loanId).get();
 
         if (!isAuthorized(sessionId, loan.getItem()) || !isAuthorized(sessionId, loan.getUser())) {
-            return createUnauthorizedResponse();
+            return responseBuilder.createUnauthorizedResponse();
         }
 
         if (!loan.getState().equals("active")) {
-            return createBadRequestResponse("Status der Ausleihe ist nicht \"aktiv\".");
+            return responseBuilder.createBadRequestResponse("Status der Ausleihe ist nicht \"aktiv\".");
         }
 
         loan.setState("conflict");
@@ -133,18 +133,18 @@ public class LoanController {
                 "und dem Betreff \"" + sessionRepository.findUserBySessionCookie(sessionId).getUsername() + " - " +
                 loan.getId().toString() + "\" an conflict@leihordie.de";
 
-        return createSuccessResponse(message);
+        return responseBuilder.createSuccessResponse(message);
     }
 
     @PostMapping("/conflict/solve/{loanId}")
     public ResponseEntity solveConflict(Model model, ConflictForm form, @PathVariable Long loanId,
                                         @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         if (!isAdmin(sessionId)) {
-            return createUnauthorizedResponse();
+            return responseBuilder.createUnauthorizedResponse();
         }
 
         if (!loanRepository.findById(loanId).isPresent()) {
-            return createBadRequestResponse("Loan " + loanId + " exisitert nicht.");
+            return responseBuilder.createBadRequestResponse("Loan " + loanId + " exisitert nicht.");
         }
 
         Loan loan = loanRepository.findById(loanId).get();
@@ -152,7 +152,7 @@ public class LoanController {
         String covenanteeEmail = form.getCovenanteeEmail();
 
         if (userRepository.findUserByEMail(covenanteeEmail).isEmpty()) {
-            return createBadRequestResponse("User " + covenanteeEmail + " existiert nicht.");
+            return responseBuilder.createBadRequestResponse("User " + covenanteeEmail + " existiert nicht.");
         }
 
 
@@ -163,18 +163,18 @@ public class LoanController {
             try {
                 freeReservationOfUser(lendingUser.getEmail(), loan.getProPayReservationId());
             } catch (Exception e) {
-                return createBadRequestResponse("ProPay Fehler");
+                return responseBuilder.createBadRequestResponse("ProPay Fehler");
             }
 
         } else if(convenantee.getEmail().equals(loan.getItem().getUser().getEmail())) {
             try {
                 punishAccount(lendingUser.getEmail(), loan.getProPayReservationId());
             } catch (Exception e) {
-                return createBadRequestResponse("ProPay Fehler");
+                return responseBuilder.createBadRequestResponse("ProPay Fehler");
             }
 
         } else {
-            return createBadRequestResponse("User " + covenanteeEmail + " steht nicht im Kontext mit Loan " +
+            return responseBuilder.createBadRequestResponse("User " + covenanteeEmail + " steht nicht im Kontext mit Loan " +
                     loan.getId() + ".");
         }
 
@@ -185,7 +185,7 @@ public class LoanController {
         item.setAvailability(false);
         itemRepository.save(item);
 
-        return createSuccessResponse("Konflikt wurde gelöst.");
+        return responseBuilder.createSuccessResponse("Konflikt wurde gelöst.");
     }
 
     @GetMapping("/conflict/admin")
@@ -198,19 +198,6 @@ public class LoanController {
         model.addAttribute("conflicts", openConflicts);
 
         return "conflict-list";
-    }
-
-    private ResponseEntity createBadRequestResponse(String errorMessage) {
-        return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
-    }
-
-    private ResponseEntity createUnauthorizedResponse() {
-        String errorMessage = "Du bist nicht authorisiert diese Aktion durchzuführen.";
-        return  new ResponseEntity<>(errorMessage, HttpStatus.UNAUTHORIZED);
-    }
-
-    private ResponseEntity createSuccessResponse(String successMessage) {
-        return new ResponseEntity<>(successMessage, HttpStatus.OK);
     }
 
     private boolean isAuthorized(String sessionId, Item item) {
