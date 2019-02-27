@@ -23,6 +23,8 @@ public class Buy {
     @JoinColumn(name="username")
     private User buyer;
 
+    private User buyer;
+
     public Buy() {}
 
     public Buy(Item item, int purchasePrice, String status, User buyer) {
