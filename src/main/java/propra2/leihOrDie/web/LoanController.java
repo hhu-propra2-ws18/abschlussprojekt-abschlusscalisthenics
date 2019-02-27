@@ -1,11 +1,6 @@
 package propra2.leihOrDie.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-<<<<<<< HEAD
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
-=======
->>>>>>> Add reload of items on user page
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +16,6 @@ import propra2.leihOrDie.model.User;
 import javax.validation.Valid;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static propra2.leihOrDie.web.ProPayWrapper.*;
 
