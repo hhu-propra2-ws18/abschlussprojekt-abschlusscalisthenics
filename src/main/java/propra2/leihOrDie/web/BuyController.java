@@ -72,6 +72,7 @@ public class BuyController {
         } catch (Exception e) {
             return responseBuilder.createProPayErrorResponse(user, buy);
         }
+
         return responseBuilder.createSuccessResponse("Erfolgreich verkauft");
     }
 
