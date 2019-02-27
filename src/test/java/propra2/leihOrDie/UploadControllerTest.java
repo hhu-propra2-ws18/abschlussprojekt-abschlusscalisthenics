@@ -23,6 +23,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
@@ -60,7 +62,7 @@ public class UploadControllerTest {
     @After
     public void tearDown() {
         List<Picture> pictureList = pictureRepository.findAll();
-        if (!pictureList.isEmpty()) {
+        if (pictureList.size() == 1) {
             String pictureId = Long.toString(pictureList.get(0).getId());
             String type = pictureList.get(0).getType();
             File file = new File("img/" + pictureId.concat(type));
@@ -81,8 +83,68 @@ public class UploadControllerTest {
         mvc.perform(multipart("/item/1/uploadphoto")
                 .file(file)
                 .cookie(new Cookie("SessionID", "1")))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/item/1/uploadphoto"));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/item/1/uploadphoto"))
+                .andExpect(flash().attribute("message", "Sie haben schon 1 Fotos hochgeladen"));
 
-        Assert.assertEquals(pictureRepository.count(), 1);
+        Assert.assertEquals(pictureRepository.findPicturesOfItem(1L).size(), 1);
+
     }
+
+    @Test
+    public void testMaxNumberOfImagesMessage() throws Exception {
+        //set up for this test
+        Address address = new Address(1337, "TestStreet", 42, "TestCity");
+        User testUser = new User("name", "email@test.de", "password", "USER", address);
+        userRepository.save(testUser);
+        Item testItem = new Item("name", "description", 314, 1, true, 1, testUser.getAddress(), testUser);
+        itemRepository.save(testItem);
+        Picture pic1 = new Picture(testItem);
+        Picture pic2 = new Picture(testItem);
+        Picture pic3 = new Picture(testItem);
+        Picture pic4 = new Picture(testItem);
+        Picture pic5 = new Picture(testItem);
+        Picture pic6 = new Picture(testItem);
+        Picture pic7 = new Picture(testItem);
+        Picture pic8 = new Picture(testItem);
+        Picture pic9 = new Picture(testItem);
+        Picture pic10 = new Picture(testItem);
+        pictureRepository.save(pic1);
+        pictureRepository.save(pic2);
+        pictureRepository.save(pic3);
+        pictureRepository.save(pic4);
+        pictureRepository.save(pic5);
+        pictureRepository.save(pic6);
+        pictureRepository.save(pic7);
+        pictureRepository.save(pic8);
+        pictureRepository.save(pic9);
+        pictureRepository.save(pic10);
+
+
+        // try to save picture 11
+        byte[] bytes = Files.readAllBytes(Paths.get("img/", "test.jpg"));
+        MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpeg", bytes);
+
+        mvc.perform(multipart("/item/" + testItem.getId() + "/uploadphoto")
+                .file(file)
+                .cookie(new Cookie("SessionID", "1")))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/item/" + testItem.getId() + "/uploadphoto"))
+                .andExpect(flash().attribute("message", "Maximale Anzahl an Bildern ist erreicht."));
+
+        Assert.assertEquals(pictureRepository.findPicturesOfItem(testItem.getId()).size(), 10);
+    }
+
+    @Test
+    public void testNoFileMessage() throws Exception {
+        byte[] bytes = {};
+        MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpeg", bytes);
+
+        mvc.perform(multipart("/item/1/uploadphoto")
+                .file(file)
+                .cookie(new Cookie("SessionID", "1")))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/item/1/uploadphoto"))
+                .andExpect(flash().attribute("message", "Bitte eine Datei wählen :)"));
+
+        Assert.assertEquals(pictureRepository.findPicturesOfItem(1L).size(), 0);
+    }
+
 }
