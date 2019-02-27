@@ -69,10 +69,17 @@ public class ItemController {
             return "edit-item";
         }
         Item item = itemRepository.findById(id).get();
-        loadItemIntoForm(model, item);
+
+        item.setName(form.getName());
+        item.setDescription(form.getDescription());
+        item.setCost(form.getCost());
+        item.setDeposit(form.getDeposit());
+        item.setAvailability(form.isAvailability());
+        item.setAvailableTime(form.getAvailableTime());
+
         saveItem(item);
 
-        return "redirect:/";
+        return "redirect:/borrowall/" + id + "/";
     }
 
     @GetMapping("/borrowall/{id}")
