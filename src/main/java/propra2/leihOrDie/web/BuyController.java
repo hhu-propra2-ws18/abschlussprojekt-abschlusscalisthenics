@@ -70,8 +70,9 @@ public class BuyController {
             buyRepository.save(buy);
             transactionRepository.save(transaction);
         } catch (Exception e) {
-            return responseBuilder.createErrorResponse("Es war nicht möglich den Betrag zu überweisen. Bitte sende eine Email mit der genauen Beschreibung Deines Problems und dem Betreff \"" + sessionRepository.findUserBySessionCookie(sessionId).getUsername() + " - " + buy.getId().toString() + "\" an conflict@leihordie.de");
+            return responseBuilder.createProPayErrorResponse(user, buy);
         }
+
         return responseBuilder.createSuccessResponse("Erfolgreich verkauft");
     }
 

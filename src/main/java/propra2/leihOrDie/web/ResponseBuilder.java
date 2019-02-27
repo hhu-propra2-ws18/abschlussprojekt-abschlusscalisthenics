@@ -2,6 +2,9 @@ package propra2.leihOrDie.web;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import propra2.leihOrDie.dataaccess.SessionRepository;
+import propra2.leihOrDie.model.Buy;
+import propra2.leihOrDie.model.User;
 
 public class ResponseBuilder {
     public ResponseEntity createBadRequestResponse(String errorMessage) {
@@ -19,6 +22,11 @@ public class ResponseBuilder {
 
     public ResponseEntity createProPayErrorResponse() {
         String errorMessage = "Fehler bei der Verarbeitung der Zahlung.";
+        return new ResponseEntity<>(errorMessage, HttpStatus.SERVICE_UNAVAILABLE);
+    }
+
+    public ResponseEntity createProPayErrorResponse(User user, Buy buy) {
+        String errorMessage = "Es war nicht möglich den Betrag zu überweisen. Bitte sende eine Email mit der genauen Beschreibung Deines Problems und dem Betreff \"" + user.getUsername() + " - " + buy.getId().toString() + "\" an conflict@leihordie.de";
         return new ResponseEntity<>(errorMessage, HttpStatus.SERVICE_UNAVAILABLE);
     }
 }

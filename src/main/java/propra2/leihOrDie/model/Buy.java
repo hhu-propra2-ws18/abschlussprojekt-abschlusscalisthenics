@@ -18,7 +18,7 @@ public class Buy {
 
     private int purchasePrice;
     private String status;
-
+    
     private User buyer;
 
     public Buy() {}
