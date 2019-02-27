@@ -125,6 +125,9 @@ public class ConflictController {
         List<Loan> openConflicts = loanRepository.findLoansByState("conflict");
         model.addAttribute("conflicts", openConflicts);
 
+        List<Loan> openErrors = loanRepository.findLoansByState("error");
+        model.addAttribute("errors", openErrors);
+
         return "conflict-list";
     }
 }
