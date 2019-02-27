@@ -15,8 +15,7 @@ import propra2.leihOrDie.model.User;
 
 import java.util.List;
 
-import static propra2.leihOrDie.web.ProPayWrapper.freeReservationOfUser;
-import static propra2.leihOrDie.web.ProPayWrapper.punishAccount;
+import static propra2.leihOrDie.web.ProPayWrapper.*;
 
 @Controller
 @ResponseBody
@@ -42,8 +41,8 @@ public class ConflictController {
 
         Loan loan = loanRepository.findById(loanId).get();
 
-        if (!authorizationHandler.isAuthorized(sessionId, loan.getItem()) ||
-                !authorizationHandler.isAuthorized(sessionId, loan.getUser())) {
+        if (authorizationHandler.isAuthorized(sessionId, loan.getItem()) ||
+                authorizationHandler.isAuthorized(sessionId, loan.getUser())) {
             return responseBuilder.createUnauthorizedResponse();
         }
 
@@ -114,6 +113,35 @@ public class ConflictController {
         itemRepository.save(item);
 
         return responseBuilder.createSuccessResponse("Konflikt wurde gelöst.");
+    }
+
+    @PostMapping("/conflict/solveerror/{loanId}")
+    public ResponseEntity solveError(Model model, @PathVariable Long loanId,
+                                     @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        if (!authorizationHandler.isAdmin(sessionId)) {
+            return responseBuilder.createUnauthorizedResponse();
+        }
+
+        Loan loan = loanRepository.findById(loanId).get();
+
+        if (!loan.getState().equals("error")) {
+            return responseBuilder.createBadRequestResponse("Es liegt kein Fehler bei dieser Ausleihe vor.");
+        }
+
+        int amount = loan.getItem().getCost() * loan.getDuration();
+        String lenderEmail = loan.getUser().getEmail();
+        String ownerEmail = loan.getItem().getUser().getEmail();
+
+        try {
+            transferMoney(lenderEmail, ownerEmail, amount);
+        } catch (Exception e) {
+            return responseBuilder.createProPayErrorResponse();
+        }
+
+        loan.setState("completed");
+        loanRepository.save(loan);
+
+        return responseBuilder.createSuccessResponse("Überweisung wurde getätigt.");
     }
 
     @GetMapping("/conflict/admin")

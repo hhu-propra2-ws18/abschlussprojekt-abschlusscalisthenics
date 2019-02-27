@@ -16,4 +16,9 @@ public class ResponseBuilder {
         String errorMessage = "Du bist nicht authorisiert diese Aktion auszuführen.";
         return new ResponseEntity<>(errorMessage, HttpStatus.UNAUTHORIZED);
     }
+
+    public ResponseEntity createProPayErrorResponse() {
+        String errorMessage = "Fehler bei der Verarbeitung der Zahlung.";
+        return new ResponseEntity<>(errorMessage, HttpStatus.SERVICE_UNAVAILABLE);
+    }
 }
