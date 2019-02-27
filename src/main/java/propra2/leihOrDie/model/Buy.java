@@ -19,11 +19,14 @@ public class Buy {
     private int purchasePrice;
     private String status;
 
+    private User buyer;
+
     public Buy() {}
 
-    public Buy(Item item, int purchasePrice, String status) {
+    public Buy(Item item, int purchasePrice, String status, User buyer) {
         this.item = item;
         this.purchasePrice = purchasePrice;
         this.status = status;
+        this.buyer = buyer;
     }
 }
