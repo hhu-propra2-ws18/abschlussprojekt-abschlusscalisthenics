@@ -42,11 +42,6 @@ public class UserController {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         String userName = user.getUsername();
 
-        if (!isAuthorized(user, userName)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return "redirect:/error";
-        }
-
         model.addAttribute("user", userName);
         model.addAttribute("pendingloans", getPendingLoans(userName));
         model.addAttribute("activeloans", getActiveLoans(userName));
@@ -125,9 +120,5 @@ public class UserController {
         }
 
         return loans;
-    }
-
-    private boolean isAuthorized(User user, String username) {
-        return user.getUsername().equals(username);
     }
 }
