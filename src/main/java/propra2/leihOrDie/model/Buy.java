@@ -18,7 +18,7 @@ public class Buy {
 
     private int purchasePrice;
     private String status;
-
+    
     @ManyToOne
     @JoinColumn(name="username")
     private User buyer;
@@ -30,4 +30,5 @@ public class Buy {
         this.purchasePrice = purchasePrice;
         this.status = status;
         this.buyer = buyer;
+    }
 }
