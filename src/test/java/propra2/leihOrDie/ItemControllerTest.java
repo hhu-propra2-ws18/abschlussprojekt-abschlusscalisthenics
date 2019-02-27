@@ -138,7 +138,7 @@ public class ItemControllerTest {
     }
 
     @Test
-    public void testListAllItemsOnlyOneItem() throws Exception {
+    public void testListAllItems() throws Exception {
         DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
         User user = dummyUserGenerator.generateUser();
         userRepository.save(user);
@@ -156,29 +156,14 @@ public class ItemControllerTest {
                         allOf(
                                 hasProperty("id", is(item1.getId())),
                                 hasProperty("cost", is(item1.getCost())),
-                                hasProperty("deposit", is(item1.getDeposit()))))))
+                                hasProperty("deposit", is(item1.getDeposit())),
+                                hasProperty("description", is(item1.getDescription()))))))
                 .andExpect(model().attribute("items", hasItem(
                         allOf(
                                 hasProperty("id", is(item2.getId())),
                                 hasProperty("cost", is(item2.getCost())),
-                                hasProperty("deposit", is(item2.getDeposit()))))));
+                                hasProperty("deposit", is(item2.getDeposit())),
+                                hasProperty("description", is(item2.getDescription()))))));
     }
 
-    @Test
-    public void testListAllItemsTwoItemsExist() throws Exception {
-        DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
-        User user = dummyUserGenerator.generateUser();
-        userRepository.save(user);
-
-        sessionRepository.save(new Session("1", user));
-        DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
-        Item item1 = dummyItemGenerator.generateItem(user);
-        Item item2 = dummyItemGenerator.generateAnotherItem(user);
-        itemRepository.save(item1);
-        itemRepository.save(item2);
-
-        mvc.perform(get("/borrowall/"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(model().attribute("items", hasSize(2)));
-    }
 }
