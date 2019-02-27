@@ -21,6 +21,8 @@ public class Buy {
     
     private User buyer;
 
+    private User buyer;
+
     public Buy() {}
 
     public Buy(Item item, int purchasePrice, String status, User buyer) {
