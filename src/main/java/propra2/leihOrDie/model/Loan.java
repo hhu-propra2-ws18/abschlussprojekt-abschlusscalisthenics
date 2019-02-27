@@ -3,6 +3,7 @@ package propra2.leihOrDie.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -23,6 +24,9 @@ public class Loan {
     @ManyToOne
     @JoinColumn(name="item_id")
     private Item item;
+
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
     public Loan() {}
 

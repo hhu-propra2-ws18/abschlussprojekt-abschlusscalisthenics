@@ -44,6 +44,7 @@ public class UserController {
 
         model.addAttribute("user", userName);
         model.addAttribute("pendingloans", getPendingLoans(userName));
+        model.addAttribute("acceptedloans", getAcceptedLoans(userName));
         model.addAttribute("activeloans", getActiveLoans(userName));
         model.addAttribute("loans", loanRepository.findLoansOfUser(userName));
         model.addAttribute("items", itemRepository.findItemsOfUser(userName));
@@ -100,6 +101,21 @@ public class UserController {
             Loan loan = loanRepository.findLoansOfItem(item.getId()).get(0);
 
             if (loan.getState().equals("pending")) {
+                loans.add(loan);
+            }
+        }
+
+        return loans;
+    }
+
+    private List<Loan> getAcceptedLoans(String userName) {
+        List<Item> itemsOfUser = itemRepository.findItemsOfUser(userName);
+        List<Loan> loans = new ArrayList<>();
+
+        for (Item item: itemsOfUser) {
+            Loan loan = loanRepository.findLoansOfItem(item.getId()).get(0);
+
+            if (loan.getState().equals("accepted")) {
                 loans.add(loan);
             }
         }

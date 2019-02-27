@@ -1,6 +1,7 @@
 package propra2.leihOrDie.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +19,6 @@ import java.util.List;
 import static propra2.leihOrDie.web.ProPayWrapper.*;
 
 @Controller
-@ResponseBody
 public class ConflictController {
     @Autowired
     ItemRepository itemRepository;
@@ -30,7 +30,9 @@ public class ConflictController {
     SessionRepository sessionRepository;
 
     private ResponseBuilder responseBuilder = new ResponseBuilder();
+    @Autowired
     private AuthorizationHandler authorizationHandler = new AuthorizationHandler(sessionRepository);
+
 
     @PostMapping("/conflict/open/{loanId}")
     public ResponseEntity openConflict(Model model, @PathVariable Long loanId,
@@ -41,12 +43,12 @@ public class ConflictController {
 
         Loan loan = loanRepository.findById(loanId).get();
 
-        if (authorizationHandler.isAuthorized(sessionId, loan.getItem()) ||
-                authorizationHandler.isAuthorized(sessionId, loan.getUser())) {
+        if (!(authorizationHandler.isAuthorized(sessionId, loan.getItem()) ||
+                authorizationHandler.isAuthorized(sessionId, loan.getUser()))) {
             return responseBuilder.createUnauthorizedResponse();
         }
 
-        if (!loan.getState().equals("active")) {
+        if (!(loan.getState().equals("active") || loan.getState().equals("accepted"))) {
             return responseBuilder.createBadRequestResponse("Status der Ausleihe ist nicht \"aktiv\".");
         }
 
@@ -63,8 +65,8 @@ public class ConflictController {
         return responseBuilder.createSuccessResponse(message);
     }
 
-    @PostMapping("/conflict/solve/{loanId}")
-    public ResponseEntity solveConflict(Model model, ConflictForm form, @PathVariable Long loanId,
+    @PostMapping("/conflict/solve/{loanId}/and/{userName}")
+    public ResponseEntity solveConflict(Model model, @PathVariable Long loanId, @PathVariable String userName,
                                         @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         if (!authorizationHandler.isAdmin(sessionId)) {
             return responseBuilder.createUnauthorizedResponse();
@@ -76,32 +78,32 @@ public class ConflictController {
 
         Loan loan = loanRepository.findById(loanId).get();
 
-        String covenanteeEmail = form.getCovenanteeEmail();
+        String covenanteeName = userName;
 
-        if (userRepository.findUserByEMail(covenanteeEmail).isEmpty()) {
-            return responseBuilder.createBadRequestResponse("User " + covenanteeEmail + " existiert nicht.");
+        if (userRepository.findUserByName(covenanteeName).isEmpty()) {
+            return responseBuilder.createBadRequestResponse("User " + covenanteeName + " existiert nicht.");
         }
 
 
-        User convenantee = userRepository.findUserByEMail(covenanteeEmail).get(0);
+        User convenantee = userRepository.findUserByName(covenanteeName).get(0);
         User lendingUser = userRepository.findUserByEMail(convenantee.getEmail()).get(0);
 
         if (convenantee.getEmail().equals(loan.getUser().getEmail())) {
             try {
                 freeReservationOfUser(lendingUser.getEmail(), loan.getProPayReservationId());
             } catch (Exception e) {
-                return responseBuilder.createBadRequestResponse("ProPay Fehler");
+                return responseBuilder.createProPayErrorResponse();
             }
 
         } else if(convenantee.getEmail().equals(loan.getItem().getUser().getEmail())) {
             try {
                 punishAccount(lendingUser.getEmail(), loan.getProPayReservationId());
             } catch (Exception e) {
-                return responseBuilder.createBadRequestResponse("ProPay Fehler");
+                return responseBuilder.createProPayErrorResponse();
             }
 
         } else {
-            return responseBuilder.createBadRequestResponse("User " + covenanteeEmail + " steht nicht im Kontext mit Loan " +
+            return responseBuilder.createBadRequestResponse("User " + covenanteeName + " steht nicht im Kontext mit Loan " +
                     loan.getId() + ".");
         }
 
