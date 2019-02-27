@@ -12,8 +12,8 @@ public interface BuyRepository extends CrudRepository<Buy, Long> {
     List<Buy> findAll();
 
     @Query("SELECT b FROM Buy b WHERE b.item.id = :itemId")
-    List<Loan> findBuysOfItem(@Param("itemId") Long itemId);
+    List<Buy> findBuysOfItem(@Param("itemId") Long itemId);
 
     @Query("SELECT b FROM Buy b WHERE b.buyer.username = :username")
-    List<Loan> findBuysOfUser(@Param("username") String username);
+    List<Buy> findBuysOfUser(@Param("username") String username);
 }
