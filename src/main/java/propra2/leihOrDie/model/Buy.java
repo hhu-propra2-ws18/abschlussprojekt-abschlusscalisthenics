@@ -30,5 +30,4 @@ public class Buy {
         this.purchasePrice = purchasePrice;
         this.status = status;
         this.buyer = buyer;
-    }
 }
