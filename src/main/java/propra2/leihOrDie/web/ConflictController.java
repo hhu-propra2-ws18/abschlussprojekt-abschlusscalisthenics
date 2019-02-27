@@ -92,14 +92,14 @@ public class ConflictController {
             try {
                 freeReservationOfUser(lendingUser.getEmail(), loan.getProPayReservationId());
             } catch (Exception e) {
-                return responseBuilder.createBadRequestResponse("ProPay Fehler");
+                return responseBuilder.createProPayErrorResponse();
             }
 
         } else if(convenantee.getEmail().equals(loan.getItem().getUser().getEmail())) {
             try {
                 punishAccount(lendingUser.getEmail(), loan.getProPayReservationId());
             } catch (Exception e) {
-                return responseBuilder.createBadRequestResponse("ProPay Fehler");
+                return responseBuilder.createProPayErrorResponse();
             }
 
         } else {
