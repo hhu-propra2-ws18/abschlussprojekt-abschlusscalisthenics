@@ -133,19 +133,19 @@ public class LoanController {
             return responseBuilder.createUnauthorizedResponse();
         }
 
-        double amount = loan.getDuration() * loan.getItem().getDeposit();
+        double amount = loan.getDuration() * loan.getItem().getCost();
+
+        loan.setEndDate(LocalDateTime.now());
 
         try {
             transferMoney(loan.getUser().getEmail(), user.getEmail(), amount);
         } catch (Exception e) {
-            loan.setState("completed");
-            loan.setEndDate(LocalDateTime.now());
+            loan.setState("error");
             loanRepository.save(loan);
-            return responseBuilder.createBadRequestResponse("Es war nicht möglich den Betrag zu überweisen.");
+            return responseBuilder.createBadRequestResponse("Es war nicht möglich den Betrag zu überweisen. Bitte sende eine Email mit der genauen Beschreibung Deines Problems und dem Betreff \"" + sessionRepository.findUserBySessionCookie(sessionId).getUsername() + " - " + loan.getId().toString() + "\" an conflict@leihordie.de");
         }
 
         loan.setState("completed");
-        loan.setEndDate(LocalDateTime.now());
         loanRepository.save(loan);
 
         return responseBuilder.createSuccessResponse("Erfolgreich!");
