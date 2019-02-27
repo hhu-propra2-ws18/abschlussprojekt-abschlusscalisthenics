@@ -42,7 +42,7 @@ public class ItemRepositoryTest {
 
         DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
         User user = dummyUserGenerator.generateUser();
-        Item item = new Item(name, description, cost,deposit, availability, availableTime, user.getAddress(), user);
+        Item item = new Item(name, description, cost,deposit, availability, availableTime, user.getAddress(), user, 0);
 
         Assert.assertEquals(item.getName(), "Fahrrad");
         Assert.assertEquals(item.getDescription(), "Stereo Hybrid 160 Action Team 500Wh (2018)");

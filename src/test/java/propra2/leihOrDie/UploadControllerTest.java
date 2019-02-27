@@ -25,7 +25,6 @@ import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 
-
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -88,7 +87,6 @@ public class UploadControllerTest {
 
         Assert.assertEquals(pictureRepository.findPicturesOfItem(1L).size(), 1);
     }
-
     @Test
     public void testNoFileMessage() throws Exception {
         byte[] bytes = {};
