@@ -19,7 +19,6 @@ import java.util.List;
 import static propra2.leihOrDie.web.ProPayWrapper.*;
 
 @Controller
-@ResponseBody
 public class ConflictController {
     @Autowired
     ItemRepository itemRepository;
