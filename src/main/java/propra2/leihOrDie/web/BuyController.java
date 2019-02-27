@@ -43,11 +43,7 @@ public class BuyController {
         if (!isAuthorized(user, item)) {
             return responseBuilder.createUnauthorizedResponse();
         }
-
-        buyRepository.save(buy);
-        item.setAvailability(false);
-        itemRepository.save(item);
-
+        
         buyRepository.save(buy);
         item.setAvailability(false);
         itemRepository.save(item);
