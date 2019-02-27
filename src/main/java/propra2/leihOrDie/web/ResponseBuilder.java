@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public class ResponseBuilder {
-    public ResponseEntity createErrorResponse(String errorMessage) {
+    public ResponseEntity createBadRequestResponse(String errorMessage) {
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
@@ -15,5 +15,10 @@ public class ResponseBuilder {
     public ResponseEntity createUnauthorizedResponse() {
         String errorMessage = "Du bist nicht authorisiert diese Aktion auszuführen.";
         return new ResponseEntity<>(errorMessage, HttpStatus.UNAUTHORIZED);
+    }
+
+    public ResponseEntity createProPayErrorResponse() {
+        String errorMessage = "Fehler bei der Verarbeitung der Zahlung.";
+        return new ResponseEntity<>(errorMessage, HttpStatus.SERVICE_UNAVAILABLE);
     }
 }

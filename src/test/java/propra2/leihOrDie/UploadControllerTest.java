@@ -70,7 +70,7 @@ public class UploadControllerTest {
         pictureRepository.deleteAll();
         itemRepository.deleteAll();
         userRepository.deleteAll();
-
+        sessionRepository.deleteAll();
     }
 
     @Test
