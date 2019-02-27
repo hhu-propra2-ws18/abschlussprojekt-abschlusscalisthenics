@@ -39,9 +39,15 @@ public class BuyController {
         Item item = itemRepository.findById(itemId).get();
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         Buy buy = new Buy(item, form.getPurchasePrice(), "pending", user);
+
+        if (!isAuthorized(user, item)) {
+            return responseBuilder.createUnauthorizedResponse();
+        }
+
         buyRepository.save(buy);
         item.setAvailability(false);
         itemRepository.save(item);
+
         return responseBuilder.createSuccessResponse("Kaufanfrage wurde gestellt");
     }
 
@@ -50,6 +56,10 @@ public class BuyController {
         Item item = itemRepository.findById(itemId).get();
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         Buy buy = getPendingBuyOfItem(item);
+
+        if (!isAuthorized(user, item)) {
+            return responseBuilder.createUnauthorizedResponse();
+        }
 
         try {
             transferMoney(buy.getBuyer().getEmail(), user.getEmail(), buy.getPurchasePrice());
@@ -70,6 +80,10 @@ public class BuyController {
         Item item = itemRepository.findById(itemId).get();
         Buy buy = getPendingBuyOfItem(item);
 
+        if (!isAuthorized(sessionRepository.findUserBySessionCookie(sessionId), item)) {
+            return responseBuilder.createUnauthorizedResponse();
+        }
+
         buy.setStatus("declined");
 
         buyRepository.save(buy);
@@ -88,5 +102,9 @@ public class BuyController {
         }
 
         return buy;
+    }
+
+    private boolean isAuthorized(User user, Item item) {
+        return user.getUsername().equals(item.getUser().getUsername());
     }
 }
