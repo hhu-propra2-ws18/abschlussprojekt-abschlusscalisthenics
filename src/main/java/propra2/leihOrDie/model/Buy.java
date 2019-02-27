@@ -18,7 +18,7 @@ public class Buy {
 
     private int purchasePrice;
     private String status;
-    
+
     @ManyToOne
     @JoinColumn(name="username")
     private User buyer;
