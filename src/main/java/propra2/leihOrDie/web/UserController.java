@@ -93,6 +93,22 @@ public class UserController {
         return responseBuilder.createSuccessResponse("Überweisung erfolgreich!");
     }
 
+    //neu
+    @GetMapping("/reloaditems")
+    public String reloadItems(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId,
+                              HttpServletResponse response) {
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+        String userName = user.getUsername();
+
+        model.addAttribute("pendingloans", getPendingLoans(userName));
+        model.addAttribute("acceptedloans", getAcceptedLoans(userName));
+        model.addAttribute("activeloans", getActiveLoans(userName));
+        model.addAttribute("loans", loanRepository.findLoansOfUser(userName));
+        model.addAttribute("items", itemRepository.findItemsOfUser(userName));
+
+        return "loan-snippet";
+    }
+
     private List<Loan> getPendingLoans(String userName) {
         List<Item> itemsOfUser = itemRepository.findItemsOfUser(userName);
         List<Loan> loans = new ArrayList<>();

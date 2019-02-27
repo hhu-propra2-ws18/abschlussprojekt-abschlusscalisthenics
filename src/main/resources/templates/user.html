@@ -74,149 +74,181 @@
 
                 <!-- HIER TABELLE VON DEN ANGEBOTENEN PRODUKTEN DES USERS -->
 
-                <div class="columns">
-                    <div class="column is-6">
-                        <div class="card events-card">
-                            <header class="card-header">
-                                <p class="card-header-title">
-                                    Diese Artikel biete ich an:
-                                </p>
-                            </header>
-                            <div class="card-table">
-                                <div class="content">
-                                    <table class="table is-fullwidth is-striped">
-                                        <tbody>
-                                        <tr th:each="item: ${items}">
-                                            <th><a th:href="@{'/borrowall/' + ${item.id}}" th:text="${item.getName()}"></a></th>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                <div id="articles">
+                    <div class="columns">
+                        <div class="column is-6">
+                            <div class="card events-card">
+                                <header class="card-header">
+                                    <p class="card-header-title">
+                                        Diese Artikel biete ich an:
+                                    </p>
+                                </header>
+                                <div class="card-table">
+                                    <div class="content">
+                                        <table class="table is-fullwidth is-striped">
+                                            <tbody>
+                                            <tr th:each="item: ${items}">
+                                                <th><a th:href="@{'/borrowall/' + ${item.id}}" th:text="${item.getName()}"></a></th>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
 
+                            </div>
+                        </div>
+
+                        <div class="column is-6">
+                            <div class="card events-card">
+                                <header class="card-header">
+                                    <p class="card-header-title">
+                                        Ich leihe zurzeit aus:
+                                    </p>
+                                </header>
+                                <div class="card-table">
+                                    <div class="content">
+                                        <table class="table is-fullwidth is-striped">
+                                            <tbody>
+                                            <tr th:each="loan: ${loans}">
+                                                <th th:text="${loan.getItem().getName()}"></th>
+                                                <td>
+                                                    <form class="currentLoansForm" method="POST" th:action="@{'/conflict/open/' + ${loan.getId()}}">
+                                                        <button type="submit" name="submit" value="value" class="button is-medium is-primary">Konflikt</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
 
-                    <div class="column is-6">
-                        <div class="card events-card">
-                            <header class="card-header">
-                                <p class="card-header-title">
-                                    Ich leihe zurzeit aus:
-                                </p>
-                            </header>
-                            <div class="card-table">
-                                <div class="content">
-                                    <table class="table is-fullwidth is-striped">
-                                        <tbody>
-                                        <tr th:each="loan: ${loans}">
-                                            <th th:text="${loan.getItem().getName()}"></th>
-                                            <td>
-                                                <form method="POST" th:action="@{'/conflict/open/' + ${loan.getId()}}">
-                                                    <button type="submit" name="submit" value="value" class="button is-medium is-primary">Konflikt</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                    <!-- HIER TABELLE VON DEN ARTIKELN, WELCHE JEMAND VOM USER AUSLEIHEN MÖCHTE -->
+
+                    <div class="columns">
+                        <div class="column is-6">
+                            <div class="card events-card">
+                                <header class="card-header">
+                                    <p class="card-header-title">
+                                        Anfragen zum Verleihen:
+                                    </p>
+                                </header>
+                                <div class="card-table">
+                                    <div class="content">
+                                        <table class="table is-fullwidth is-striped">
+                                            <tbody>
+                                            <tr th:each="item: ${pendingloans}">
+                                                <th th:text="${item.getItem().getName()}"></th>
+                                                <td>
+                                                    <form class="acceptRequestForm" method="POST" th:action="@{'/request/accept/' + ${item.getId()}}">
+                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary">bestätigen</button>
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form class="declineRequestForm" method="POST" th:action="@{'/request/decline/' + ${item.getId()}}">
+                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">ablehnen</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="column is-6">
+                            <div class="card events-card">
+                                <header class="card-header">
+                                    <p class="card-header-title">
+                                        Diese Artikel verleihe ich zurzeit:
+                                    </p>
+                                </header>
+                                <div class="card-table">
+                                    <div class="content">
+                                        <table class="table is-fullwidth is-striped">
+                                            <tbody>
+                                            <tr th:each="acceptedloan: ${acceptedloans}">
+                                                <th th:text="${acceptedloan.getItem().getName()}"></th>
+                                                <td>
+                                                    <form class="pickedUpForm" method="POST" th:action="@{'/request/activate/' + ${acceptedloan.getId()}}">
+                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary">abgeholt</button>
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form class="conflictForm" method="POST" th:action="@{'/conflict/open/' + ${acceptedloan.getId()}}">
+                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">Konflikt</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <table class="table is-fullwidth is-striped">
+                                            <tbody>
+                                            <tr th:each="activeloan: ${activeloans}">
+                                                <th th:text="${activeloan.getItem().getName()}"></th>
+                                                <td>
+                                                    <form class="conflictForm" method="POST" th:action="@{'/request/return/' + ${activeloan.getId()}}">
+                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary ">zurückgegeben</button>
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form class="returnedForm" method="POST" th:action="@{'/conflict/open/' + ${activeloan.getId()}}">
+                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">Konflikt</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
-
-                <!-- HIER TABELLE VON DEN ARTIKELN, WELCHE JEMAND VOM USER AUSLEIHEN MÖCHTE -->
-
-                <div class="columns">
-                    <div class="column is-6">
-                        <div class="card events-card">
-                            <header class="card-header">
-                                <p class="card-header-title">
-                                    Anfragen zum Verleihen:
-                                </p>
-                            </header>
-                            <div class="card-table">
-                                <div class="content">
-                                    <table class="table is-fullwidth is-striped">
-                                        <tbody>
-                                        <tr th:each="item: ${pendingloans}">
-                                            <th th:text="${item.getItem().getName()}"></th>
-                                            <td>
-                                                <form method="POST" th:action="@{'/request/accept/' + ${item.getId()}}">
-                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary">bestätigen</button>
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form method="POST" th:action="@{'/request/decline/' + ${item.getId()}}">
-                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">ablehnen</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-
-                                    </table>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="column is-6">
-                        <div class="card events-card">
-                            <header class="card-header">
-                                <p class="card-header-title">
-                                    Diese Artikel verleihe ich zurzeit:
-                                </p>
-                            </header>
-                            <div class="card-table">
-                                <div class="content">
-                                    <table class="table is-fullwidth is-striped">
-                                        <tbody>
-                                        <tr th:each="acceptedloan: ${acceptedloans}">
-                                            <th th:text="${acceptedloan.getItem().getName()}"></th>
-                                            <td>
-                                                <form method="POST" th:action="@{'/request/activate/' + ${acceptedloan.getId()}}">
-                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary">abgeholt</button>
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form method="POST" th:action="@{'/conflict/open/' + ${acceptedloan.getId()}}">
-                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">Konflikt</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-
-                                    </table>
-
-                                    <table class="table is-fullwidth is-striped">
-                                        <tbody>
-                                        <tr th:each="activeloan: ${activeloans}">
-                                            <th th:text="${activeloan.getItem().getName()}"></th>
-                                            <td>
-                                                <form method="POST" th:action="@{'/request/return/' + ${activeloan.getId()}}">
-                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary ">zurückgegeben</button>
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form method="POST" th:action="@{'/conflict/open/' + ${activeloan.getId()}}">
-                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">Konflikt</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                        </tbody>
-
-                                    </table>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
+  <script>
+      function setDataSenderOnForms() {
+          var forms = [
+              document.getElementsByClassName("currentLoansForm"),
+              document.getElementsByClassName("acceptRequestForm"),
+              document.getElementsByClassName("declineRequestForm"),
+              document.getElementsByClassName("pickedUpForm"),
+              document.getElementsByClassName("conflictForm"),
+              document.getElementsByClassName("returnedForm")
+          ];
+
+          for(var i = 0; i < forms.length; i++) {
+              Array.prototype.forEach.call(forms[i], el=>el.addEventListener("submit", function (event) {
+                  event.preventDefault();
+                  sendData(el);
+              }));
+          };
+      }
+
+      function sendData(form) {
+          var xhr = new XMLHttpRequest();
+          //var formData = new FormData(form);
+
+          xhr.addEventListener("load", function(event) {
+              document.getElementById("articles").innerHTML = xhr.response;
+              setDataSenderOnForms();
+          });
+
+          xhr.open("POST", form.action);
+          xhr.send();
+
+      }
+
+      setDataSenderOnForms();
+  </script>
 </body>
 
 </html>
