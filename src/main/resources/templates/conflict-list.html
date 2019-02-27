@@ -35,11 +35,11 @@
                         <article class="tile is-child box">
                             <p class="title" th:text="${'AusleihID : ' + conflict.getId()}"></p>
                             <div class="buttons has-addons is-centered">
-                                <form method="POST" th:action="@{'/conflict/solve/' + ${conflict.id}}">
+                                <form method="POST" th:action="@{'/conflict/solve/' + ${conflict.id} + '/and/' + ${conflict.getUser().getUsername()}}">
                                     <button type="submit" name="submit" value="value" class="button is-large is-primary is-outlined" th:text="${conflict.getUser().getUsername()}"></button>
                                 </form>
 
-                                <form method="POST" th:action="@{'/conflict/solve/' + ${conflict.id}}">
+                                <form method="POST" th:action="@{'/conflict/solve/' + ${conflict.id} + '/and/' + ${conflict.getItem().getUser().getUsername()}}">
                                     <button type="submit" name="submit" value="value" class="button is-large is-primary is-outlined" th:text="${conflict.getItem().getUser().getUsername()}"></button>
                                 </form>
 
