@@ -24,7 +24,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
@@ -53,7 +53,7 @@ public class UploadControllerTest {
         User testUser = new User("name", "email@test.de", password, "USER", address);
         userRepository.save(testUser);
 
-        Item testItem = new Item("name", "description", 314, 1, true, 1, testUser.getAddress(), testUser);
+        Item testItem = new Item("name", "description", 314, 1, true, 1, testUser.getAddress(), testUser, 0);
         itemRepository.save(testItem);
 
         sessionRepository.save(new Session("1", testUser));
@@ -87,7 +87,6 @@ public class UploadControllerTest {
                 .andExpect(flash().attribute("message", "Sie haben schon 1 Fotos hochgeladen"));
 
         Assert.assertEquals(pictureRepository.findPicturesOfItem(1L).size(), 1);
-
     }
 
     @Test
