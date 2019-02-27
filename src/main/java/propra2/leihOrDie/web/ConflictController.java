@@ -65,8 +65,8 @@ public class ConflictController {
         return responseBuilder.createSuccessResponse(message);
     }
 
-    @PostMapping("/conflict/solve/{loanId}")
-    public ResponseEntity solveConflict(Model model, ConflictForm form, @PathVariable Long loanId,
+    @PostMapping("/conflict/solve/{loanId}/and/{userName}")
+    public ResponseEntity solveConflict(Model model, @PathVariable Long loanId, @PathVariable String userName,
                                         @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         if (!authorizationHandler.isAdmin(sessionId)) {
             return responseBuilder.createUnauthorizedResponse();
@@ -78,14 +78,14 @@ public class ConflictController {
 
         Loan loan = loanRepository.findById(loanId).get();
 
-        String covenanteeEmail = form.getCovenanteeEmail();
+        String covenanteeName = userName;
 
-        if (userRepository.findUserByEMail(covenanteeEmail).isEmpty()) {
-            return responseBuilder.createBadRequestResponse("User " + covenanteeEmail + " existiert nicht.");
+        if (userRepository.findUserByName(covenanteeName).isEmpty()) {
+            return responseBuilder.createBadRequestResponse("User " + covenanteeName + " existiert nicht.");
         }
 
 
-        User convenantee = userRepository.findUserByEMail(covenanteeEmail).get(0);
+        User convenantee = userRepository.findUserByName(covenanteeName).get(0);
         User lendingUser = userRepository.findUserByEMail(convenantee.getEmail()).get(0);
 
         if (convenantee.getEmail().equals(loan.getUser().getEmail())) {
@@ -103,7 +103,7 @@ public class ConflictController {
             }
 
         } else {
-            return responseBuilder.createBadRequestResponse("User " + covenanteeEmail + " steht nicht im Kontext mit Loan " +
+            return responseBuilder.createBadRequestResponse("User " + covenanteeName + " steht nicht im Kontext mit Loan " +
                     loan.getId() + ".");
         }
 
