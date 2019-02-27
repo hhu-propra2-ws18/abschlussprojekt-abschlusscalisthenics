@@ -176,12 +176,12 @@
                                             <th th:text="${acceptedloan.getItem().getName()}"></th>
                                             <td>
                                                 <form method="POST" th:action="@{'/request/activate/' + ${acceptedloan.getId()}}">
-                                                    <button type="submit" name="submit" value="value" class="button is-medium is-primary">abgeholt</button>
+                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary">abgeholt</button>
                                                 </form>
                                             </td>
                                             <td>
                                                 <form method="POST" th:action="@{'/conflict/open/' + ${acceptedloan.getId()}}">
-                                                    <button type="submit" name="submit" value="value" class="button is-medium is-primary is-outlined">Konflikt</button>
+                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">Konflikt</button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -195,12 +195,12 @@
                                             <th th:text="${activeloan.getItem().getName()}"></th>
                                             <td>
                                                 <form method="POST" th:action="@{'/request/return/' + ${activeloan.getId()}}">
-                                                    <button type="submit" name="submit" value="value" class="button is-medium is-primary ">zurückgegeben</button>
+                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary ">zurückgegeben</button>
                                                 </form>
                                             </td>
                                             <td>
                                                 <form method="POST" th:action="@{'/conflict/open/' + ${activeloan.getId()}}">
-                                                    <button type="submit" name="submit" value="value" class="button is-medium is-primary is-outlined">Konflikt</button>
+                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">Konflikt</button>
                                                 </form>
                                             </td>
                                         </tr>
