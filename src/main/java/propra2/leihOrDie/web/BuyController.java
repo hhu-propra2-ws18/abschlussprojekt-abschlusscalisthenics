@@ -48,6 +48,10 @@ public class BuyController {
         item.setAvailability(false);
         itemRepository.save(item);
 
+        buyRepository.save(buy);
+        item.setAvailability(false);
+        itemRepository.save(item);
+
         return responseBuilder.createSuccessResponse("Kaufanfrage wurde gestellt");
     }
 
