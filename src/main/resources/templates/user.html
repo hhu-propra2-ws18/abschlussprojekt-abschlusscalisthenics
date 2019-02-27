@@ -172,7 +172,7 @@
                                 <div class="content">
                                     <table class="table is-fullwidth is-striped">
                                         <tbody>
-                                        <tr th:each="activeloan: ${activeloans}">
+                                        <tr th:each="activeloan: ${acceptedloans}">
                                             <th th:text="${activeloan.getItem().getName()}"></th>
                                             <td>
                                                 <form method="POST" th:if="${activeloan.getState()} == 'accepted'" th:action="@{'/request/activate/' + ${activeloan.getId()}}">
@@ -180,13 +180,13 @@
                                                 </form>
                                             </td>
                                             <td>
-                                                <form method="POST" th:if="${activeloan.getState()} == 'active'" th:action="@{'/request/return/' + ${activeloan.getId()}}">
-                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">zurückgegeben</button>
+                                                <form method="POST" th:action="@{'/conflict/open/' + ${activeloan.getId()}}">
+                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">Konflikt</button>
                                                 </form>
                                             </td>
                                             <td>
-                                                <form method="POST" th:action="@{'/conflict/open/' + ${activeloan.getId()}}">
-                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">Konflikt</button>
+                                                <form method="POST" th:if="${activeloan.getState()} == 'active'" th:action="@{'/request/return/' + ${activeloan.getId()}}">
+                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">zurückgegeben</button>
                                                 </form>
                                             </td>
                                         </tr>
