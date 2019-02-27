@@ -43,12 +43,12 @@ public class ConflictController {
 
         Loan loan = loanRepository.findById(loanId).get();
 
-        if (authorizationHandler.isAuthorized(sessionId, loan.getItem()) ||
-                authorizationHandler.isAuthorized(sessionId, loan.getUser())) {
+        if (!(authorizationHandler.isAuthorized(sessionId, loan.getItem()) ||
+                authorizationHandler.isAuthorized(sessionId, loan.getUser()))) {
             return responseBuilder.createUnauthorizedResponse();
         }
 
-        if (!loan.getState().equals("active")) {
+        if (!(loan.getState().equals("active") || loan.getState().equals("accepted"))) {
             return responseBuilder.createBadRequestResponse("Status der Ausleihe ist nicht \"aktiv\".");
         }
 
@@ -92,14 +92,14 @@ public class ConflictController {
             try {
                 freeReservationOfUser(lendingUser.getEmail(), loan.getProPayReservationId());
             } catch (Exception e) {
-                return responseBuilder.createBadRequestResponse("ProPay Fehler");
+                return responseBuilder.createProPayErrorResponse();
             }
 
         } else if(convenantee.getEmail().equals(loan.getItem().getUser().getEmail())) {
             try {
                 punishAccount(lendingUser.getEmail(), loan.getProPayReservationId());
             } catch (Exception e) {
-                return responseBuilder.createBadRequestResponse("ProPay Fehler");
+                return responseBuilder.createProPayErrorResponse();
             }
 
         } else {
