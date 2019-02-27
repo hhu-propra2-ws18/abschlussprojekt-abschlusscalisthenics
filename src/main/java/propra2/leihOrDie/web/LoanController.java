@@ -133,8 +133,6 @@ public class LoanController {
             return responseBuilder.createUnauthorizedResponse();
         }
 
-        // What action should be triggered when the duration is smaller than the lend time?
-
         double amount = loan.getDuration() * loan.getItem().getDeposit();
 
         try {
