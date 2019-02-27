@@ -44,12 +44,12 @@ public class ConflictController {
 
         Loan loan = loanRepository.findById(loanId).get();
 
-        if (authorizationHandler.isAuthorized(sessionId, loan.getItem()) ||
-                authorizationHandler.isAuthorized(sessionId, loan.getUser())) {
+        if (!(authorizationHandler.isAuthorized(sessionId, loan.getItem()) ||
+                authorizationHandler.isAuthorized(sessionId, loan.getUser()))) {
             return responseBuilder.createUnauthorizedResponse();
         }
 
-        if (!loan.getState().equals("active")) {
+        if (!(loan.getState().equals("active") || loan.getState().equals("accepted"))) {
             return responseBuilder.createBadRequestResponse("Status der Ausleihe ist nicht \"aktiv\".");
         }
 
