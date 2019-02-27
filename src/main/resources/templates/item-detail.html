@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
       <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+      <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">-->
       <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
 
       <script th:inline="javascript">
           function sendLoanRequest() {
@@ -88,7 +88,6 @@
       <section class="hero is-fullheight is-default is-bold">
        <div class="hero-body">
            <div class="container has-text-left">
-               <h1 th:text="${name}" class="title is-2 has-text-centered" > Artikelname </h1>
                <br></br>
                <div class="columns is-vcentered">
 
@@ -139,7 +138,7 @@
                    <!--Image Beschreibung-->
                    <div class="column is-6 is-offset-1">
                      <p class="has-text-right">
-                       
+
                        <h1 th:text="${name}" class="title is-2"> ArtikelName </h1>
 
                      </p>
@@ -151,7 +150,7 @@
                            Abholort:
 
                        </h3>
-                       <h4 th:text="'Verfügbarkeit: ' + ${availability}" class="subtitle is-4">
+                       <h4 th:text="'Max. Ausleihdauer: ' + ${availableTime} + ' Tage'" class="subtitle is-4">
                            Verfügbarkeit:
 
                        </h4>
@@ -174,7 +173,6 @@
                            <div th:if="${isAvailable} == true">
                                <form th:object="${LoanForm}">
                                    <div class="field">
-                                       <label class="label">Wie viel Tagen:</label>
                                        <div class="control">
                                            <input class="input" id="loanDuration" type="number" pattern="\d*" placeholder="Wie lange am Stück willst du deinen Artikel ausleihen?" th:field="*{loanDuration}">
                                        </div>
