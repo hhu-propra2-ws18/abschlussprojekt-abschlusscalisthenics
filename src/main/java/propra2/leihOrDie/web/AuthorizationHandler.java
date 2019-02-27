@@ -1,10 +1,15 @@
 package propra2.leihOrDie.web;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
 import propra2.leihOrDie.dataaccess.SessionRepository;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.User;
 
+@Service
 public class AuthorizationHandler {
+    @Autowired
     private SessionRepository sessionRepository;
 
     public AuthorizationHandler(SessionRepository sessionRepository) {

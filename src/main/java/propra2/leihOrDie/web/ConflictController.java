@@ -1,6 +1,7 @@
 package propra2.leihOrDie.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,7 +31,9 @@ public class ConflictController {
     SessionRepository sessionRepository;
 
     private ResponseBuilder responseBuilder = new ResponseBuilder();
+    @Autowired
     private AuthorizationHandler authorizationHandler = new AuthorizationHandler(sessionRepository);
+
 
     @PostMapping("/conflict/open/{loanId}")
     public ResponseEntity openConflict(Model model, @PathVariable Long loanId,

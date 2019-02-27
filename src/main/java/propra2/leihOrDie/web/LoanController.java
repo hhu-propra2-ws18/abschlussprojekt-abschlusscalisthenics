@@ -1,6 +1,7 @@
 package propra2.leihOrDie.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -33,7 +34,9 @@ public class LoanController {
     SessionRepository sessionRepository;
 
     private ResponseBuilder responseBuilder = new ResponseBuilder();
+    @Autowired
     private AuthorizationHandler authorizationHandler = new AuthorizationHandler(sessionRepository);
+
 
     @PostMapping(value="/request/{itemId}")
     @ResponseBody
