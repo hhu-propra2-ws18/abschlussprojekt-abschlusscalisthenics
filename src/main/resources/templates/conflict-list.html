@@ -1,10 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Konflikte</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 </head>
-<body>
+<body class="has-navbar-fixed-top">
+<div th:insert="fragments/header :: header"></div>
+<br></br>
+
+<section class="hero is-primary welcome is-small is-outlined">
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title">
+                Konfliktstelle für den Admin
+            </h1>
+            <h2 class="subtitle">
+                Hier werden die Konflikte der Kunden aufgelistet. Bitte lösen!
+            </h2>
+        </div>
+    </div>
+</section>
+<br></br>
+
+<div class="columns is-centered">
+    <div class="column is-half">
+        <div class="container has-text-centered is-centered">
+            <section class="info-tiles" th:each="conflict: ${conflicts}">
+                <div class="tile is-ancestor has-text-centered">
+                    <div class="tile is-parent is-7">
+                        <article class="tile is-child box">
+                            <p class="title" th:text="${'AusleihID : ' + conflict.getId()}"></p>
+                            <div class="buttons has-addons is-centered">
+                                <form method="POST" th:action="@{'/conflict/solve/' + ${conflict.id}}">
+                                    <button type="submit" name="submit" value="value" class="button is-large is-primary is-outlined" th:text="${conflict.getUser().getUsername()}"></button>
+                                </form>
+
+                                <form method="POST" th:action="@{'/conflict/solve/' + ${conflict.id}}">
+                                    <button type="submit" name="submit" value="value" class="button is-large is-primary is-outlined" th:text="${conflict.getItem().getUser().getUsername()}"></button>
+                                </form>
+
+                            </div>
+
+                        </article>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
 
 </body>
 </html>
