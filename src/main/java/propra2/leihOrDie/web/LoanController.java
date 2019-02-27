@@ -112,7 +112,7 @@ public class LoanController {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         Loan loan = loanRepository.findById(loanId).get();
 
-        if (!isAuthorized(user.getUsername(), loan.getItem().getUser())) {
+        if (!isAuthorized(sessionId, loan.getItem().getUser())) {
             return responseBuilder.createUnauthorizedResponse();
         }
 
@@ -128,7 +128,7 @@ public class LoanController {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         Loan loan = loanRepository.findById(loanId).get();
 
-        if (!isAuthorized(user.getUsername(), loan.getItem().getUser())) {
+        if (!isAuthorized(sessionId, loan.getItem().getUser())) {
             return responseBuilder.createUnauthorizedResponse();
         }
 
