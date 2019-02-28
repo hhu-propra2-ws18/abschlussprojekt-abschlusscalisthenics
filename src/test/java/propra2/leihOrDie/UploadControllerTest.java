@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UploadControllerTest {
 
     @Autowired
-    MockMvc mvc;
+    MockMvc mvc; 
 
     @Autowired
     UserRepository userRepository;
