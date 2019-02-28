@@ -88,7 +88,6 @@
       <section class="hero is-fullheight is-default is-bold">
        <div class="hero-body">
            <div class="container has-text-left">
-               <h1 th:text="${name}" class="title is-2 has-text-centered" > Artikelname </h1>
                <br></br>
                <div class="columns is-vcentered">
 
@@ -151,7 +150,7 @@
                            Abholort:
 
                        </h3>
-                       <h4 th:text="'Verfügbarkeit: ' + ${availability}" class="subtitle is-4">
+                       <h4 th:text="'Max. Ausleihdauer: ' + ${availableTime} + ' Tage'" class="subtitle is-4">
                            Verfügbarkeit:
 
                        </h4>
