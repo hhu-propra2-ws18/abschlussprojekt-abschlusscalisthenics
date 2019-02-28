@@ -10,18 +10,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import propra2.leihOrDie.dataaccess.*;
+import propra2.leihOrDie.form.TransactionForm;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Loan;
 import propra2.leihOrDie.model.Transaction;
 import propra2.leihOrDie.model.User;
+import propra2.leihOrDie.response.ResponseBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
-import static propra2.leihOrDie.web.ProPayWrapper.getBalanceOfUser;
-import static propra2.leihOrDie.web.ProPayWrapper.raiseBalanceOfUser;
+import static propra2.leihOrDie.propay.ProPayWrapper.getBalanceOfUser;
+import static propra2.leihOrDie.propay.ProPayWrapper.raiseBalanceOfUser;
 
 @Controller
 public class UserController {
@@ -112,9 +114,16 @@ public class UserController {
     private List<Loan> getPendingLoans(String userName) {
         List<Item> itemsOfUser = itemRepository.findItemsOfUser(userName);
         List<Loan> loans = new ArrayList<>();
+        Loan loan;
 
         for (Item item: itemsOfUser) {
-            Loan loan = loanRepository.findLoansOfItem(item.getId()).get(0);
+            List<Loan> loanList = loanRepository.findLoansOfItem(item.getId());
+
+            if(loanList.size() != 0) {
+                loan = loanList.get(0);
+            } else {
+                continue;
+            }
 
             if (loan.getState().equals("pending")) {
                 loans.add(loan);
@@ -127,9 +136,16 @@ public class UserController {
     private List<Loan> getAcceptedLoans(String userName) {
         List<Item> itemsOfUser = itemRepository.findItemsOfUser(userName);
         List<Loan> loans = new ArrayList<>();
+        Loan loan;
 
         for (Item item: itemsOfUser) {
-            Loan loan = loanRepository.findLoansOfItem(item.getId()).get(0);
+            List<Loan> loanList = loanRepository.findLoansOfItem(item.getId());
+
+            if(loanList.size() != 0) {
+                loan = loanList.get(0);
+            } else {
+                continue;
+            }
 
             if (loan.getState().equals("accepted")) {
                 loans.add(loan);
@@ -142,9 +158,16 @@ public class UserController {
     private List<Loan> getActiveLoans(String userName) {
         List<Item> itemsOfUser = itemRepository.findItemsOfUser(userName);
         List<Loan> loans = new ArrayList<>();
+        Loan loan;
 
         for (Item item: itemsOfUser) {
-            Loan loan = loanRepository.findLoansOfItem(item.getId()).get(0);
+            List<Loan> loanList = loanRepository.findLoansOfItem(item.getId());
+
+            if(loanList.size() != 0) {
+                loan = loanList.get(0);
+            } else {
+                continue;
+            }
 
             if (loan.getState().equals("active")) {
                 loans.add(loan);
