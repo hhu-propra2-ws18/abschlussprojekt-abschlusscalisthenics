@@ -1,5 +1,6 @@
 package propra2.leihOrDie.web;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static propra2.leihOrDie.propay.ProPayWrapper.transferMoney;
+
 
 @Controller
 public class BuyController {
@@ -42,6 +44,7 @@ public class BuyController {
 
         for (Item item: items) {
             Buy pendingBuy = getPendingBuyOfItem(item);
+
             if (pendingBuy != null ) {
                 buys.add(pendingBuy);
             }
