@@ -10,7 +10,7 @@
 <body>
     <nav class="navbar is-dark is-fixed-top" role="navigation" aria-label="main navigation" th:fragment="header">
         <div class="navbar-brand">
-            <a class="navbar-item">
+            <a class="navbar-item" href="/">
                 <img src="https://image.flaticon.com/icons/svg/126/126496.svg" width="28" height="28">
             </a>
             <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -34,24 +34,6 @@
                     Produkt einstellen
                 </a>
 
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
-                        Nachrichten
-                    </a>
-
-                    <div class="navbar-dropdown">
-                        <a class="navbar-item">
-                            Chat
-                        </a>
-                        <a class="navbar-item">
-                            Benachrichtigungen
-                        </a>
-                        <hr class="navbar-divider">
-                        <a class="navbar-item">
-                            Konfliktstelle
-                        </a>
-                    </div>
-                </div>
             </div>
 
             <div class="navbar-end" th:if="${isLoggedIn} == false">

@@ -39,7 +39,7 @@ public class ItemController {
         }
 
         Item item = new Item(form.getName(), form.getDescription(), form.getCost(), form.getDeposit(), true,
-                form.getAvailableTime(), user.getAddress(), user);
+                form.getAvailableTime(), user.getAddress(), user, form.getSoldPrice());
         saveItem(item);
 
         return "redirect:/item/" + item.getId() + "/uploadphoto";

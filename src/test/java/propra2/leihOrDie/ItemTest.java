@@ -16,7 +16,7 @@ public class ItemTest {
         User user = (new DummyUserGenerator()).generateUser();
 
         Item item = new Item("testitem", "das ist ein test", 200, 10,
-                true, 20, user.getAddress(), user);
+                true, 20, user.getAddress(), user, 0);
 
         Assert.assertEquals(item.getName(), "testitem");
         Assert.assertEquals(item.getDescription(), "das ist ein test");

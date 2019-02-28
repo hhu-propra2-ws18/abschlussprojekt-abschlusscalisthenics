@@ -50,56 +50,52 @@
 
             <div class="columns">
                 <div class="column is-6">
-                    <div class="card events-card">
-                        <header class="card-header">
-                            <p class="card-header-title">
-                                Meine Käufe:
-                            </p>
-                        </header>
-                        <div class="card-table">
-                            <div class="content">
-                                <table class="table is-fullwidth is-striped">
-                                    <tbody>
-                                    <tr th:each="purchase: ${mypurchases}">
-                                        <th th:text="${purchase.getItem().getName()}"></th>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                    <section class="info-tiles">
+                        <div class="tile is-ancestor has-text-centered">
+                            <div class="tile is-parent">
+                                <article class="tile is-child box">
+                                    <p class="subtitle">Meine Käufe</p>
+                                    <table class="table is-fullwidth is-striped">
+                                        <tbody>
+                                        <tr th:each="purchase: ${mypurchases}">
+                                            <th th:text="${purchase.getItem().getName()}"></th>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </article>
                             </div>
                         </div>
-
-                    </div>
+                    </section>
                 </div>
 
             <div class="column is-6">
-            <section class="info-tiles">
-                <div class="tile is-ancestor has-text-centered">
-                    <div class="tile is-parent">
-                        <article class="tile is-child box">
-                            <p class="subtitle has-text-danger">Kaufanfragen</p>
-                            <p th:if="${buy} == null">Keine Anfragen zurzeit!</p>
-                            <table class="table is-fullwidth is-striped">
-                                <tbody th:if="${buy} != null">
-                                <tr>
-                                    <th th:text="${buy.getItem().getName()}"></th>
-                                    <td>
-                                        <form method="POST" th:action="@{'buy/accept/' + ${buy.getItem().getId()}}">
-                                            <button type="submit" name="submit" value="value" class="button is-small is-primary">bestätigen</button>
-                                        </form>
-                                    </td>
-                                    <td>
-                                        <form method="POST" th:action="@{'buy/decline/' + ${buy.getItem().getId()}}">
-                                            <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">ablehnen</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                </tbody>
+                <section class="info-tiles">
+                    <div class="tile is-ancestor has-text-centered">
+                        <div class="tile is-parent">
+                            <article class="tile is-child box">
+                                <p class="subtitle has-text-danger">Kaufanfragen</p>
+                                <table class="table is-fullwidth is-striped">
+                                    <tbody>
+                                    <tr th:each="buy: ${buys}">
+                                        <th th:text="${buy.getItem().getName()}"></th>
+                                        <td>
+                                            <form method="POST" th:action="@{'buy/accept/' + ${buy.getItem().getId()}}">
+                                                <button type="submit" name="submit" value="value" class="button is-small is-primary">bestätigen</button>
+                                            </form>
+                                        </td>
+                                        <td>
+                                            <form method="POST" th:action="@{'buy/decline/' + ${buy.getItem().getId()}}">
+                                                <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">ablehnen</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    </tbody>
 
-                            </table>
-                        </article>
+                                </table>
+                            </article>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
             </div>
             </div>
         </div>

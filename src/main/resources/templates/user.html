@@ -231,7 +231,7 @@
                                                 <th th:text="${loan.getItem().getName()}"></th>
                                                 <td>
                                                     <form class="currentLoansForm" method="POST" th:action="@{'/conflict/open/' + ${loan.getId()}}">
-                                                        <button type="submit" name="submit" value="value" class="button is-medium is-primary">Konflikt</button>
+                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary">Konflikt</button>
                                                     </form>
                                                 </td>
                                             </tr>
