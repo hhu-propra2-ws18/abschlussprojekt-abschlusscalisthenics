@@ -1,7 +1,6 @@
 package propra2.leihOrDie.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -9,9 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import propra2.leihOrDie.dataaccess.LoanRepository;
 import propra2.leihOrDie.dataaccess.SessionRepository;
 import propra2.leihOrDie.dataaccess.UserRepository;
+import propra2.leihOrDie.model.ExceededLoan;
 import propra2.leihOrDie.model.Loan;
 import propra2.leihOrDie.model.User;
-import propra2.leihOrDie.response.ResponseBuilder;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -28,22 +27,16 @@ public class ReminderController {
     @Autowired
     SessionRepository sessionRepository;
 
-    ResponseBuilder responseBuilder;
-
     @GetMapping("/reminde")
-    public ResponseEntity getReminded(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+    public String getReminded(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         List<Loan> exceededLoansOfUser = getExceededLoans(user);
+        List<ExceededLoan> exceededLoans = getExceededLoansList(exceededLoansOfUser);
 
-        model.addAttribute(user.getUsername());
+        model.addAttribute("user", user.getUsername());
+        model.addAttribute("exceededLoans", exceededLoans);
 
-        for (Loan loan: exceededLoansOfUser) {
-            int exceededDays = numberOfExceededDays(loan);
-            model.addAttribute(loan.getItem());
-            model.addAttribute(exceededDays);
-        }
-
-        return responseBuilder.createProPayErrorResponse();
+        return "";
     }
 
     private List<Loan> getExceededLoans(User user) {
@@ -57,6 +50,16 @@ public class ReminderController {
         }
 
         return returnLoans;
+    }
+
+    private List<ExceededLoan> getExceededLoansList(List<Loan> exceededLoansOfUser) {
+        List<ExceededLoan> exceededLoans = new ArrayList<>();
+
+        for (Loan loan: exceededLoansOfUser) {
+            exceededLoans.add(new ExceededLoan(loan, numberOfExceededDays(loan)));
+        }
+
+        return exceededLoans;
     }
 
     private int numberOfExceededDays(Loan loan) {
