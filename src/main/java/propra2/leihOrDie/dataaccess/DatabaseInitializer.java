@@ -6,10 +6,7 @@ import javax.servlet.ServletException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.stereotype.Component;
-import propra2.leihOrDie.model.Address;
-import propra2.leihOrDie.model.Item;
-import propra2.leihOrDie.model.Loan;
-import propra2.leihOrDie.model.User;
+import propra2.leihOrDie.model.*;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
@@ -25,6 +22,8 @@ public class DatabaseInitializer implements ServletContextInitializer {
     ItemRepository itemRepository;
     @Autowired
     LoanRepository loanRepository;
+    @Autowired
+    TransactionRepository transactionRepository;
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
@@ -55,15 +54,27 @@ public class DatabaseInitializer implements ServletContextInitializer {
                 user9, user10));
 
         raiseBalanceOfUser(user1.getEmail(), 10000);
+        Transaction transaction1 = new Transaction(user1, user1, 10000, "Überweisung");
         raiseBalanceOfUser(user2.getEmail(), 10000);
+        Transaction transaction2 = new Transaction(user2, user2, 10000, "Überweisung");
         raiseBalanceOfUser(user3.getEmail(), 10000);
+        Transaction transaction3 = new Transaction(user3, user3, 10000, "Überweisung");
         raiseBalanceOfUser(user4.getEmail(), 10000);
+        Transaction transaction4 = new Transaction(user4, user4, 10000, "Überweisung");
         raiseBalanceOfUser(user5.getEmail(), 10000);
+        Transaction transaction5 = new Transaction(user5, user5, 10000, "Überweisung");
         raiseBalanceOfUser(user6.getEmail(), 10000);
+        Transaction transaction6 = new Transaction(user6, user6, 10000, "Überweisung");
         raiseBalanceOfUser(user7.getEmail(), 10000);
+        Transaction transaction7 = new Transaction(user7, user7, 10000, "Überweisung");
         raiseBalanceOfUser(user8.getEmail(), 10000);
+        Transaction transaction8 = new Transaction(user8, user8, 10000, "Überweisung");
         raiseBalanceOfUser(user9.getEmail(), 10000);
+        Transaction transaction9 = new Transaction(user9, user9, 10000, "Überweisung");
         raiseBalanceOfUser(user10.getEmail(), 10000);
+        Transaction transaction10 = new Transaction(user10, user10, 10000, "Überweisung");
+
+        transactionRepository.saveAll(Arrays.asList(transaction1, transaction2, transaction3, transaction4, transaction5, transaction6, transaction7, transaction8, transaction9, transaction10));
 
         Item item1 = new Item("Säge", "Sehr scharf", 5, 30, true, 4, user1.getAddress(), user1);
         Item item2 = new Item("Hammer", "Super schwer", 2, 15, true, 3, user2.getAddress(), user2);

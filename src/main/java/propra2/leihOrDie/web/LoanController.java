@@ -4,21 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import propra2.leihOrDie.dataaccess.ItemRepository;
-import propra2.leihOrDie.dataaccess.LoanRepository;
-import propra2.leihOrDie.dataaccess.SessionRepository;
-import propra2.leihOrDie.dataaccess.UserRepository;
+import propra2.leihOrDie.dataaccess.*;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Loan;
 import propra2.leihOrDie.model.User;
 
 import javax.validation.Valid;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.time.LocalDate;
 
 import static propra2.leihOrDie.web.ProPayWrapper.*;
 
@@ -32,10 +29,10 @@ public class LoanController {
     LoanRepository loanRepository;
     @Autowired
     SessionRepository sessionRepository;
-
-    private ResponseBuilder responseBuilder = new ResponseBuilder();
     @Autowired
     private AuthorizationHandler authorizationHandler = new AuthorizationHandler(sessionRepository);
+  
+    private ResponseBuilder responseBuilder = new ResponseBuilder();
 
 
     @PostMapping(value="/request/{itemId}")
@@ -119,8 +116,8 @@ public class LoanController {
             return responseBuilder.createUnauthorizedResponse();
         }
 
+        loan.setDayOfRental(LocalDate.now());
         loan.setState("active");
-        loan.setStartDate(LocalDateTime.now());
         loanRepository.save(loan);
 
         return responseBuilder.createSuccessResponse("Bestätigt");
@@ -137,8 +134,8 @@ public class LoanController {
 
         double amount = loan.getDuration() * loan.getItem().getCost();
 
-        loan.setEndDate(LocalDateTime.now());
-
+        loan.setDayOfReturn(LocalDate.now());
+      
         try {
             transferMoney(loan.getUser().getEmail(), user.getEmail(), amount);
         } catch (Exception e) {
@@ -151,5 +148,22 @@ public class LoanController {
         loanRepository.save(loan);
 
         return responseBuilder.createSuccessResponse("Erfolgreich!");
+    }
+  
+    @Scheduled(cron = "0 0 7 * * ?")
+    private void determineExceededLoans() {
+        List<Loan> allActivLoans = loanRepository.findLoansByState("active");
+        LocalDate now = LocalDate.now();
+
+        for (Loan loan: allActivLoans) {
+            saveExceededLoans(loan, now);
+        }
+    }
+
+    private void saveExceededLoans(Loan loan, LocalDate now) {
+        if (now.isAfter(loan.getDayOfRental().plusDays(loan.getDuration()))) {
+            loan.setExceeded(true);
+            loanRepository.save(loan);
+        }
     }
 }
