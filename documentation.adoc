@@ -169,11 +169,12 @@ Dateien die Verändert werden mussten: +
 Item.java musste dahingehend angepasst werden, dass es noch möglich ist, einen
 Verkaufspreis zu speichern.
 
-Desweiteren mussten Änderungen an den HTML-Dateien user-shop.html und
-vorgenommen werden. Im Frontend mussten ebenfalls nicht viele Änderungen
-vorgenommen werden. Es mussten lediglich ein Button zum kaufen eingefügt werden
-und die Möglichkeit für einen Anbieter den Verkauf zu bestätigen oder
-abzulehnen. Außerdem musste das Formular mit dem ein neuer Artikel eingefügt
-wird angepasst werden, sodass man einen Verkaufspreis festlegen kann.
+Im Frontend mussten ebenfalls nicht viele Änderungen vorgenommen werden. Es
+mussten lediglich ein Button zum kaufen eingefügt werden und die Möglichkeit für
+einen Anbieter den Verkauf zu bestätigen oder abzulehnen. Dazu wurde eine
+Abschnitt in der Ansicht von dem eigenen Benutzerkonto eingefügt, in der man die
+Käufe die man getätigt hat sieht sowie die verkauften Artikel. Außerdem musste
+das Formular mit dem ein neuer Artikel eingefügt wird angepasst werden, sodass
+man einen Verkaufspreis festlegen kann.
 
 ## Konfliktlösung
