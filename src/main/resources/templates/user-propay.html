@@ -22,15 +22,15 @@
                     Profil
                 </p>
                 <ul class="menu-list">
-                    <li><a href="/Profilverwalten">Profil verwalten</a></li>
+                    <li><a href="/myaccount">Profil</a></li>
                 </ul>
                 <p class="menu-label">
-                    Einstellungen
+                    Menü
                 </p>
                 <ul class="menu-list">
                     <li><a href="/myaccount/propay">Propay</a></li>
-                    <li><a href="Kundenservice">Kundenservice</a></li>
-                    <li><a href="Fragen">häufige Fragen</a></li>
+                    <li><a href="/myaccount/buy">Kaufservice</a></li>
+                    <li><a href="/help">Hilfe</a></li>
                 </ul>
             </aside>
         </div>
@@ -55,12 +55,7 @@
                             <p class="subtitle">Kontostand</p>
                         </article>
                     </div>
-                </div>
-            </section>
-
-            <form class= action="#" th:action="@{/myaccount/propay}" th:object="${transactionForm}" method="POST" enctype="utf8">
-            <section class="info-tiles">
-                <div class="tile is-ancestor has-text-centered">
+                    <form class= action="#" th:action="@{/myaccount/propay}" th:object="${transactionForm}" method="POST" enctype="utf8">
                     <div class="tile is-parent">
                         <article class="tile is-child box">
                             <div class="field">
@@ -70,11 +65,14 @@
                                 </div>
                                 <p class="help is-danger" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}">Überweisung ungültig</p>
                             </div>
+                            <div class="buttons has-addons is-centered">
+                                <span class="button is-primary is-small">überweisen</span>
+                            </div>
                         </article>
                     </div>
+                    </form>
                 </div>
             </section>
-            </form>
 
             <!-- Hier Transaktionen -->
 
@@ -82,6 +80,7 @@
                 <div class="tile is-ancestor has-text-centered">
                     <div class="tile is-parent">
                         <article class="tile is-child box">
+                            <label class="subtitle has-text-centered">Transaktionen</label>
                             <table class="table is-fullwidth is-hoverable">
                                 <thead>
                                     <tr>
@@ -94,8 +93,8 @@
 
                                 <tbody>
                                 <tr th:each="transaction: ${transactions}">
-                                    <th th:text="${transaction.getFromUser()}"></th>
-                                    <td th:text="${transaction.getToUser()}"></td>
+                                    <th th:text="${transaction.getFromUser().getUsername()}"></th>
+                                    <td th:text="${transaction.getToUser().getUsername()}"></td>
                                     <td th:text="${transaction.getAmount()}"></td>
                                     <td th:text="${transaction.getDate()}"></td>
                                 </tr>
@@ -106,7 +105,6 @@
                     </div>
                 </div>
             </section>
-
 
         </div>
     </div>
