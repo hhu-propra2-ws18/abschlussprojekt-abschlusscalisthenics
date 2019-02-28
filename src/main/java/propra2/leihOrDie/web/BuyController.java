@@ -13,6 +13,8 @@ import propra2.leihOrDie.model.Transaction;
 import propra2.leihOrDie.model.User;
 import propra2.leihOrDie.response.ResponseBuilder;
 
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 import static propra2.leihOrDie.propay.ProPayWrapper.transferMoney;
