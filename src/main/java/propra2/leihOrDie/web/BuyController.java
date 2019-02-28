@@ -12,6 +12,7 @@ import propra2.leihOrDie.model.Transaction;
 import propra2.leihOrDie.model.User;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 import static propra2.leihOrDie.web.ProPayWrapper.transferMoney;
@@ -35,14 +36,15 @@ public class BuyController {
     public String showBuyService(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         List<Item> items = itemRepository.findItemsOfUser(user.getUsername());
+        List<Buy> buys = new ArrayList<>();
 
-        Buy buy = null;
         for (Item item: items) {
-            if (getPendingBuyOfItem(item) != null ) {
-                buy = getPendingBuyOfItem(item);
+            Buy pendingBuy = getPendingBuyOfItem(item);
+            if (pendingBuy != null ) {
+                buys.add(pendingBuy);
             }
         }
-        model.addAttribute("buy", buy);
+        model.addAttribute("buys", buys);
         model.addAttribute("mypurchases", buyRepository.findBuysOfUser(user.getUsername()));
         return "user-shop";
     }
