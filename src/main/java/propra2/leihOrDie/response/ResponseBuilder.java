@@ -1,4 +1,4 @@
-package propra2.leihOrDie.web;
+package propra2.leihOrDie.response;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

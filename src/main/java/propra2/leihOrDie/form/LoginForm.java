@@ -1,4 +1,4 @@
-package propra2.leihOrDie.web;
+package propra2.leihOrDie.form;
 
 import lombok.Data;
 import javax.validation.constraints.Email;
@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
-class LoginForm {
+public class LoginForm {
     @NotNull
     @Size(min = 1, message = "Dieses Feld darf nicht leer bleiben")
     @Email(message = "Gib eine gültige Email-Adresse ein")

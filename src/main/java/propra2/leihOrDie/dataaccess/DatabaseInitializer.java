@@ -8,10 +8,9 @@ import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.stereotype.Component;
 import propra2.leihOrDie.model.*;
 
-import java.security.SecureRandom;
 import java.util.Arrays;
 
-import static propra2.leihOrDie.web.ProPayWrapper.raiseBalanceOfUser;
+import static propra2.leihOrDie.propay.ProPayWrapper.raiseBalanceOfUser;
 
 
 @Component

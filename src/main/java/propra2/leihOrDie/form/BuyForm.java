@@ -1,4 +1,4 @@
-package propra2.leihOrDie.web;
+package propra2.leihOrDie.form;
 
 import lombok.Data;
 
