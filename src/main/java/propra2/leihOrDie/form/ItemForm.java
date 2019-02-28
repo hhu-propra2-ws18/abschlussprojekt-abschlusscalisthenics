@@ -34,7 +34,7 @@ public class ItemForm {
 
     private User user;
 
-    @Range(min = 0 ,message="Verkaufspreis muss einer positiven Zahl größer gleich 0 entsprechen.")
+    @Range(min = 0 ,message="Gib 0 ein wenn du den Artikel nicht verkaufen möchtest.")
     private int soldPrice;
 }
 

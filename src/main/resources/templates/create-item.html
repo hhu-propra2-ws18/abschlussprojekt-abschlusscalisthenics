@@ -18,7 +18,7 @@
         <div class="container has-text-centered">
             <div class="column is-6 is-offset-3">
                 <h3 class="title has-text-black">Artikel einstellen</h3>
-
+                <p class="subtitle has-text-grey">Stelle hier einen Artikel zum Verleihen oder Verkaufen ein!</p>
                 <form action="#" th:action="@{/item/create}" th:object="${itemForm}" method="post">
                     <div class="box">
 
@@ -41,7 +41,7 @@
 
 
                         <div class="field">
-                            <label class="label">Preis</label>
+                            <label class="label">Verleihpreis pro Tag</label>
                             <div class="control">
                                 <input class="input" type="number" pattern="\d*" placeholder="in Euro / pro Tag" th:field="*{cost}">
                             </div>
@@ -64,6 +64,14 @@
                                 <input class="input" type="number" pattern="\d*" placeholder="Wie lange am Stück willst du deinen Artikel ausleihen?" th:field="*{availableTime}">
                             </div>
                             <p class="help is-danger" th:if="${#fields.hasErrors('availableTime')}" th:errors="*{availableTime}">Verfügbarkeit falsch eingegeben</p>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Preis für den Verkauf</label>
+                            <div class="control">
+                                <input class="input" type="number" pattern="\d*" placeholder="Gib einen Preis für den Verkauf an" th:field="*{soldPrice}">
+                            </div>
+                            <p class="help is-danger" th:if="${#fields.hasErrors('soldPrice')}" th:errors="*{soldPrice}">Preis falsch eingegeben</p>
                         </div>
 
 
