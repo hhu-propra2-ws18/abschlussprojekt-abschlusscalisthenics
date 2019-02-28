@@ -21,7 +21,7 @@
                         <h1 th:text="'Hi, ich bins ' + ${user} +'!'" class="title">
                         </h1>
                         <h2 class="subtitle">
-                            Hier könnte personalisierter Text stehen (oder auch nicht).
+                            Willkomen auf meinem Profil!
                         </h2>
                     </div>
                 </div>
@@ -33,30 +33,26 @@
             <div class="tile is-parent">
                 <article class="tile is-child box">
                     <p class="title">Kurz zu mir:</p>
-                    <p class="subtitle">Hier könnte ein Text stehen, wenn man eine Datenbank dafür hätte.</p>
                 </article>
             </div>
         </div>
     </section>
 
-            <section class="info-tiles">
-                <div class="tile is-ancestor has-text-centered">
-                    <div class="tile is-parent">
-                        <article class="tile is-child box">
-                            <p class="title" th:text="${items.size()}"></p>
-                            <p class="subtitle">Produkte online</p>
-                        </article>
-                    </div>
-                    <div class="tile is-parent">
-                        <article class="tile is-child box">
-                            <p class="title has-text-danger">42</p>
-                            <p class="subtitle">Bewertungen</p>
-                        </article>
-                    </div>
-                </div>
-            </section>
-
             <div class="columns">
+                <div class="column is-6">
+                    <section class="info-tiles">
+                        <div class="tile is-ancestor has-text-centered">
+                            <div class="tile is-parent">
+                                <article class="tile is-child box">
+                                    <p class="title" th:text="${items.size()}"></p>
+                                    <p class="subtitle">Produkte online</p>
+                                </article>
+                            </div>
+                        </div>
+                    </section>
+
+                    </div>
+
                 <div class="column is-6">
                     <div class="card events-card">
                         <header class="card-header">
