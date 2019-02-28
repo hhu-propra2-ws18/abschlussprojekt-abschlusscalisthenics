@@ -18,9 +18,7 @@ import javax.servlet.http.Cookie;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
@@ -32,11 +30,7 @@ public class UserControllerTest {
     @Autowired
     private ItemRepository itemRepository;
     @Autowired
-    private LoanRepository loanRepository;
-    @Autowired
     private SessionRepository sessionRepository;
-    @Autowired
-    private TransactionRepository transactionRepository;
     @Autowired
     UserRepository userRepository;
 
@@ -76,46 +70,5 @@ public class UserControllerTest {
         mvc.perform(get("/myaccount"))
                 .andExpect(MockMvcResultMatchers
                         .redirectedUrl("/login"));
-    }
-
-    @Test
-    public void testShowPropay() throws Exception {
-        DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
-        User user =dummyUserGenerator.generateUser();
-        userRepository.save(user);
-
-        DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
-        Item item = dummyItemGenerator.generateItem(user);
-        itemRepository.save(item);
-
-        sessionRepository.save(new Session("1", user));
-
-        mvc.perform(get("/myaccount/propay")
-                .cookie(new Cookie("SessionID", "1")))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(model().attribute("bankBalance", 0.0))
-                .andExpect(model().attribute("items", isEmptyOrNullString()));
-    }
-
-    @Test
-    public void testDoTransaction() throws Exception {
-        DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
-        User user =dummyUserGenerator.generateUser();
-        userRepository.save(user);
-
-        DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
-        Item item = dummyItemGenerator.generateItem(user);
-        itemRepository.save(item);
-
-        sessionRepository.save(new Session("1", user));
-
-        mvc.perform(post("/myaccount/propay")
-                .cookie(new Cookie("SessionID", "1"))
-                .param("amount", "200.0"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-        mvc.perform(get("/myaccount/propay")
-                .cookie(new Cookie("SessionID", "1")))
-                .andExpect(model().attribute("bankBalance", 200.0))
-                .andExpect(model().attribute("items", isEmptyOrNullString()));
     }
 }
