@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import propra2.leihOrDie.model.Transaction;
 import propra2.leihOrDie.response.ResponseBuilder;
@@ -39,11 +40,14 @@ public class LoanController {
     private ResponseBuilder responseBuilder = new ResponseBuilder();
 
 
-    @PostMapping(value="/request/{itemId}")
-    @ResponseBody
-    public ResponseEntity requestLoan(Model model, @Valid LoanForm form,
+    @PostMapping("/request/{itemId}")
+    public ResponseEntity requestLoan(Model model, @Valid LoanForm form, BindingResult bindingResult,
                                       @CookieValue(value="SessionID", defaultValue="") String sessionId,
                                       @PathVariable Long itemId) {
+        if (bindingResult.hasErrors()) {
+            return responseBuilder.createBadRequestResponse("Bitte gewünschten Zeitraum eingeben!");
+        }
+
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         Item item = itemRepository.findById(itemId).get();
 

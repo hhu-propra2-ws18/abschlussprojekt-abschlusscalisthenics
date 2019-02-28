@@ -137,7 +137,7 @@
                 </div>
 
                 <!--Image Beschreibung-->
-                <div class="column is-6 is-offset-1">
+                <div class="column is-6">
                     <p class="has-text-right">
 
                     <h1 th:text="${name}" class="title is-2"> ArtikelName </h1>
@@ -171,30 +171,26 @@
                     <br>
                     <br>
 
-                    <div id="loanForm">
+                    <div>
                         <div th:if="${isAvailable} == true">
-                            <form th:object="${LoanForm}">
+                            <form class= action="#" th:action="@{'/request/' + ${itemID}}" th:object="${loanForm}" method="post">
                                 <div class="field">
                                     <div class="control">
-                                        <input class="input" id="loanDuration" type="number" pattern="\d*" placeholder="Wie lange am Stück willst du deinen Artikel ausleihen?" th:field="*{loanDuration}">
+                                        <input class="input" type="number" pattern="\d*" placeholder="Wie lange am Stück willst du deinen Artikel ausleihen?" th:field="*{loanDuration}">
                                     </div>
                                     <p class="help is-danger" th:if="${#fields.hasErrors('loanDuration')}" th:errors="*{loanDuration}">Falsch eingegeben</p>
                                 </div>
+                                <button type="submit" name="submit" value="value" class="button is-small is-primary">Anfragen</button>
                             </form>
                             <br>
 
                             <div class="buttons has-addons is-centered">
-                                <form method="POST" th:action="@{'/request/' + ${itemID}}">
-                                    <button type="submit" name="submit" value="value" class="button is-large is-primary">Anfragen</button>
-                                </form>
-                                &nbsp;
-                                &nbsp;
                                 <form method="POST" th:action="@{'/buy/' + ${itemID}}">
-                                    <button type="submit" name="submit" value="value" class="button is-large is-primary">Kaufen</button>
+                                    <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">Kaufen</button>
                                 </form>
                                 &nbsp;
                                 &nbsp;
-                                <a  th:href="@{'/borrowall'}" class="button is-large is-primary is-outlined">zurück</a>
+                                <a  th:href="@{'/borrowall'}" class="button is-small is-primary is-outlined">zurück</a>
                             </div>
 
 
