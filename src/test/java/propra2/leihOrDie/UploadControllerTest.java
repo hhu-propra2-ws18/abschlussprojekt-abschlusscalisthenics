@@ -1,6 +1,7 @@
 package propra2.leihOrDie;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,18 +11,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import propra2.leihOrDie.dataaccess.ItemRepository;
 import propra2.leihOrDie.dataaccess.PictureRepository;
 import propra2.leihOrDie.dataaccess.SessionRepository;
 import propra2.leihOrDie.dataaccess.UserRepository;
 import propra2.leihOrDie.model.*;
-
 import javax.servlet.http.Cookie;
 import java.io.File;
-import java.io.FileInputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
@@ -59,35 +62,46 @@ public class UploadControllerTest {
     @After
     public void tearDown() {
         List<Picture> pictureList = pictureRepository.findAll();
-        if (!pictureList.isEmpty()) {
+        if (pictureList.size() == 1) {
             String pictureId = Long.toString(pictureList.get(0).getId());
-            File file = new File("images/" + pictureId + ".jpg");
-
+            String type = pictureList.get(0).getType();
+            File file = new File("img/" + pictureId.concat(type));
             file.delete();
-
         }
 
         pictureRepository.deleteAll();
+        sessionRepository.deleteAll();
         itemRepository.deleteAll();
         userRepository.deleteAll();
-
     }
 
     @Test
     public void testUploadImage() throws Exception {
-        FileInputStream fis = new FileInputStream("src/main/resources/images/test.jpg");
-        MockMultipartFile multipartFile = new MockMultipartFile("file", fis);
+        byte[] bytes = Files.readAllBytes(Paths.get("img/", "test.jpg"));
+        MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpeg", bytes);
 
-        List<Item> itemList = itemRepository.findAll();
-        String itemId = Long.toString(itemList.get(0).getId());
+        mvc.perform(multipart("/item/1/uploadphoto")
+                .file(file)
+                .cookie(new Cookie("SessionID", "1")))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/item/1/uploadphoto"))
+                .andExpect(flash().attribute("message", "Sie haben schon 1 Fotos hochgeladen"));
 
-        String fileName = "test.jpg";
+        Assert.assertEquals(pictureRepository.findPicturesOfItem(1L).size(), 1);
 
-        mvc.perform(MockMvcRequestBuilders.multipart("/image/upload")
-                .file(multipartFile)
-                .cookie(new Cookie("SessionID", "1"))
-                .param("itemId", itemId)
-                .param("fileName", fileName))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/image/uploadSuccessful"));
     }
+
+    @Test
+    public void testNoFileMessage() throws Exception {
+        byte[] bytes = {};
+        MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpeg", bytes);
+
+        mvc.perform(multipart("/item/1/uploadphoto")
+                .file(file)
+                .cookie(new Cookie("SessionID", "1")))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/item/1/uploadphoto"))
+                .andExpect(flash().attribute("message", "Bitte eine Datei wählen :)"));
+
+        Assert.assertEquals(pictureRepository.findPicturesOfItem(1L).size(), 0);
+    }
+
 }

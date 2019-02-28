@@ -9,6 +9,8 @@ import propra2.leihOrDie.dataaccess.ItemRepository;
 import propra2.leihOrDie.dataaccess.PictureRepository;
 import propra2.leihOrDie.dataaccess.SessionRepository;
 import propra2.leihOrDie.dataaccess.UserRepository;
+import propra2.leihOrDie.form.ItemForm;
+import propra2.leihOrDie.form.LoanForm;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Picture;
 import propra2.leihOrDie.model.User;
@@ -69,10 +71,17 @@ public class ItemController {
             return "edit-item";
         }
         Item item = itemRepository.findById(id).get();
-        loadItemIntoForm(model, item);
+
+        item.setName(form.getName());
+        item.setDescription(form.getDescription());
+        item.setCost(form.getCost());
+        item.setDeposit(form.getDeposit());
+        item.setAvailability(form.isAvailability());
+        item.setAvailableTime(form.getAvailableTime());
+
         saveItem(item);
 
-        return "redirect:/";
+        return "redirect:/borrowall/" + id + "/";
     }
 
     @GetMapping("/borrowall/{id}")

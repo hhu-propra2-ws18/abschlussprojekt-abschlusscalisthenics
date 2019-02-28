@@ -10,18 +10,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import propra2.leihOrDie.dataaccess.*;
+import propra2.leihOrDie.form.TransactionForm;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Loan;
 import propra2.leihOrDie.model.Transaction;
 import propra2.leihOrDie.model.User;
+import propra2.leihOrDie.response.ResponseBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
-import static propra2.leihOrDie.web.ProPayWrapper.getBalanceOfUser;
-import static propra2.leihOrDie.web.ProPayWrapper.raiseBalanceOfUser;
+import static propra2.leihOrDie.propay.ProPayWrapper.getBalanceOfUser;
+import static propra2.leihOrDie.propay.ProPayWrapper.raiseBalanceOfUser;
 
 @Controller
 public class UserController {
@@ -42,14 +44,10 @@ public class UserController {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         String userName = user.getUsername();
 
-        if (!isAuthorized(user, userName)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return "redirect:/error";
-        }
-
         model.addAttribute("user", userName);
-        model.addAttribute("pendingloans", getPendingLoans(userName));
-        model.addAttribute("activeloans", getActiveLoans(userName));
+        model.addAttribute("pendingloans", getLoansByStatus(userName, "pending"));
+        model.addAttribute("acceptedloans", getLoansByStatus(userName, "accepted"));
+        model.addAttribute("activeloans", getLoansByStatus(userName, "active"));
         model.addAttribute("loans", loanRepository.findLoansOfUser(userName));
         model.addAttribute("items", itemRepository.findItemsOfUser(userName));
 
@@ -80,7 +78,7 @@ public class UserController {
     @PostMapping("/myaccount/propay")
     public ResponseEntity doTransaction(Model model, @Valid TransactionForm form, BindingResult bindingResult, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         if(bindingResult.hasErrors()) {
-            return responseBuilder.createErrorResponse("Der Mindestbetrag beläuft sich auf einen Euro!");
+            return responseBuilder.createBadRequestResponse("Der Mindestbetrag beläuft sich auf einen Euro!");
         }
 
         User user = sessionRepository.findUserBySessionCookie(sessionId);
@@ -91,43 +89,47 @@ public class UserController {
             Transaction transaction = new Transaction(user, user, form.getAmount(), "Überweisung");
             transactionRepository.save(transaction);
         } catch (Exception e) {
-            return responseBuilder.createErrorResponse("Es war nicht möglich den Betrag zu Überweisen. Bitte versuchen sie es später nochmal.");
+            return responseBuilder.createBadRequestResponse("Es war nicht möglich den Betrag zu Überweisen. Bitte versuchen sie es später nochmal.");
         }
 
         return responseBuilder.createSuccessResponse("Überweisung erfolgreich!");
     }
 
-    private List<Loan> getPendingLoans(String userName) {
+    //neu
+    @GetMapping("/reloaditems")
+    public String reloadItems(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId,
+                              HttpServletResponse response) {
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+        String userName = user.getUsername();
+
+        model.addAttribute("pendingloans", getLoansByStatus(userName, "pending"));
+        model.addAttribute("acceptedloans", getLoansByStatus(userName, "accepted"));
+        model.addAttribute("activeloans", getLoansByStatus(userName, "active"));
+        model.addAttribute("loans", loanRepository.findLoansOfUser(userName));
+        model.addAttribute("items", itemRepository.findItemsOfUser(userName));
+
+        return "loan-snippet";
+    }
+
+    private List<Loan> getLoansByStatus(String userName, String status) {
         List<Item> itemsOfUser = itemRepository.findItemsOfUser(userName);
         List<Loan> loans = new ArrayList<>();
+        Loan loan;
 
         for (Item item: itemsOfUser) {
-            Loan loan = loanRepository.findLoansOfItem(item.getId()).get(0);
+            List<Loan> loanList = loanRepository.findLoansOfItem(item.getId());
 
-            if (loan.getState().equals("pending")) {
+            if(loanList.size() != 0) {
+                loan = loanList.get(0);
+            } else {
+                continue;
+            }
+
+            if (loan.getState().equals(status)) {
                 loans.add(loan);
             }
         }
 
         return loans;
-    }
-
-    private List<Loan> getActiveLoans(String userName) {
-        List<Item> itemsOfUser = itemRepository.findItemsOfUser(userName);
-        List<Loan> loans = new ArrayList<>();
-
-        for (Item item: itemsOfUser) {
-            Loan loan = loanRepository.findLoansOfItem(item.getId()).get(0);
-
-            if (loan.getState().equals("active")) {
-                loans.add(loan);
-            }
-        }
-
-        return loans;
-    }
-
-    private boolean isAuthorized(User user, String username) {
-        return user.getUsername().equals(username);
     }
 }
