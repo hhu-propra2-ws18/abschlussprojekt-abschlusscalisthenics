@@ -77,16 +77,27 @@ public class UploadControllerTest {
 
     @Test
     public void testUploadImage() throws Exception {
+        String password= "password";
+        Address address = new Address(1337, "TestStreet", 42, "TestCity");
+        User testUser2 = new User("name", "email@test.de", password, "USER", address);
+        userRepository.save(testUser2);
+
+        Item testItem = new Item("name", "description", 314, 1, true, 1, testUser2.getAddress(), testUser2);
+        itemRepository.save(testItem);
+
+        sessionRepository.save(new Session("2", testUser2));
+
+
         byte[] bytes = Files.readAllBytes(Paths.get("img/", "test.jpg"));
         MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpeg", bytes);
 
-        mvc.perform(multipart("/item/1/uploadphoto")
+        mvc.perform(multipart("/item/" + testItem.getId()+ "/uploadphoto")
                 .file(file)
-                .cookie(new Cookie("SessionID", "1")))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/item/1/uploadphoto"))
+                .cookie(new Cookie("SessionID", "2")))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/item/" + testItem.getId()+ "/uploadphoto"))
                 .andExpect(flash().attribute("message", "Sie haben schon 1 Fotos hochgeladen"));
 
-        Assert.assertEquals(pictureRepository.findPicturesOfItem(1L).size(), 1);
+        Assert.assertEquals(pictureRepository.findPicturesOfItem(testItem.getId()).size(), 1);
 
     }
 
