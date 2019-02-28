@@ -1,21 +1,19 @@
 package propra2.leihOrDie.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import propra2.leihOrDie.dataaccess.ItemRepository;
-import propra2.leihOrDie.dataaccess.LoanRepository;
-import propra2.leihOrDie.dataaccess.SessionRepository;
-import propra2.leihOrDie.dataaccess.UserRepository;
+import propra2.leihOrDie.dataaccess.*;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Loan;
 import propra2.leihOrDie.model.User;
 
 import javax.validation.Valid;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static propra2.leihOrDie.web.ProPayWrapper.*;
@@ -105,5 +103,22 @@ public class LoanController {
         itemRepository.save(item);
 
         return responseBuilder.createSuccessResponse("Bestätigt.");
+    }
+
+    @Scheduled(cron = "0 0 7 * * ?")
+    private void determineExceededLoans() {
+        List<Loan> allActivLoans = loanRepository.findLoansByState("active");
+        LocalDate now = LocalDate.now();
+
+        for (Loan loan: allActivLoans) {
+            saveExceededLoans(loan, now);
+        }
+    }
+
+    private void saveExceededLoans(Loan loan, LocalDate now) {
+        if (now.isAfter(loan.getDayOfRental().plusDays(loan.getDuration()))) {
+            loan.setExceeded(true);
+            loanRepository.save(loan);
+        }
     }
 }
