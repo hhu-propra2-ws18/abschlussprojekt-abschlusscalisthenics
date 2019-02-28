@@ -1,37 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Help</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-    <style>
-    .left    { text-align: left; }
-    </style>
 </head>
 <body>
-<section class="section">
-    <div class="container">
+<div th:insert="fragments/header :: header"></div>
 
-        <div class="navbar-item">
-            <a class="left"><img src="https://image.flaticon.com/icons/svg/1256/1256638.svg"></a>
+<section class="hero is-white is-fullheight">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <h1 class="title">
+                Hallo liebe/r LeihOrDie Nutzer/in
+            </h1>
+            <h2 class="subtitle">
+                Hast du Fragen? Gibt es Probleme mit deiner Software? Oder möchtest du uns ein Feedback geben? <br>
+                Dann komm doch zur Heinrich-Heine-Universität in unser Office in Raum <i>25.12.02.55</i>. <br>Wir freuen uns auf dich.
+            </h2>
+            <br>
+            <h3 class="subtitle">
+                <a class="button is-primary" href="/">startseite</a>
+            </h3>
         </div>
-
-        <h1 class="title">
-            Hallo liebe/r LeihOrDie Nutzer/in
-        </h1>
-        <br>
-        <p class="subtitle">
-            Hast du Fragen? Gibt es Probleme mit deiner Software? Oder möchtest du uns ein Feedback geben? <br>
-            Dann komm doch zur Heinrich-Heine-Universität in unser Office in Raum <i>25.12.02.55</i>. Wir freuen uns auf dich.
-        </p>
-
-        <p class="has-text-left">
-            <a class="button is-primary ">zurück</a>
-        </p>
-
-
     </div>
 </section>
 <div th:insert="fragments/footer :: footer"></div>
