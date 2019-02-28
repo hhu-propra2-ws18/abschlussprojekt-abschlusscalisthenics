@@ -173,7 +173,6 @@
                            <div th:if="${isAvailable} == true">
                                <form th:object="${LoanForm}">
                                    <div class="field">
-                                       <label class="label">Wie viel Tagen:</label>
                                        <div class="control">
                                            <input class="input" id="loanDuration" type="number" pattern="\d*" placeholder="Wie lange am Stück willst du deinen Artikel ausleihen?" th:field="*{loanDuration}">
                                        </div>

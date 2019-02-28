@@ -84,8 +84,6 @@
                   if(xhr.status == 200) {
                       reloadItems();
                   } else {
-                      document.getElementById("articles").innerHTML = xhr.response;
-
                       document.getElementById("modal-text").style.color = "red";
                       modal.style.display = "block";
                   }
