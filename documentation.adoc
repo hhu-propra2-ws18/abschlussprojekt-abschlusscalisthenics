@@ -143,6 +143,38 @@ dargestellt sind.
 
 
 ## Benötigte Änderungen für den Kaufprozess
+Unsere Architektur hat es uns erlaubt, mit wenigen Ergänzungen und
+Änderungen die Verkaufsoption in unser System zu integrieren. +
+Dateien die hinzugefügt werden mussten: +
 
+* BuyRepository.java
+* BuyForm.java
+* Buy.java
+* BuyController.java
+
+Das BuyRepository und das Buy-Model sind nötig, da genau wie mit dem
+LoanRepository ein abgeschlossener Kauf gespeichert wird. Das erlaubt es auch
+später noch käufe zurückverfolgen zu können. Das Buy-Model erlaubt es alle Daten
+zu erfassen, die für einen Kaufvorgang wichtig sind. +
+Der BuyController wurde benötigt um die Logik hinter den neuen Buttons, also das
+Verkaufen, zu realisieren. Das BuyForm ist eine Hilfsklasse, die es ermöglicht,
+weitere Daten an den Controller zu übergeben. +
+
+Dateien die Verändert werden mussten: +
+
+* Item.java
+* user-shop.html
+* item-detail.html
+
+Item.java musste dahingehend angepasst werden, dass es noch möglich ist, einen
+Verkaufspreis zu speichern.
+
+Im Frontend mussten ebenfalls nicht viele Änderungen vorgenommen werden. Es
+mussten lediglich ein Button zum kaufen eingefügt werden und die Möglichkeit für
+einen Anbieter den Verkauf zu bestätigen oder abzulehnen. Dazu wurde eine
+Abschnitt in der Ansicht von dem eigenen Benutzerkonto eingefügt, in der man die
+Käufe die man getätigt hat sieht sowie die verkauften Artikel. Außerdem musste
+das Formular mit dem ein neuer Artikel eingefügt wird angepasst werden, sodass
+man einen Verkaufspreis festlegen kann.
 
 ## Konfliktlösung
