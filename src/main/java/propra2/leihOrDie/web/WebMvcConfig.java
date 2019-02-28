@@ -24,7 +24,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor())
-                .excludePathPatterns(Arrays.asList("/", "/borrowall/**", "/signout", "/images/**"));
+                .excludePathPatterns(Arrays.asList("/", "/borrowall/**", "/signout", "/images/**", "/help"));
 
         registry.addInterceptor(signOutButtonInterceptor())
                 .excludePathPatterns("/signout");
