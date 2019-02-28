@@ -2,7 +2,6 @@ package propra2.leihOrDie;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,19 +44,6 @@ public class UploadControllerTest {
     @Autowired
     SessionRepository sessionRepository;
 
-    @Before
-    public void setUp() {
-        String password= "password";
-        Address address = new Address(1337, "TestStreet", 42, "TestCity");
-        User testUser = new User("name", "email@test.de", password, "USER", address);
-        userRepository.save(testUser);
-
-        Item testItem = new Item("name", "description", 314, 1, true, 1, testUser.getAddress(), testUser, 0);
-        itemRepository.save(testItem);
-
-        sessionRepository.save(new Session("1", testUser));
-    }
-
     @After
     public void tearDown() {
         List<Picture> pictureList = pictureRepository.findAll();
@@ -76,29 +62,50 @@ public class UploadControllerTest {
 
     @Test
     public void testUploadImage() throws Exception {
+        String password= "password";
+        Address address = new Address(1337, "TestStreet", 42, "TestCity");
+        User testUser = new User("name2", "email2@test.de", password, "USER", address);
+        userRepository.save(testUser);
+
+        Item testItem = new Item("name", "description", 314, 1, true, 1, testUser.getAddress(), testUser, 0);
+        itemRepository.save(testItem);
+
+        sessionRepository.save(new Session("2", testUser));
+
         byte[] bytes = Files.readAllBytes(Paths.get("img/", "test.jpg"));
         MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpeg", bytes);
 
-        mvc.perform(multipart("/item/1/uploadphoto")
+        mvc.perform(multipart("/item/"+ testItem.getId() +"/uploadphoto")
                 .file(file)
-                .cookie(new Cookie("SessionID", "1")))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/item/1/uploadphoto"))
+                .cookie(new Cookie("SessionID", "2")))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/item/"+ testItem.getId() +"/uploadphoto"))
                 .andExpect(flash().attribute("message", "Sie haben schon 1 Fotos hochgeladen"));
 
-        Assert.assertEquals(pictureRepository.findPicturesOfItem(1L).size(), 1);
+        Assert.assertEquals(pictureRepository.findPicturesOfItem(testItem.getId()).size(), 1);
+
     }
     @Test
     public void testNoFileMessage() throws Exception {
+        String password= "password";
+        Address address = new Address(1337, "TestStreet", 42, "TestCity");
+        User testUser = new User("name", "email@test.de", password, "USER", address);
+        userRepository.save(testUser);
+
+        Item testItem = new Item("name", "description", 314, 1, true, 1, testUser.getAddress(), testUser, 0);
+        itemRepository.save(testItem);
+
+        sessionRepository.save(new Session("1", testUser));
+
         byte[] bytes = {};
         MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpeg", bytes);
 
-        mvc.perform(multipart("/item/1/uploadphoto")
+        mvc.perform(multipart("/item/"+ testItem.getId() +"/uploadphoto")
                 .file(file)
                 .cookie(new Cookie("SessionID", "1")))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/item/1/uploadphoto"))
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/item/"+ testItem.getId() +"/uploadphoto"))
                 .andExpect(flash().attribute("message", "Bitte eine Datei wählen :)"));
 
-        Assert.assertEquals(pictureRepository.findPicturesOfItem(1L).size(), 0);
+        Assert.assertEquals(pictureRepository.findPicturesOfItem(testItem.getId()).size(), 0);
     }
 
 }
