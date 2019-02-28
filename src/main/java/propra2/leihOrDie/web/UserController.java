@@ -19,6 +19,7 @@ import propra2.leihOrDie.response.ResponseBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,9 +46,9 @@ public class UserController {
         String userName = user.getUsername();
 
         model.addAttribute("user", userName);
-        model.addAttribute("pendingloans", getPendingLoans(userName));
-        model.addAttribute("acceptedloans", getAcceptedLoans(userName));
-        model.addAttribute("activeloans", getActiveLoans(userName));
+        model.addAttribute("pendingloans", getLoansByStatus(userName, "pending"));
+        model.addAttribute("acceptedloans", getLoansByStatus(userName, "accepted"));
+        model.addAttribute("activeloans", getLoansByStatus(userName, "active"));
         model.addAttribute("loans", loanRepository.findLoansOfUser(userName));
         model.addAttribute("items", itemRepository.findItemsOfUser(userName));
 
@@ -68,9 +69,11 @@ public class UserController {
         double bankBalance = getBalanceOfUser(user.getEmail());
 
         List<Transaction> transactions = transactionRepository.findAllTransactionsOfUser(user.getUsername());
+        List<String> formattedDates = getFormattedDate(transactions);
 
         model.addAttribute("bankBalance", bankBalance);
         model.addAttribute("transactions", transactions);
+        model.addAttribute("formattedDates", formattedDates);
 
         return "user-propay";
     }
@@ -102,16 +105,16 @@ public class UserController {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         String userName = user.getUsername();
 
-        model.addAttribute("pendingloans", getPendingLoans(userName));
-        model.addAttribute("acceptedloans", getAcceptedLoans(userName));
-        model.addAttribute("activeloans", getActiveLoans(userName));
+        model.addAttribute("pendingloans", getLoansByStatus(userName, "pending"));
+        model.addAttribute("acceptedloans", getLoansByStatus(userName, "accepted"));
+        model.addAttribute("activeloans", getLoansByStatus(userName, "active"));
         model.addAttribute("loans", loanRepository.findLoansOfUser(userName));
         model.addAttribute("items", itemRepository.findItemsOfUser(userName));
 
         return "loan-snippet";
     }
 
-    private List<Loan> getPendingLoans(String userName) {
+    private List<Loan> getLoansByStatus(String userName, String status) {
         List<Item> itemsOfUser = itemRepository.findItemsOfUser(userName);
         List<Loan> loans = new ArrayList<>();
         Loan loan;
@@ -125,7 +128,7 @@ public class UserController {
                 continue;
             }
 
-            if (loan.getState().equals("pending")) {
+            if (loan.getState().equals(status)) {
                 loans.add(loan);
             }
         }
@@ -133,47 +136,11 @@ public class UserController {
         return loans;
     }
 
-    private List<Loan> getAcceptedLoans(String userName) {
-        List<Item> itemsOfUser = itemRepository.findItemsOfUser(userName);
-        List<Loan> loans = new ArrayList<>();
-        Loan loan;
-
-        for (Item item: itemsOfUser) {
-            List<Loan> loanList = loanRepository.findLoansOfItem(item.getId());
-
-            if(loanList.size() != 0) {
-                loan = loanList.get(0);
-            } else {
-                continue;
-            }
-
-            if (loan.getState().equals("accepted")) {
-                loans.add(loan);
-            }
+    private List<String> getFormattedDate(List<Transaction> transactions) {
+        List<String> dates = new ArrayList<>();
+        for (Transaction transaction: transactions) {
+            dates.add(transaction.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         }
-
-        return loans;
-    }
-
-    private List<Loan> getActiveLoans(String userName) {
-        List<Item> itemsOfUser = itemRepository.findItemsOfUser(userName);
-        List<Loan> loans = new ArrayList<>();
-        Loan loan;
-
-        for (Item item: itemsOfUser) {
-            List<Loan> loanList = loanRepository.findLoansOfItem(item.getId());
-
-            if(loanList.size() != 0) {
-                loan = loanList.get(0);
-            } else {
-                continue;
-            }
-
-            if (loan.getState().equals("active")) {
-                loans.add(loan);
-            }
-        }
-
-        return loans;
+        return dates;
     }
 }
