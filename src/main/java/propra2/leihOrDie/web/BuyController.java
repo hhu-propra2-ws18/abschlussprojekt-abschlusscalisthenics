@@ -4,22 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import propra2.leihOrDie.dataaccess.*;
 import propra2.leihOrDie.model.Buy;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Transaction;
 import propra2.leihOrDie.model.User;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 import static propra2.leihOrDie.web.ProPayWrapper.transferMoney;
 
 @Controller
-@ResponseBody
 public class BuyController {
     @Autowired
     ItemRepository itemRepository;
@@ -33,6 +30,22 @@ public class BuyController {
     TransactionRepository transactionRepository;
 
     private ResponseBuilder responseBuilder = new ResponseBuilder();
+
+    @GetMapping("/myaccount/buy")
+    public String showBuyService(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+        List<Item> items = itemRepository.findItemsOfUser(user.getUsername());
+
+        Buy buy = null;
+        for (Item item: items) {
+            if (getPendingBuyOfItem(item) != null ) {
+                buy = getPendingBuyOfItem(item);
+            }
+        }
+        model.addAttribute("buy", buy);
+        model.addAttribute("mypurchases", buyRepository.findBuysOfUser(user.getUsername()));
+        return "user-shop";
+    }
 
     @PostMapping("buy/{itemId}")
     public ResponseEntity buyItem(Model model, BuyForm form, @PathVariable Long itemId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {

@@ -1,6 +1,8 @@
 package propra2.leihOrDie.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
@@ -14,7 +16,6 @@ import propra2.leihOrDie.model.User;
 import javax.validation.Valid;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static propra2.leihOrDie.web.ProPayWrapper.*;
 
@@ -28,9 +29,11 @@ public class LoanController {
     LoanRepository loanRepository;
     @Autowired
     SessionRepository sessionRepository;
-
-    private ResponseBuilder responseBuilder = new ResponseBuilder();
+    @Autowired
     private AuthorizationHandler authorizationHandler = new AuthorizationHandler(sessionRepository);
+  
+    private ResponseBuilder responseBuilder = new ResponseBuilder();
+
 
     @PostMapping(value="/request/{itemId}")
     @ResponseBody
@@ -105,6 +108,48 @@ public class LoanController {
         return responseBuilder.createSuccessResponse("Bestätigt.");
     }
 
+    @PostMapping("/request/activate/{loanId}")
+    public ResponseEntity changeStatusToActive(Model model, @PathVariable Long loanId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        Loan loan = loanRepository.findById(loanId).get();
+
+        if (!authorizationHandler.isAuthorized(sessionId, loan.getItem().getUser())) {
+            return responseBuilder.createUnauthorizedResponse();
+        }
+
+        loan.setDayOfRental(LocalDate.now());
+        loan.setState("active");
+        loanRepository.save(loan);
+
+        return responseBuilder.createSuccessResponse("Bestätigt");
+    }
+
+    @PostMapping("/request/return/{loanId}")
+    public ResponseEntity changeStatusToCompleted(Model model, @PathVariable Long loanId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+        Loan loan = loanRepository.findById(loanId).get();
+
+        if (!authorizationHandler.isAuthorized(sessionId, loan.getItem().getUser())) {
+            return responseBuilder.createUnauthorizedResponse();
+        }
+
+        double amount = loan.getDuration() * loan.getItem().getCost();
+
+        loan.setDayOfReturn(LocalDate.now());
+      
+        try {
+            transferMoney(loan.getUser().getEmail(), user.getEmail(), amount);
+        } catch (Exception e) {
+            loan.setState("error");
+            loanRepository.save(loan);
+            return responseBuilder.createBadRequestResponse("Es war nicht möglich den Betrag zu überweisen. Bitte sende eine Email mit der genauen Beschreibung Deines Problems und dem Betreff \"" + sessionRepository.findUserBySessionCookie(sessionId).getUsername() + " - " + loan.getId().toString() + "\" an conflict@leihordie.de");
+        }
+
+        loan.setState("completed");
+        loanRepository.save(loan);
+
+        return responseBuilder.createSuccessResponse("Erfolgreich!");
+    }
+  
     @Scheduled(cron = "0 0 7 * * ?")
     private void determineExceededLoans() {
         List<Loan> allActivLoans = loanRepository.findLoansByState("active");
