@@ -74,7 +74,7 @@ public class LoanController {
         return responseBuilder.createSuccessResponse("Eine Anfrage wurde gesendet.");
     }
 
-    /*@PostMapping("/request/accept/{loanId}")
+    @PostMapping("/request/accept/{loanId}")
     public ResponseEntity changeStatusToAccepted(Model model, @PathVariable Long loanId,
                                                  @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         Loan loan = loanRepository.findById(loanId).get();
@@ -87,21 +87,6 @@ public class LoanController {
         loanRepository.save(loan);
 
         return responseBuilder.createSuccessResponse("Bestätigt.");
-    }*/
-
-    @PostMapping("/request/accept/{loanId}")
-    public String changeStatusToAccepted(Model model, @PathVariable Long loanId,
-                                                 @CookieValue(value="SessionID", defaultValue="") String sessionId) {
-        Loan loan = loanRepository.findById(loanId).get();
-
-        /*if (!isAuthorized(sessionId, loan.getItem())) {
-            return responseBuilder.createUnauthorizedResponse();
-        }*/
-
-        loan.setState("accepted");
-        loanRepository.save(loan);
-
-        return "redirect:/reloaditems";
     }
 
     @PostMapping("/request/decline/{loanId}")

@@ -6,6 +6,119 @@
     <title>Benutzerkonto</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+      <style>
+          .modal {
+              display: none;
+              font-size: 25px;
+              position: fixed;
+              z-index: 1;
+              padding-top: 100px;
+              left: 0;
+              top: 0;
+              width: 100%;
+              height: 100%;
+              overflow: auto;
+              background-color: rgb(0,0,0);
+              background-color: rgba(0,0,0,0.4);
+          }
+
+          .modal-content {
+              background-color: #fefefe;
+              margin: auto;
+              padding: 20px;
+              border: 1px solid #888;
+              width: 80%;
+          }
+
+          .close {
+              color: #aaaaaa;
+              float: right;
+              font-size: 28px;
+              font-weight: bold;
+          }
+
+          .close:hover,
+          .close:focus {
+              color: #000;
+              text-decoration: none;
+              cursor: pointer;
+          }
+      </style>
+      <script th:inline="javascript">
+          function sendConflictRequest(form) {
+              var xhr = new XMLHttpRequest();
+              var formData = new FormData(form);
+
+              xhr.addEventListener("load", function(event) {
+                  document.getElementById("modal-text").innerHTML = xhr.response;
+                  if(xhr.status == 200) {
+                      document.getElementById("modal-text").style.color = "green";
+                  } else {
+                      document.getElementById("modal-text").style.color = "red";
+                  }
+                  modal.style.display = "block";
+                  reloadItems();
+              });
+
+              xhr.open("POST", form.action);
+              xhr.send(formData);
+          }
+
+          function reloadItems() {
+              var xhr = new XMLHttpRequest();
+              xhr.addEventListener("load", function(event) {
+                  document.getElementById("articles").innerHTML = xhr.response;
+                  setDataSenderOnForms();
+              });
+
+              xhr.open("GET", "/reloaditems");
+              xhr.send();
+          }
+
+          function sendData(form) {
+              var xhr = new XMLHttpRequest();
+              var formData = new FormData(form);
+
+              xhr.addEventListener("load", function(event) {
+                  document.getElementById("modal-text").innerHTML = xhr.response;
+                  if(xhr.status == 200) {
+                      reloadItems();
+                  } else {
+                      document.getElementById("articles").innerHTML = xhr.response;
+
+                      document.getElementById("modal-text").style.color = "red";
+                      modal.style.display = "block";
+                  }
+              });
+
+              xhr.open("POST", form.action);
+              xhr.send(formData);
+          }
+
+          function setDataSenderOnForms() {
+              var forms = [
+                  document.getElementsByClassName("currentLoansForm"),
+                  document.getElementsByClassName("acceptRequestForm"),
+                  document.getElementsByClassName("declineRequestForm"),
+                  document.getElementsByClassName("pickedUpForm"),
+                  document.getElementsByClassName("returnedForm")
+              ];
+
+              for(var i = 0; i < forms.length; i++) {
+                  Array.prototype.forEach.call(forms[i], el=>el.addEventListener("submit", function (event) {
+                      event.preventDefault();
+                      sendData(el);
+                  }));
+              };
+
+              var btns = document.getElementsByClassName("conflictButton");
+
+              Array.prototype.forEach.call(btns, el=>el.addEventListener("click", function(event) {
+                  event.preventDefault();
+                  sendConflictRequest(el.form);
+              }));
+          }
+      </script>
   </head>
 
   <body>
@@ -14,6 +127,13 @@
 <br></br>
 
     <div class="container">
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p id="modal-text">Some text in the Modal..</p>
+            </div>
+
+        </div>
         <div class="columns">
             <div class="column is-3 ">
                 <aside class="menu is-hidden-mobile">
@@ -181,7 +301,7 @@
                                                 </td>
                                                 <td>
                                                     <form class="conflictForm" method="POST" th:action="@{'/conflict/open/' + ${acceptedloan.getId()}}">
-                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">Konflikt</button>
+                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined conflictButton">Konflikt</button>
                                                     </form>
                                                 </td>
                                             </tr>
@@ -193,13 +313,13 @@
                                             <tr th:each="activeloan: ${activeloans}">
                                                 <th th:text="${activeloan.getItem().getName()}"></th>
                                                 <td>
-                                                    <form class="conflictForm" method="POST" th:action="@{'/request/return/' + ${activeloan.getId()}}">
-                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary ">zurückgegeben</button>
+                                                    <form class="returnedForm" method="POST" th:action="@{'/request/return/' + ${activeloan.getId()}}">
+                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary">zurückgegeben</button>
                                                     </form>
                                                 </td>
                                                 <td>
-                                                    <form class="returnedForm" method="POST" th:action="@{'/conflict/open/' + ${activeloan.getId()}}">
-                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">Konflikt</button>
+                                                    <form class="conflictForm" method="POST" th:action="@{'/conflict/open/' + ${activeloan.getId()}}">
+                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined conflictButton">Konflikt</button>
                                                     </form>
                                                 </td>
                                             </tr>
@@ -215,38 +335,18 @@
         </div>
     </div>
   <script>
-      function setDataSenderOnForms() {
-          var forms = [
-              document.getElementsByClassName("currentLoansForm"),
-              document.getElementsByClassName("acceptRequestForm"),
-              document.getElementsByClassName("declineRequestForm"),
-              document.getElementsByClassName("pickedUpForm"),
-              document.getElementsByClassName("conflictForm"),
-              document.getElementsByClassName("returnedForm")
-          ];
+      var modal = document.getElementById('myModal');
+      var span = document.getElementsByClassName("close")[0];
 
-          for(var i = 0; i < forms.length; i++) {
-              Array.prototype.forEach.call(forms[i], el=>el.addEventListener("submit", function (event) {
-                  event.preventDefault();
-                  sendData(el);
-              }));
-          };
-      }
+      span.onclick = function() {
+          modal.style.display = "none";
+      };
 
-      function sendData(form) {
-          var xhr = new XMLHttpRequest();
-          //var formData = new FormData(form);
-
-          xhr.addEventListener("load", function(event) {
-              document.getElementById("articles").innerHTML = xhr.response;
-              setDataSenderOnForms();
-          });
-
-          xhr.open("POST", form.action);
-          xhr.send();
-
-      }
-
+      window.onclick = function(event) {
+          if (event.target == modal) {
+              modal.style.display = "none";
+          }
+      };
       setDataSenderOnForms();
   </script>
 </body>
