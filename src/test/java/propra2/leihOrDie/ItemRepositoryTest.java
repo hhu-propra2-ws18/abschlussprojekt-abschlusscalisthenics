@@ -15,6 +15,8 @@ import propra2.leihOrDie.model.User;
 
 import java.util.List;
 
+import static org.junit.Assert.assertTrue;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ItemRepositoryTest {
@@ -136,26 +138,19 @@ public class ItemRepositoryTest {
     }
 
     @Test
-    public void allItemsOfUser() throws Exception {
+    public void allItemsOfUser() {
         DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
-        User firstUser = dummyUserGenerator.generateUser();
-        User secondUser = dummyUserGenerator.generateUser();
+        User user = dummyUserGenerator.generateUser();
         DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
-        Item firstItem= dummyItemGenerator.generateItem(firstUser);
-        Item secondItem = dummyItemGenerator.generateAnotherItem(firstUser);
-        Item thirdItem= dummyItemGenerator.generateItem(secondUser);
-        userRepository.save(firstUser);
-        userRepository.save(secondUser);
+        Item firstItem= dummyItemGenerator.generateItem(user);
+        Item secondItem = dummyItemGenerator.generateAnotherItem(user);
+
+        userRepository.save(user);
         itemRepository.save(firstItem);
         itemRepository.save(secondItem);
-        itemRepository.save(thirdItem);
 
-        List<Item> itemOfFirstUser = itemRepository.findItemsOfUser(firstUser.getUsername());
+
+        List<Item> itemOfFirstUser = itemRepository.findItemsOfUser(user.getUsername());
         Assertions.assertThat(itemOfFirstUser.size()).isEqualTo(2);
-        Assertions.assertThat(itemOfFirstUser.get(0).getName()).isEqualTo("Fahrrad");
-        Assertions.assertThat(itemOfFirstUser.get(1).getName()).isEqualTo("Kickbike");
-        List<Item> itemOfSecondUser = itemRepository.findItemsOfUser(secondUser.getUsername());
-        Assertions.assertThat(itemOfSecondUser.size()).isEqualTo(1);
-        Assertions.assertThat(itemOfSecondUser.get(0).getName()).isEqualTo("Fahrrad");
     }
 }
