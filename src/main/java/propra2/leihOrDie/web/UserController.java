@@ -112,9 +112,16 @@ public class UserController {
     private List<Loan> getPendingLoans(String userName) {
         List<Item> itemsOfUser = itemRepository.findItemsOfUser(userName);
         List<Loan> loans = new ArrayList<>();
+        Loan loan;
 
         for (Item item: itemsOfUser) {
-            Loan loan = loanRepository.findLoansOfItem(item.getId()).get(0);
+            List<Loan> loanList = loanRepository.findLoansOfItem(item.getId());
+
+            if(loanList.size() != 0) {
+                loan = loanList.get(0);
+            } else {
+                continue;
+            }
 
             if (loan.getState().equals("pending")) {
                 loans.add(loan);
@@ -127,9 +134,16 @@ public class UserController {
     private List<Loan> getAcceptedLoans(String userName) {
         List<Item> itemsOfUser = itemRepository.findItemsOfUser(userName);
         List<Loan> loans = new ArrayList<>();
+        Loan loan;
 
         for (Item item: itemsOfUser) {
-            Loan loan = loanRepository.findLoansOfItem(item.getId()).get(0);
+            List<Loan> loanList = loanRepository.findLoansOfItem(item.getId());
+
+            if(loanList.size() != 0) {
+                loan = loanList.get(0);
+            } else {
+                continue;
+            }
 
             if (loan.getState().equals("accepted")) {
                 loans.add(loan);
@@ -142,9 +156,16 @@ public class UserController {
     private List<Loan> getActiveLoans(String userName) {
         List<Item> itemsOfUser = itemRepository.findItemsOfUser(userName);
         List<Loan> loans = new ArrayList<>();
+        Loan loan;
 
         for (Item item: itemsOfUser) {
-            Loan loan = loanRepository.findLoansOfItem(item.getId()).get(0);
+            List<Loan> loanList = loanRepository.findLoansOfItem(item.getId());
+
+            if(loanList.size() != 0) {
+                loan = loanList.get(0);
+            } else {
+                continue;
+            }
 
             if (loan.getState().equals("active")) {
                 loans.add(loan);
