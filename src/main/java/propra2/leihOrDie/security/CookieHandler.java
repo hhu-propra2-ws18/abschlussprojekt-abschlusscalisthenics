@@ -1,9 +1,6 @@
-package propra2.leihOrDie.web;
+package propra2.leihOrDie.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import propra2.leihOrDie.dataaccess.SessionRepository;
 

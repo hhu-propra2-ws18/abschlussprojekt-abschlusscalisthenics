@@ -1,11 +1,12 @@
 package propra2.leihOrDie.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import propra2.leihOrDie.response.ResponseBuilder;
+import propra2.leihOrDie.security.AuthorizationHandler;
 import propra2.leihOrDie.dataaccess.ItemRepository;
 import propra2.leihOrDie.dataaccess.LoanRepository;
 import propra2.leihOrDie.dataaccess.SessionRepository;
@@ -16,7 +17,7 @@ import propra2.leihOrDie.model.User;
 
 import java.util.List;
 
-import static propra2.leihOrDie.web.ProPayWrapper.*;
+import static propra2.leihOrDie.propay.ProPayWrapper.*;
 
 @Controller
 public class ConflictController {

@@ -1,4 +1,4 @@
-package propra2.leihOrDie.web;
+package propra2.leihOrDie.form;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 import javax.validation.constraints.NotEmpty;
 
 @Data
-class UserForm {
+public class UserForm {
     @NotNull
     @Size(min = 1, max = 50, message="Benutzernamen müssen 1-50 Zeichen lang sein")
     private String username;

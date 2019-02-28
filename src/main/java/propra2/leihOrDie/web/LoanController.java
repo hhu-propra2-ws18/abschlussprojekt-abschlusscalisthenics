@@ -6,16 +6,19 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import propra2.leihOrDie.response.ResponseBuilder;
+import propra2.leihOrDie.security.AuthorizationHandler;
 import propra2.leihOrDie.dataaccess.*;
+import propra2.leihOrDie.form.LoanForm;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Loan;
 import propra2.leihOrDie.model.User;
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.time.LocalDate;
+import java.util.List;
 
 
-import static propra2.leihOrDie.web.ProPayWrapper.*;
+import static propra2.leihOrDie.propay.ProPayWrapper.*;
 
 @Controller
 public class LoanController {

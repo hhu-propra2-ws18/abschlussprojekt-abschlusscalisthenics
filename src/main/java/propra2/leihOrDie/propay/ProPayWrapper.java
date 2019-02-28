@@ -1,4 +1,4 @@
-package propra2.leihOrDie.web;
+package propra2.leihOrDie.propay;
 
 
 import org.springframework.http.ResponseEntity;

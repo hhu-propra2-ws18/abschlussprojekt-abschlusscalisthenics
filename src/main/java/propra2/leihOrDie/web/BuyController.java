@@ -6,15 +6,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import propra2.leihOrDie.dataaccess.*;
+import propra2.leihOrDie.form.BuyForm;
 import propra2.leihOrDie.model.Buy;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Transaction;
 import propra2.leihOrDie.model.User;
+import propra2.leihOrDie.response.ResponseBuilder;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-import static propra2.leihOrDie.web.ProPayWrapper.transferMoney;
+import static propra2.leihOrDie.propay.ProPayWrapper.transferMoney;
 
 @Controller
 public class BuyController {

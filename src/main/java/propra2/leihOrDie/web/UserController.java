@@ -10,18 +10,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import propra2.leihOrDie.dataaccess.*;
+import propra2.leihOrDie.form.TransactionForm;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Loan;
 import propra2.leihOrDie.model.Transaction;
 import propra2.leihOrDie.model.User;
+import propra2.leihOrDie.response.ResponseBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
-import static propra2.leihOrDie.web.ProPayWrapper.getBalanceOfUser;
-import static propra2.leihOrDie.web.ProPayWrapper.raiseBalanceOfUser;
+import static propra2.leihOrDie.propay.ProPayWrapper.getBalanceOfUser;
+import static propra2.leihOrDie.propay.ProPayWrapper.raiseBalanceOfUser;
 
 @Controller
 public class UserController {
