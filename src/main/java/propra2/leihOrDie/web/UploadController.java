@@ -30,6 +30,7 @@ public class UploadController {
 
     @RequestMapping(value = "/item/{itemId}/uploadphoto", method = RequestMethod.POST)
     public String importParse(@RequestParam("file") MultipartFile file, @PathVariable Long itemId, RedirectAttributes redirectAttributes, Model model){
+
         if (file.getSize() == 0) {
             redirectAttributes.addFlashAttribute("message", "Bitte eine Datei wählen :)");
             redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
@@ -38,6 +39,12 @@ public class UploadController {
 
         if (checkPictureCount(itemId)) {
             redirectAttributes.addFlashAttribute("message", "Maximale Anzahl an Bildern ist erreicht.");
+            redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
+            return "redirect:/item/{itemId}/uploadphoto";
+        }
+
+        if (file.getSize() > 1048500) {
+            redirectAttributes.addFlashAttribute("message", "Datei ist zu gross");
             redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
             return "redirect:/item/{itemId}/uploadphoto";
         }
