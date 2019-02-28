@@ -13,7 +13,7 @@ public class DummyItemGenerator {
         boolean availability = true;
         int availableTime = 10;
 
-        Item item = new Item(name, description, cost,deposit, availability, availableTime, user.getAddress(), user);
+        Item item = new Item(name, description, cost,deposit, availability, availableTime, user.getAddress(), user, 0);
         return item;
     }
 
@@ -25,7 +25,7 @@ public class DummyItemGenerator {
         boolean availability = true;
         int availableTime = 14;
 
-        Item item = new Item(name, description, cost,deposit, availability, availableTime, user.getAddress(), user);
+        Item item = new Item(name, description, cost,deposit, availability, availableTime, user.getAddress(), user, 0);
         return item;
     }
 }
