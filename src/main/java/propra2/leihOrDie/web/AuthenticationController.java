@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import propra2.leihOrDie.dataaccess.SessionRepository;
+import propra2.leihOrDie.form.LoginForm;
+import propra2.leihOrDie.form.UserForm;
 import propra2.leihOrDie.model.Address;
 import propra2.leihOrDie.model.Session;
 import propra2.leihOrDie.model.User;

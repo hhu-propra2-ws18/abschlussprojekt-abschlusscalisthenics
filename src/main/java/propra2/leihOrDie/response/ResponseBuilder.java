@@ -1,8 +1,7 @@
-package propra2.leihOrDie.web;
+package propra2.leihOrDie.response;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import propra2.leihOrDie.dataaccess.SessionRepository;
 import propra2.leihOrDie.model.Buy;
 import propra2.leihOrDie.model.User;
 
