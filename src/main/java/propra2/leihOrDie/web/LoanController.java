@@ -1,8 +1,6 @@
 package propra2.leihOrDie.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
@@ -12,10 +10,10 @@ import propra2.leihOrDie.dataaccess.*;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Loan;
 import propra2.leihOrDie.model.User;
-
 import javax.validation.Valid;
-
+import java.time.LocalDateTime;
 import java.time.LocalDate;
+
 
 import static propra2.leihOrDie.web.ProPayWrapper.*;
 
