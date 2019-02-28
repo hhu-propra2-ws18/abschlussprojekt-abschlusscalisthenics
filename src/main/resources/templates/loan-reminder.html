@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>LeihOrDie!</title>
+</head>
+<body>
+    <ul>
+        <li th:text="${user}"></li>
+        <th:block th:each="exceededLoan : ${exceededLoans}">
+            <li th:text="'${exceededLoan.loan.item.name}' + '-' + '${exceededLoan.numberOfExceededDays}' Tage">< /li >
+        </th:block >
+    </ul>
+</body>
+</html>

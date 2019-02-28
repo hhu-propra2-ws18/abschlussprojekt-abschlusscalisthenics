@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import propra2.leihOrDie.model.Transaction;
 import propra2.leihOrDie.response.ResponseBuilder;
 import propra2.leihOrDie.security.AuthorizationHandler;
 import propra2.leihOrDie.dataaccess.*;
@@ -30,6 +31,8 @@ public class LoanController {
     LoanRepository loanRepository;
     @Autowired
     SessionRepository sessionRepository;
+    @Autowired
+    TransactionRepository transactionRepository;
     @Autowired
     private AuthorizationHandler authorizationHandler = new AuthorizationHandler(sessionRepository);
   
@@ -139,6 +142,8 @@ public class LoanController {
       
         try {
             transferMoney(loan.getUser().getEmail(), user.getEmail(), amount);
+            Transaction transaction = new Transaction(loan.getUser(), user, amount, "Danke für die Ausleihe");
+            transactionRepository.save(transaction);
         } catch (Exception e) {
             loan.setState("error");
             loanRepository.save(loan);
