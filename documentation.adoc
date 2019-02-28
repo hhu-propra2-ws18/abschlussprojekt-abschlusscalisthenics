@@ -76,4 +76,73 @@ auf der item-detail Seite
 . Passwörter wurden implementiert, da eine Service ohne Passwörter unnatürlich ist
 . Die Templates wurden im Laufe der Tage angepasst oder umgeändert. Das Layout passt sich unter anderem der Geschäftslogik
 an, ohne dabei seine Essenz zu verlieren.
-.
+
+
+
+
+
+## Authentifizierung
+Wir haben uns bei der Authentifizierung gegen die Verwendung von Spring Security
+entschieden, da es beim Login Probleme bei der Umsetzung der vorher definierten
+User Datenbank gab. +
+Stattdessen haben wir die Authentifizierung mit einem Interceptor und einer
+Session-Datenbank umgesetzt. Beim Einloggen wird ein Session-Cookie gesetzt,
+der in der Session-Datenbank gemeinsam mit dem User abgespeichert wird, wodurch
+jeder einzelne Nutzer eindeutig identifiziert werden kann. Der Interceptor fängt
+alle Anfragen auf zugriffsbeschränkte Seiten ab und prüft, ob der in der Anfrage
+enthaltene Cookie in der Datenbank existiert. Ist dies der Fall wird der Nutzer
+identifiziert und auf die angefragte Seite geleitet. Kann der Nutzer nicht identifiziert
+werden, wird er auf die Login-Page weitergeleitet. +
+Durch Ausnahmen ist es erlaubt die Start-, Login- und Registrierungsseite, sowie
+alle Artikelseiten ohne Anmeldung zu erreichen. Meldet sich ein Nutzer ab,
+wird die Session aus der Datenbank gelöscht.
+
+## Einstellen von Artikeln
+Um einen Artikel einzustellen, werden in einem Formular allgemeine Informationen
+über den Artikel eingegeben. Durch eine Checkbox auf der Formularseite ist es dem
+Nutzer auch möglich Artikel zum Verkauf anzubieten. +
+Anschließend gibt es die Möglichkeit bis zu 10 Bilder des Artikels hochzuladen.
+Aus Zeitgründen haben wir nur den zeitgleichen Upload eines einzigen Bildes
+implementiert. Möchte man mehrere Bilder hochladen, muss man nacheinander auf Upload
+klicken. +
+Nach dem Hochladen der Fotos ist der Einstellprozess beendet und der Artikel ist in
+der Artikelliste auf der Homepage zu finden.
+
+## Benutzerkonto
+Auf der Benutzerseite wird dem Nutzer eine Übersicht der Artikel, die
+er eingestellt und selbst ausgeliehen hat, angezeigt. Es werden alle Anfragen
+zum Verleihen aufgelistet und man hat die Möglichkeit diese anzunehmen oder abzulehnen.
+Nimmt man eine Anfrage an, muss der Anbieter noch bestätigen, dass der Artikel abgeholt wurde
+und am Ende muss man auch wieder angeben, wann der Artikel zurückgegeben wurde. +
+Über das Menü hat der Nutzer Zugriff auf sein ProPay-Konto, wo er seinen Kontostand
+erhöhen kann und alle Transaktionen an denen er beteiligt ist einsehen kann.
+
+## Ausleihprozess
+Um einen Artikel auszuleihen, muss ein eingeloggter User eine Anfrage an den
+Anbieter senden und dabei die gewünschte Ausleihdauer angeben. Ein Artikel
+ist immer für die angegebene max. Ausleihdauer verfügbar, wenn er online ist und
+gerade nicht ausgeliehen wird. Möchte man einen Artikel nicht mehr anderen Nutzern
+zur Verfügung stellen, muss man ihn löschen, da Artikel nicht automatisch von der
+Seite genommen werden. +
+Die Kaution des Artikels wird bereits nach Abschicken der Anfrage auf dem ProPay
+Konto reserviert, um zu verhindern, dass beim Annehmen einer Anfrage das Geld für die
+Reservierung nicht mehr verfügbar ist. +
+Im nächsten Schritt entscheidet der Anbieter, ob er die Anfrage annehmen möchte oder nicht.
+Wird die Anfrage angenommen ändert sich der Zustand der Ausleihe auf "accepted" und
+der nächste Schritt erfordert die Abholung des Artikels am angegebenen Artikelstandort.
+Wurde der Artikel abgeholt, muss der Anbieter dies in seinem Benutzerkonto bestätigen und
+der Status der Ausleihe ändert sich zu "active". Ab diesem Zeitpunkt werden
+die Tage der Ausleihe gezählt und der Anbieter muss am Ende bestätigen, dass er den
+Artikel zurückerhalten hat. Erst wenn der Anbieter dies bestätigt, wird das Geld zwischen
+den Konten transferiert. Besitzt die Person, die sich den Artikel ausgeliehen hat, nicht genug
+Geld auf ihrem Konto wird eine Fehlermeldung dargestellt und der Anbieter kann einen
+Konflikt eröffnen. +
+Wird eine Leihfrist überschritten, wird beiden Parteien der Ausleihe beim Einloggen
+eine Pop-Up Meldung angezeigt, in der die Artikel und die Überschreitungsdauer
+dargestellt sind.
+
+
+## Benötigte Änderungen für den Kaufprozess
+
+
+## Konfliktlösung
