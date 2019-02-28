@@ -53,7 +53,7 @@ public class ProPayWrapper {
     }
 
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
-    public String transferMoney(String senderUsername, String recipientUsername,
+    public void transferMoney(String senderUsername, String recipientUsername,
                                         double amount) throws Exception {
         RestTemplate rt = new RestTemplate();
         String url = "http://localhost:8888/account/" + senderUsername + "/transfer/" + recipientUsername;
@@ -61,28 +61,28 @@ public class ProPayWrapper {
         postParams.add("amount", amount);
         ResponseEntity<String> result = rt.postForEntity(url, postParams, String.class);
 
-        return result.getBody();
+        //return result.getBody();
     }
 
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
-    public Account punishAccount(String username, Long reservationId) throws Exception {
+    public void punishAccount(String username, Long reservationId) throws Exception {
         RestTemplate rt = new RestTemplate();
         String url = "http://localhost:8888/reservation/punish/" + username;
         MultiValueMap<String, Object> postParams = new LinkedMultiValueMap<>();
         postParams.add("reservationId", reservationId);
 
-        return rt.postForEntity(url, postParams, Account.class).getBody();
+        //return rt.postForEntity(url, postParams, Account.class).getBody();
     }
 
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
-    public Account freeReservationOfUser(String username, Long reservationId) throws Exception {
+    public void freeReservationOfUser(String username, Long reservationId) throws Exception {
         RestTemplate rt = new RestTemplate();
         String url = "http://localhost:8888/reservation/release/" + username;
         MultiValueMap<String, Object> postParams = new LinkedMultiValueMap<>();
         postParams.add("reservationId", reservationId);
         ResponseEntity<Account> result = rt.postForEntity(url, postParams, Account.class);
 
-        return result.getBody();
+        //return result.getBody();
     }
 
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
