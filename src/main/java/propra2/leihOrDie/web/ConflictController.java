@@ -79,14 +79,12 @@ public class ConflictController {
 
         Loan loan = loanRepository.findById(loanId).get();
 
-        String covenanteeName = userName;
-
-        if (userRepository.findUserByName(covenanteeName).isEmpty()) {
-            return responseBuilder.createBadRequestResponse("User " + covenanteeName + " existiert nicht.");
+        if (userRepository.findUserByName(userName).isEmpty()) {
+            return responseBuilder.createBadRequestResponse("User " + userName + " existiert nicht.");
         }
 
 
-        User convenantee = userRepository.findUserByName(covenanteeName).get(0);
+        User convenantee = userRepository.findUserByName(userName).get(0);
         User lendingUser = userRepository.findUserByEMail(convenantee.getEmail()).get(0);
 
         if (convenantee.getEmail().equals(loan.getUser().getEmail())) {
@@ -104,7 +102,7 @@ public class ConflictController {
             }
 
         } else {
-            return responseBuilder.createBadRequestResponse("User " + covenanteeName + " steht nicht im Kontext mit Loan " +
+            return responseBuilder.createBadRequestResponse("User " + userName + " steht nicht im Kontext mit Loan " +
                     loan.getId() + ".");
         }
 
