@@ -18,7 +18,6 @@
         <div class="container has-text-centered">
             <div class="column is-6 is-offset-3">
                 <h3 class="title has-text-black">Artikel einstellen</h3>
-                <br></br>
 
                 <form action="#" th:action="@{/item/create}" th:object="${itemForm}" method="post">
                     <div class="box">
@@ -73,7 +72,7 @@
                                 <button class="button is-block is-primary is-normal is-fullwidth" type="submit">Weiter</button>
                             </div>
                             <div class="control">
-                                <button class="button is-text">abbrechen</button>
+                                <a class="button is-text" href="/">abbrechen</a>
                             </div>
                         </div>
                     </div>
@@ -83,6 +82,7 @@
     </div>
     </div>
 </section>
+<div th:insert="fragments/footer :: footer"></div>
 </body>
 
 </html>
