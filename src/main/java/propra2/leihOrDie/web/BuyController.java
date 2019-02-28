@@ -1,21 +1,23 @@
 package propra2.leihOrDie.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import propra2.leihOrDie.dataaccess.*;
-import propra2.leihOrDie.form.BuyForm;
-import propra2.leihOrDie.model.Buy;
-import propra2.leihOrDie.model.Item;
-import propra2.leihOrDie.model.Transaction;
-import propra2.leihOrDie.model.User;
-import propra2.leihOrDie.response.ResponseBuilder;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.http.ResponseEntity;
+        import org.springframework.stereotype.Controller;
+        import org.springframework.ui.Model;
+        import org.springframework.web.bind.annotation.*;
+        import propra2.leihOrDie.dataaccess.*;
+        import propra2.leihOrDie.form.BuyForm;
+        import propra2.leihOrDie.model.Buy;
+        import propra2.leihOrDie.model.Item;
+        import propra2.leihOrDie.model.Transaction;
+        import propra2.leihOrDie.model.User;
+        import propra2.leihOrDie.response.ResponseBuilder;
 
-import java.util.List;
+        import javax.servlet.http.HttpServletResponse;
+        import java.util.ArrayList;
+        import java.util.List;
 
-import static propra2.leihOrDie.propay.ProPayWrapper.transferMoney;
+        import static propra2.leihOrDie.propay.ProPayWrapper.transferMoney;
 
 @Controller
 public class BuyController {
@@ -36,14 +38,15 @@ public class BuyController {
     public String showBuyService(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         List<Item> items = itemRepository.findItemsOfUser(user.getUsername());
+        List<Buy> buys = new ArrayList<>();
 
-        Buy buy = null;
         for (Item item: items) {
-            if (getPendingBuyOfItem(item) != null ) {
-                buy = getPendingBuyOfItem(item);
+            Buy pendingBuy = getPendingBuyOfItem(item);
+            if (pendingBuy != null) {
+                buys.add(pendingBuy);
             }
         }
-        model.addAttribute("buy", buy);
+        model.addAttribute("buys", buys);
         model.addAttribute("mypurchases", buyRepository.findBuysOfUser(user.getUsername()));
         return "user-shop";
     }
