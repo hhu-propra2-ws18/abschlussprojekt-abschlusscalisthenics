@@ -19,6 +19,7 @@ import propra2.leihOrDie.response.ResponseBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,9 +69,11 @@ public class UserController {
         double bankBalance = getBalanceOfUser(user.getEmail());
 
         List<Transaction> transactions = transactionRepository.findAllTransactionsOfUser(user.getUsername());
+        List<String> formattedDates = getFormattedDate(transactions);
 
         model.addAttribute("bankBalance", bankBalance);
         model.addAttribute("transactions", transactions);
+        model.addAttribute("formattedDates", formattedDates);
 
         return "user-propay";
     }
@@ -131,5 +134,13 @@ public class UserController {
         }
 
         return loans;
+    }
+
+    private List<String> getFormattedDate(List<Transaction> transactions) {
+        List<String> dates = new ArrayList<>();
+        for (Transaction transaction: transactions) {
+            dates.add(transaction.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        }
+        return dates;
     }
 }
