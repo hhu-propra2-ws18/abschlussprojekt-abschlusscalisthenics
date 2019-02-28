@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Benutzerkonto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+</head>
+
+<body>
+<div th:insert="fragments/header :: header"></div>
+<br></br>
+<br></br>
+
+<div class="container">
+    <div class="columns">
+        <div class="column is-3 ">
+            <aside class="menu is-hidden-mobile">
+
+                <p class="menu-label">
+                    Profil
+                </p>
+                <ul class="menu-list">
+                    <li><a href="/myaccount">Profil</a></li>
+                </ul>
+                <p class="menu-label">
+                    Menü
+                </p>
+                <ul class="menu-list">
+                    <li><a href="/myaccount/propay">Propay</a></li>
+                    <li><a href="/myaccount/buy">Kaufservice</a></li>
+                    <li><a href="/help">Hilfe</a></li>
+                </ul>
+            </aside>
+        </div>
+
+        <div class="column is-9">
+
+            <section class="hero is-primary is-small">
+                <div class="hero-body">
+                    <div class="container">
+                        <h1 class="title">
+                            Kaufservice
+                        </h1>
+                    </div>
+                </div>
+            </section>
+            <br></br>
+
+            <div class="columns">
+                <div class="column is-6">
+                    <div class="card events-card">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                                Meine Käufe:
+                            </p>
+                        </header>
+                        <div class="card-table">
+                            <div class="content">
+                                <table class="table is-fullwidth is-striped">
+                                    <tbody>
+                                    <tr th:each="purchase: ${mypurchases}">
+                                        <th th:text="${purchase.getItem().getName()}"></th>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            <div class="column is-6">
+            <section class="info-tiles">
+                <div class="tile is-ancestor has-text-centered">
+                    <div class="tile is-parent">
+                        <article class="tile is-child box">
+                            <p class="subtitle has-text-danger">Kaufanfragen</p>
+                            <p th:if="${buy} == null">Keine Anfragen zurzeit!</p>
+                            <table class="table is-fullwidth is-striped">
+                                <tbody th:if="${buy} != null">
+                                <tr>
+                                    <th th:text="${buy.getItem().getName()}"></th>
+                                    <td>
+                                        <form method="POST" th:action="@{'buy/accept/' + ${buy.getItem().getId()}}">
+                                            <button type="submit" name="submit" value="value" class="button is-small is-primary">bestätigen</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form method="POST" th:action="@{'buy/decline/' + ${buy.getItem().getId()}}">
+                                            <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">ablehnen</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                </tbody>
+
+                            </table>
+                        </article>
+                    </div>
+                </div>
+            </section>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
