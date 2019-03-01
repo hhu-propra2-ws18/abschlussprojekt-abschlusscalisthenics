@@ -13,8 +13,6 @@ public class CookieHandler {
     @Autowired
     private SessionRepository sessionRepository;
 
-    AuthorizationHandler authorizationHandler = new AuthorizationHandler(sessionRepository);
-
     private boolean checkSessionCookie(String sessionId) {
         Optional optional = sessionRepository.findById(sessionId);
         return optional.isPresent();
@@ -32,6 +30,8 @@ public class CookieHandler {
     }
 
     boolean checkIfAdmin(Cookie cookies[]) {
+        AuthorizationHandler authorizationHandler = new AuthorizationHandler(sessionRepository);
+
         if(cookies != null) {
             for(Cookie cookie: cookies) {
                 if (cookie.getName().equals("SessionID") &&  authorizationHandler.isAdmin(cookie.getValue())) {

@@ -14,7 +14,7 @@ public class AdminInterceptor  extends HandlerInterceptorAdapter {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
                            ModelAndView modelAndView) {
-        boolean isAdmin = (cookieHandler.checkIfAdmin(request.getCookies()));
-        request.setAttribute("isAdmin", isAdmin);
+            boolean isAdmin = (cookieHandler.checkIfAdmin(request.getCookies()));
+            request.setAttribute("isAdmin", isAdmin);
     }
 }
