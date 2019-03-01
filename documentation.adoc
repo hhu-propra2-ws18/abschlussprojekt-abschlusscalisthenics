@@ -1,91 +1,5 @@
 # Dokumentation - Team Abschlusscalisthenics
 
-
-## Tag 1
-
-. Eine grobe Architektur für die Anwendung wurde erstellt.
-Offene Fragen: Interaktion von unangemeldeten Usern und Website.
-
-## Tag 2
-. Frontend Entwicklung hat angefangen.
-. Die Datenbank wurde aufgesetzt. Noch Probleme mit den Models.
-. Docker wurde angefangen: Der Dockerfile und eine .yml-Datei um die Datenbank einzeln starten zu können.
-
-## Tag 3
-. Die Datenbank wurde fertig gestellt. Die Entitäten, welche in der Datenbank gespeichert werden,
-sind die User, Artikel, Ausleihen, Bilder und Adressen.
-.. User: Besitzen einen eindeutigen Benutzernamen, eine Email, ein verschlüsseltes Passwort
-und eine Adresse
-.. Item: Besitzt eine automatisch generierte eindeutige Id, einen Namen, Beschreibung,
-Kosten, Kaution, Standort, aktuelle Verfügbarkeit und gesamte Einstellungsdauer.
-Außerdem wird der der Primärschlüssel von User als Fremdschlüssel gespeichert.
-.. Address: Besitzt eine Straße, Hausnummer, Stadt und PLZ
-.. Loan: Speichert die gesamte Ausleihdauer und den Status der Ausleihe (z.B. Laufend,
-  Abgeschlossen, Konflikt, ...). Zusätzlich werden die ItemId und der username des Users, der
-  sich den Artikel ausleiht gespeichert. Über die itemId kann dann auch der User, welcher
-  den Artikel verleiht ermittelt werden.
-.. Picture: Besitzt ebenfalls eine automatisch generierte und eindeutige Id und ein Blob.
-Der Verweis auf den zugehörigen Artikel erfolgt durch Speichern des Fremdschlüssels item_id.
-
-. Für User, Item, Loan und Picture wurden je ein Repository erstellt. Address wurde als Embedabble
-implementiert. Die Repositories wurden außerdem um eine Query erweitert, über die man die Entitäten
-nach den Fremdschlüsseln filtern kann.
-
-## Tag 4
-. Travis fertig gestellt
-. Arbeit an Docker
-.. Probleme mit der Datenbank
-.. Probleme eine Datenbank für development Zwecke in der selben .properties Datei zu starten
-. Frontend:
-.. arbeit an Seiten
-.. Thymeleaf angefangen einzubeziehen
-
-
-## Tag 5
-. Docker wurde fertiggestellt:
-.. docker-compose up:
-... stellt Anwendung auf localhost:8080 bereit
-... stellt die Datenbank nach außen abgeschlossen auf leihordiedb:3306 bereit
-... stellt Propay auf localhost:8888 bereit
-.. docker-compose -f datenbanktest.yml up:
-... stellt eine Testdatenbank nach außen offen auf localhost:3306 bereit
-. Anpassung der Datenbank
-. arbeit an Test für Uploadcontroller
-. ItemRepository Test fertiggestellt
-.. 3 Helfer Klassen:
-... DummyItemGenerator
-... SummyUserGenerator
-... DummyLoanGenerator.
-.arbeit an LoanRepository Test
-. 2 Controller geschrieben: UserController, HomepageController
-. arbeit an html Seiten
-
-## Tag 6
-. Formvalidation für das Login und Signup wurde fertiggestellt
-. Arbeit an der Formvalidation vom ItemController
-. Arbeit am ErrorController wurde begonnen
-. Man hat sich darauf geeinigt für das Login Spring Security zu verwenden
-. docker-compose ist fertig, man hat sich für die Entwicklung entschieden eine "Testdatenbank" zu benutzen,
-da das Aufsetzen Zeit kostet und für das Testen den Workflow behindert
-
-## Tag 7 + 8 + 9 + 10
-. Die Idee, die Authentifizierung mit Spring Security zu implementieren, wurde verworfen, wurde zu zeitaufwändig
-. der Fotoupload wurde überarbeitet und funktioniert
-.. Der Wunsch war eine Art slideshow zu implementieren, die aus irgendeinem Grund nicht funktioniert
-auf der item-detail Seite
-. Passwörter wurden implementiert, da ein Service ohne Passwörter unnatürlich ist
-. Die Templates wurden im Laufe der Tage angepasst oder umgeändert. Das Layout passt sich unter anderem der Geschäftslogik
-an, ohne dabei seine Essenz zu verlieren.
-
-## Tag 11 + 12 + 13 + 14 + 15
-. Einbinden der zusätzlichen Aufgabenstellung (Propay´s triviale Lösung überarbeitet, Kaufen-Option implementiert)
-. Foto-Karussel auf der item-Page
-. TESTS
-. Refactor Frontend(Header, item-page, ...), Ordnerstruktur
-. User Roles (Admin, ...)
-.
-
-
 ## Authentifizierung
 Wir haben uns bei der Authentifizierung gegen die Verwendung von Spring Security
 entschieden, da es beim Login Probleme bei der Umsetzung der vorher definierten
@@ -101,6 +15,12 @@ werden, wird er auf die Login-Page weitergeleitet. +
 Durch Ausnahmen ist es erlaubt die Start-, Login-, Registrierungs-, und Hilfeseite, sowie
 alle Artikelseiten ohne Anmeldung zu erreichen. Meldet sich ein Nutzer ab,
 wird die Session aus der Datenbank gelöscht.
+
+## Login/Logout
+Wir haben uns dazu entschieden den Login über die E-Mailadresse und mit einem Passwort
+druchzuführen. +
+Die E-Mailadresse haben wir ausgewält, weil ein Benutzer eher seinen Benutzernamen vergisst,
+als seine E-Mailadresse.
 
 ## Einstellen von Artikeln
 Um einen Artikel einzustellen, werden in einem Formular allgemeine Informationen
@@ -190,9 +110,12 @@ erscheint ein Pop-Up, welches auf den weiteren Verlauf der Konfliktlösung hinwe
 Beschreibung des Problems an "conflict@leihordie.de" schicken. In dem Pop-Up sieht man den Betreff, welcher in der Email
 verwendet werden soll. Anhand des Betreffs kann der Vorgang nachvollzogen werden und beide Seiten können vom Admin
 angehört werden. +
-Der Admin verwaltet die Konfliktlösestelle.
+Der Admin verwaltet die Konfliktlösestelle. Er muss entscheiden wer von den beiden Benutzern recht hat. Je nach dem um welchen
+Konflikt es sich handelt, kann der Admin die Kaution zuweisen. +
+Falls es eine fehlgeschlagene Überweisung gibt, wird das dem Admin ebenfalls angezeigt. Wenn er weiß, dass Propay wieder
+erreichbar ist, kann er in seinem Adminpanel die fehlgeschlagenen Transaktionen erneut ausführen.
 
-## Interpretierung
+## Eigene Umsetzung
 Beim Einstellen eines Artikels muss man keinen Abholort eingeben, da der Abholort automatisch
 die Adresse des Users ist, welche beim Registrieren angegeben werden muss. Für uns war dies die logischere Entscheidung,
 als bei jedem Artikel den man anbietet die geiche Adresse anzugeben. +
@@ -200,3 +123,11 @@ Der Leihende kann frühzeitig einen Artikel zurückgeben, dies muss allerdings v
 werden. Somit kann der Ausleihprozess nur durch den Verleihenden frühzeitig abgebrochen werden. +
 Um Missverständnisse zu verhindern, wird immer der Zeitraum, welcher bei der Anfrage angegeben wurde berechnet und es gibt
 keinen Nachlass für die ausleihende Person, falls diese den Artikel frühzeitig zurückgibt.
+
+## Propay Wrapping
+Der Umgang mit der REST API von ProPay wird bei uns mit einem Wrapper gehändelt.
+Dabei werden die jeweiligen Schnittstellen mit Methoden gewrapped, welche aus dem Backend aufgerufen werden können.
+Um ein einfacheres Testen zu ermöglichen haben wir uns entschieden die Methoden non-Static zu implementieren.
+In dem Fall dass die ProPay Schnittstelle nicht erreichbar ist, wird 5 mal in Abständen von 5 Sekunden ein Retry durchgeführt.
+Kann dann immer noch keine Verbindung aufgebaut werden, muss der Admin die Transaktion über das Admin Panel manuell durchführen,
+wenn der Fehler mit Propay behoben ist.
