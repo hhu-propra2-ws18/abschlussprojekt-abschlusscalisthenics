@@ -15,7 +15,6 @@ import propra2.leihOrDie.model.User;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Controller
