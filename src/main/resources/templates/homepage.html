@@ -6,10 +6,73 @@
     <title>LeihOrDie!</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+      <style>
+      .modal {
+          display: none;
+          font-size: 25px;
+          position: fixed;
+          z-index: 1;
+          padding-top: 100px;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          overflow: auto;
+          background-color: rgb(0,0,0);
+          background-color: rgba(0,0,0,0.4);
+      }
+
+      .modal-content {
+          background-color: #fefefe;
+          margin: auto;
+          padding: 20px;
+          border: 1px solid #888;
+          width: 80%;
+      }
+
+      .close {
+          color: #aaaaaa;
+          float: right;
+          font-size: 28px;
+          font-weight: bold;
+      }
+
+      .close:hover,
+      .close:focus {
+          color: #000;
+          text-decoration: none;
+          cursor: pointer;
+      }
+  </style>
+      <script>
+          function checkReminders() {
+              var xhr = new XMLHttpRequest();
+
+              xhr.addEventListener("load", function(event) {
+                  if(xhr.response.indexOf("Überschreitungsdauer") == -1 ||
+                      xhr.responseURL == "http://localhost:8080/login") {
+                      return;
+                  } else {
+                      document.getElementById("modal-text").innerHTML = xhr.response;
+                      modal.style.display = "block";
+                  }
+              });
+
+              xhr.open("GET", "/reminder");
+              xhr.send();
+          }
+      </script>
   </head>
   <div th:insert="fragments/header :: header"></div>
   <body>
   <div th:insert="fragments/header :: header"></div>
+  <div id="myModal" class="modal">
+      <div class="modal-content">
+          <span class="close">&times;</span>
+          <p id="modal-text">Some text in the Modal..</p>
+      </div>
+
+  </div>
       <section class="hero is-fullheight is-default is-bold">
        <div class="hero-body">
            <div class="container has-text-centered">
@@ -37,5 +100,22 @@
        </div>
    </section>
   <div th:insert="fragments/footer :: footer"></div>
+  <script>
+      var modal = document.getElementById('myModal');
+      var span = document.getElementsByClassName("close")[0];
+
+      span.onclick = function() {
+          modal.style.display = "none";
+      };
+
+      window.onclick = function(event) {
+          if (event.target == modal) {
+              modal.style.display = "none";
+          }
+      };
+
+
+      checkReminders();
+  </script>
   </body>
 </html>
