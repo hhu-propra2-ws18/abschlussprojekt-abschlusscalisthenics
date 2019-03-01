@@ -207,6 +207,10 @@
                                             <tbody>
                                             <tr th:each="item: ${items}">
                                                 <th><a th:href="@{'/borrowall/' + ${item.id}}" th:text="${item.getName()}"></a></th>
+                                                <td>
+                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary">löschen</button>
+                                                </td>
+
                                             </tr>
                                             </tbody>
                                         </table>
