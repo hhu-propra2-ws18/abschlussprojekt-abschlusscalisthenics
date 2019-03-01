@@ -79,12 +79,12 @@
                                     <tr th:each="buy: ${buys}">
                                         <th th:text="${buy.getItem().getName()}"></th>
                                         <td>
-                                            <form method="POST" th:action="@{'buy/accept/' + ${buy.getItem().getId()}}">
+                                            <form class= action="#" method="POST" th:action="@{'buy/accept/' + ${buy.getItem().getId()}}">
                                                 <button type="submit" name="submit" value="value" class="button is-small is-primary">bestätigen</button>
                                             </form>
                                         </td>
                                         <td>
-                                            <form method="POST" th:action="@{'buy/decline/' + ${buy.getItem().getId()}}">
+                                            <form class= action="#" method="POST" th:action="@{'buy/decline/' + ${buy.getItem().getId()}}">
                                                 <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">ablehnen</button>
                                             </form>
                                         </td>
