@@ -21,4 +21,3 @@ Die Anmeldedaten der vordefinierten Konten sind:
 * E-Mail: petra@hhu.de, PW: petra1234, Benutzerrechte: USER
 * E-Mail: otto@icloud.com, PW: otto1234, Benutzerrechte: USER
 * E-Mail: florian@web.de, PW: florian1234, Benutzerrechte: USER
-* E-Mail: juergen@j.de, PW: juergen1234, Benutzerrechte: USER
