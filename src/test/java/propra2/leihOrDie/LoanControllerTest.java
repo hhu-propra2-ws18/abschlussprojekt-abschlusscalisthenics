@@ -21,6 +21,7 @@ import propra2.leihOrDie.model.User;
 import propra2.leihOrDie.propay.ProPayWrapper;
 import javax.servlet.http.Cookie;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -74,7 +75,10 @@ public class LoanControllerTest {
         sessionRepository.save(adminSession);
 
         DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
-        testItem = dummyItemGenerator.generateItem(testUser1);
+        testItem = dummyItemGenerator.generateItem(testUser2);
+        testItem.setAvailableTime(5);
+        testItem.setDeposit(50);
+        testItem.setCost(10);
         itemRepository.save(testItem);
 
         DummyLoanGenerator dummyLoanGenerator = new DummyLoanGenerator();
@@ -92,36 +96,7 @@ public class LoanControllerTest {
 
     @Ignore
     @Test
-    //body is empty- how to test responseBuilder
-    public void testRequestLoanAndLoanDurationIsZero() throws Exception {
-        testItem.setAvailableTime(5);
-        testItem.setDeposit(50);
-        testItem.setUser(testUser2);
-        itemRepository.save(testItem);
-
-        mvc.perform(post("/request/" + testItem.getId())
-                .cookie(new Cookie("SessionID", "2"))
-                .param("loanDuration", "0"))
-                .andExpect(content().string("\"Die minimale Ausleihdauer beträgt einen Tag.\""));
-
-        Assert.assertEquals(loanRepository.findLoansOfUser(testUser1.getUsername()).size(),0);
-
-
-        /*Errors errors = new BeanPropertyBindingResult(responseBuilder, "responseBinder");
-        assertTrue(errors.getFieldError().toString().equalsIgnoreCase("Die minimale Ausleihdauer beträgt einen Tag."));*/
-    }
-
-
-    @Test
     public void testRequestLoan() throws Exception {
-        testItem.setAvailableTime(5);
-        testItem.setDeposit(50);
-        testItem.setUser(testUser2);
-        itemRepository.save(testItem);
-
-        proPayWrapper.reserve(testUser1.getEmail()
-                ,testItem.getUser().getEmail()
-                ,testItem.getDeposit()).setId(1L);
         when(
                         proPayWrapper.reserve(testUser1.getEmail()
                                 ,testItem.getUser().getEmail()
@@ -129,27 +104,16 @@ public class LoanControllerTest {
                                 .getId())
                 .thenReturn(1L);
 
-
-       /* ResponseBuilder responseBuilder = new ResponseBuilder();
-        responseBuilder.createBadRequestResponse("Die minimale Ausleihdauer beträgt einen Tag.");*/
-
         mvc.perform(post("/request/" + testItem.getId())
                 .cookie(new Cookie("SessionID", "1"))
                 .param("loanDuration", "2"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         Assert.assertEquals(loanRepository.findLoansOfUser(testUser1.getUsername()).size(),1);
-
-
-        /*Errors errors = new BeanPropertyBindingResult(responseBuilder, "responseBinder");
-        assertTrue(errors.getFieldError().toString().equalsIgnoreCase("Die minimale Ausleihdauer beträgt einen Tag."));*/
     }
 
     @Test
     public void testChangeStatusToAccepted() throws Exception {
-        testItem.setUser(testUser2);
-        itemRepository.save(testItem);
-
         testLoan.setState("active");
         loanRepository.save(testLoan);
 
@@ -162,9 +126,6 @@ public class LoanControllerTest {
 
     @Test
     public void testChangeStatusToDeclined() throws Exception {
-        testItem.setUser(testUser2);
-        itemRepository.save(testItem);
-
         testLoan.setState("active");
         loanRepository.save(testLoan);
 
@@ -178,9 +139,6 @@ public class LoanControllerTest {
 
     @Test
     public void testChangeStatusToActive() throws Exception {
-        testItem.setUser(testUser2);
-        itemRepository.save(testItem);
-
         testLoan.setState("declined");
         loanRepository.save(testLoan);
 
@@ -191,18 +149,16 @@ public class LoanControllerTest {
         Assert.assertEquals("active", loanRepository.findLoansOfUser(testUser2.getUsername()).get(0).getState());
     }
 
+    @Ignore
     @Test
     public void testChangeStatusToCompleted() throws Exception {
-        testItem.setUser(testUser2);
-        testItem.setCost(10);
-        itemRepository.save(testItem);
-
         testLoan.setState("active");
         testLoan.setDuration(2);
         loanRepository.save(testLoan);
 
-        Mockito.doNothing()
-                .when(proPayWrapper).transferMoney(testUser1.getEmail(), testUser2.getEmail(), 20);
+       /* Mockito.doNothing()
+                .when(proPayWrapper).transferMoney(testUser1.getEmail(), testUser2.getEmail(), 20);*/
+        doNothing().when(proPayWrapper.transferMoney(testUser1.getEmail(), testUser2.getEmail(),20));
 
         mvc.perform(post("/request/return/" + testLoan.getId())
                 .cookie(new Cookie("SessionID", "2")))
@@ -211,5 +167,3 @@ public class LoanControllerTest {
         Assert.assertEquals("completed", loanRepository.findLoansOfUser(testUser2.getUsername()).get(0).getState());
     }
 }
-
-// .andExpect(content().string("\"Username already taken - please try with different username\""));
