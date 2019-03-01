@@ -160,16 +160,19 @@
                         Preis pro Tag (€):
                     </h6>
 
+                    <div class="navbar-start" th:if="${soldPrice} > 0">
+                        <h7 th:text="'Kaufpreis: ' + ${soldPrice} + '€'" class="subtitle is-4">
+                            Kaufpreis(€) :
+                        </h7>
+                        <br><br>
+                    </div>
 
-                    <h7 th:text="'Kaufpreis: ' + ${soldPrice} + '€'" class="subtitle is-4">
-                        Kaufpreis(€) :
-                    </h7>
-
-                    <br><br>
 
                     <h8 th:text="'Anbieter: ' + ${username}" class="subtitle is-4">
                         Ausleiher:
                     </h8>
+
+
 
                     <br><br>
 
