@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import propra2.leihOrDie.dataaccess.SessionRepository;
 import propra2.leihOrDie.form.LoginForm;
 import propra2.leihOrDie.form.UserForm;
@@ -36,6 +37,10 @@ public class AuthenticationController {
     @PostMapping("/registration")
     public String newUser(Model model, @Valid UserForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
+            return "registration";
+        }
+
+        if (!userRepository.findUserByEMail(form.getEmail()).isEmpty()) {
             return "registration";
         }
 
