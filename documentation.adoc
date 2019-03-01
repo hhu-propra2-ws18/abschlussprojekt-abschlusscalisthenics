@@ -69,16 +69,21 @@ nach den Fremdschlüsseln filtern kann.
 da das Aufsetzen Zeit kostet und für das Testen den Workflow behindert
 
 ## Tag 7 + 8 + 9 + 10
-. Die Idee, die Authentifizierung mit Spring Security zu implementieren, wurde verworfen, weil ...
+. Die Idee, die Authentifizierung mit Spring Security zu implementieren, wurde verworfen, wurde zu zeitaufwändig
 . der Fotoupload wurde überarbeitet und funktioniert
 .. Der Wunsch war eine Art slideshow zu implementieren, die aus irgendeinem Grund nicht funktioniert
 auf der item-detail Seite
-. Passwörter wurden implementiert, da eine Service ohne Passwörter unnatürlich ist
+. Passwörter wurden implementiert, da ein Service ohne Passwörter unnatürlich ist
 . Die Templates wurden im Laufe der Tage angepasst oder umgeändert. Das Layout passt sich unter anderem der Geschäftslogik
 an, ohne dabei seine Essenz zu verlieren.
 
-
-
+## Tag 11 + 12 + 13 + 14 + 15
+. Einbinden der zusätzlichen Aufgabenstellung (Propay´s triviale Lösung überarbeitet, Kaufen-Option implementiert)
+. Foto-Karussel auf der item-Page
+. TESTS
+. Refactor Frontend(Header, item-page, ...), Ordnerstruktur
+. User Roles (Admin, ...)
+.
 
 
 ## Authentifizierung
@@ -93,7 +98,7 @@ alle Anfragen auf zugriffsbeschränkte Seiten ab und prüft, ob der in der Anfra
 enthaltene Cookie in der Datenbank existiert. Ist dies der Fall wird der Nutzer
 identifiziert und auf die angefragte Seite geleitet. Kann der Nutzer nicht identifiziert
 werden, wird er auf die Login-Page weitergeleitet. +
-Durch Ausnahmen ist es erlaubt die Start-, Login- und Registrierungsseite, sowie
+Durch Ausnahmen ist es erlaubt die Start-, Login-, Registrierungs-, und Hilfeseite, sowie
 alle Artikelseiten ohne Anmeldung zu erreichen. Meldet sich ein Nutzer ab,
 wird die Session aus der Datenbank gelöscht.
 
@@ -178,3 +183,20 @@ das Formular mit dem ein neuer Artikel eingefügt wird angepasst werden, sodass
 man einen Verkaufspreis festlegen kann.
 
 ## Konfliktlösung
+Tritt ein Konflikt auf (z.B.: Ein Artikel wird nicht zurückgegeben, ein Artikel wird beschädigt zurückgegeben, ein Artikel wird
+in beschädigtem Zustand verliehen), so besteht die Möglichkeit die Konfliktlösestelle zu kontaktieren. +
+Um dies zu tun, geht man auf "Mein Konto" (im Header), dort sieht man den Button Konflikt. Wird Konflikt gedrückt, so
+erscheint ein Pop-Up, welches auf den weiteren Verlauf der Konfliktlösung hinweist. So soll man eine Email mit detaillierter
+Beschreibung des Problems an "conflict@leihordie.de" schicken. In dem Pop-Up sieht man den Betreff, welcher in der Email
+verwendet werden soll. Anhand des Betreffs kann der Vorgang nachvollzogen werden und beide Seiten können vom Admin
+angehört werden. +
+Der Admin verwaltet die Konfliktlösestelle.
+
+## Interpretierung
+Beim Einstellen eines Artikels muss man keinen Abholort eingeben, da der Abholort automatisch
+die Adresse des Users ist, welche beim Registrieren angegeben werden muss. Für uns war dies die logischere Entscheidung,
+als bei jedem Artikel den man anbietet die geiche Adresse anzugeben. +
+Der Leihende kann frühzeitig einen Artikel zurückgeben, dies muss allerdings von dem Verleihenden auf der Website bestätigt
+werden. Somit kann der Ausleihprozess nur durch den Verleihenden frühzeitig abgebrochen werden. +
+Um Missverständnisse zu verhindern, wird immer der Zeitraum, welcher bei der Anfrage angegeben wurde berechnet und es gibt
+keinen Nachlass für die ausleihende Person, falls diese den Artikel frühzeitig zurückgibt.
