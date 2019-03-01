@@ -200,3 +200,22 @@ Der Leihende kann frühzeitig einen Artikel zurückgeben, dies muss allerdings v
 werden. Somit kann der Ausleihprozess nur durch den Verleihenden frühzeitig abgebrochen werden. +
 Um Missverständnisse zu verhindern, wird immer der Zeitraum, welcher bei der Anfrage angegeben wurde berechnet und es gibt
 keinen Nachlass für die ausleihende Person, falls diese den Artikel frühzeitig zurückgibt.
+
+## Datenbank
+Wir haben uns für eine MySQL-Datenbank entschieden. Folgende Daten werden
+in der Datenbank gespeichert:
+
+. User: Jeder User wird mit seinen Credentials und seiner Adresse gespeichert.
+Das Passwort wird dabei gehasht gespeichert.
+. Transaction: Jede Transaktion wird mit Absender und Empfänger gespeichert, um
+die Transaktionen später in dem Benutzerkonto darstellen zu können. Zusätzlich
+wird ein Verwendungszweck und das Datum der Transaktion gespeichert.
+. Session: Um jedem Session-Cookie einem User zuordnen zu können, werden SessionId +
+User-EMail Paare abgespeichert. Diese werden immer angelegt, wenn man sich einloggt und
+gelöscht, wenn man sich abmeldet.
+. Picture: Zu jedem Artikel werden die Bilder mit ihrer Id und dem Datentyp gespeichert.
+. Loan: Der Zustand jeder Ausleihe wird in der Datenbank verwaltet. Es gibt Verweise
+auf den Artikel (und somit auch auf den Verleiher) und auf den User, der sich den Artikel
+ausleiht. Außerdem werden Ausleih- und Rückgabedatum gespeichert, um verfolgen zu können, ob
+die Ausleihfrist abgelaufen ist.
+. Item: Artikel werden mit all ihren Informationen gespeichert. 
