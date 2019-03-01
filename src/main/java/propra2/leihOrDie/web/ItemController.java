@@ -1,6 +1,7 @@
 package propra2.leihOrDie.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,6 +15,7 @@ import propra2.leihOrDie.form.LoanForm;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Picture;
 import propra2.leihOrDie.model.User;
+import propra2.leihOrDie.response.ResponseBuilder;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -29,6 +31,8 @@ public class ItemController {
     PictureRepository pictureRepository;
     @Autowired
     SessionRepository sessionRepository;
+
+    ResponseBuilder responseBuilder;
 
     @PostMapping("/item/create")
     public String newItem(Model model, @Valid ItemForm form, BindingResult bindingResult, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
@@ -123,6 +127,27 @@ public class ItemController {
         }
 
         return urlList;
+    }
+
+    @PostMapping("/delete/{itemId}")
+    public ResponseEntity deleteItem(Model model, @PathVariable Long id, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        Item item = itemRepository.findById(id).get();
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+
+        if (!user.getUsername().equals(item.getUser().getUsername())) {
+            return responseBuilder.createUnauthorizedResponse();
+        }
+
+        if (!item.isAvailability()) {
+            return responseBuilder.createBadRequestResponse("Der Artikel ist noch verliehen und kann deswegen nicht gelöscht werden");
+        }
+
+        try {
+            itemRepository.delete(item);
+            return responseBuilder.createSuccessResponse("Artikel wurde erfolgreich gelöscht");
+        } catch (Exception e) {
+            return responseBuilder.createBadRequestResponse("Artikel existiert nicht und kann deswegen nicht gelöscht werden");
+        }
     }
 
     private String buildUrl(Picture picture) {
