@@ -2,6 +2,7 @@ package propra2.leihOrDie;
 
 import org.junit.*;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,16 +14,14 @@ import propra2.leihOrDie.dataaccess.ItemRepository;
 import propra2.leihOrDie.dataaccess.LoanRepository;
 import propra2.leihOrDie.dataaccess.SessionRepository;
 import propra2.leihOrDie.dataaccess.UserRepository;
-import propra2.leihOrDie.model.Item;
-import propra2.leihOrDie.model.Loan;
-import propra2.leihOrDie.model.Session;
-import propra2.leihOrDie.model.User;
+import propra2.leihOrDie.model.*;
 import propra2.leihOrDie.propay.ProPayWrapper;
 import javax.servlet.http.Cookie;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
@@ -92,15 +91,50 @@ public class LoanControllerTest {
         userRepository.deleteAll();
     }
 
-    @Ignore
+
+    @Test
+    public void testRequestLoanAndLoanDurationIsTooLong() throws Exception {
+        mvc.perform(post("/request/" + testItem.getId())
+                .cookie(new Cookie("SessionID", "1"))
+                .param("loanDuration", "100"))
+                .andExpect(content().string("Die maximale Ausleihdauer ist überschritten."));
+
+        Assert.assertEquals(loanRepository.findLoansOfUser(testUser1.getUsername()).size(),0);
+    }
+
+    @Test
+    public void testRequestLoanAndYouCantLoanYourOwnItem() throws Exception {
+        mvc.perform(post("/request/" + testItem.getId())
+                .cookie(new Cookie("SessionID", "2"))
+                .param("loanDuration", "3"))
+                .andExpect(content().string("Du kannst deinen eigenen Gegenstand nicht ausleihen."));
+
+        Assert.assertEquals(loanRepository.findLoansOfUser(testUser1.getUsername()).size(),0);
+    }
+
+    @Test
+    public void testRequestLoanAndAvailabilityIsFalse() throws Exception {
+        testItem.setAvailability(false);
+        itemRepository.save(testItem);
+        mvc.perform(post("/request/" + testItem.getId())
+                .cookie(new Cookie("SessionID", "1"))
+                .param("loanDuration", "3"))
+                .andExpect(content().string("Dieser Gegenstand ist nicht verfügbar."));
+
+        Assert.assertEquals(loanRepository.findLoansOfUser(testUser1.getUsername()).size(),0);
+    }
+
+
     @Test
     public void testRequestLoan() throws Exception {
+        Reservation res = new Reservation();
+        res.setId(1L);
         when(
                         proPayWrapper.reserve(testUser1.getEmail()
                                 ,testItem.getUser().getEmail()
-                                ,testItem.getDeposit())
-                                .getId())
-                .thenReturn(1L);
+                                ,50.0))
+                .thenReturn(res);
+
 
         mvc.perform(post("/request/" + testItem.getId())
                 .cookie(new Cookie("SessionID", "1"))
@@ -147,19 +181,28 @@ public class LoanControllerTest {
         Assert.assertEquals("active", loanRepository.findLoansOfUser(testUser2.getUsername()).get(0).getState());
     }
 
-    @Ignore
     @Test
     public void testChangeStatusToCompleted() throws Exception {
         testLoan.setState("active");
         testLoan.setDuration(2);
         loanRepository.save(testLoan);
 
-        doNothing().when(proPayWrapper.transferMoney(testUser1.getEmail(), testUser2.getEmail(),20));
+        Reservation res = new Reservation();
+        res.setId(1L);
+
+        when(
+                proPayWrapper.transferMoney(testUser1.getEmail()
+                        ,testItem.getUser().getEmail()
+                        ,50.0))
+                .thenReturn("something");
+
+        when(proPayWrapper.getBalanceOfUser(testUser2.getEmail())).thenReturn(50.0);
 
         mvc.perform(post("/request/return/" + testLoan.getId())
                 .cookie(new Cookie("SessionID", "2")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         Assert.assertEquals("completed", loanRepository.findLoansOfUser(testUser2.getUsername()).get(0).getState());
+        Assert.assertEquals(50.0, proPayWrapper.getBalanceOfUser(testUser2.getEmail()), 0.001);
     }
 }
