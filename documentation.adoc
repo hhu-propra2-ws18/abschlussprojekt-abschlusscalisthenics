@@ -123,3 +123,11 @@ Der Leihende kann frühzeitig einen Artikel zurückgeben, dies muss allerdings v
 werden. Somit kann der Ausleihprozess nur durch den Verleihenden frühzeitig abgebrochen werden. +
 Um Missverständnisse zu verhindern, wird immer der Zeitraum, welcher bei der Anfrage angegeben wurde berechnet und es gibt
 keinen Nachlass für die ausleihende Person, falls diese den Artikel frühzeitig zurückgibt.
+
+## Propay Wrapping
+Der Umgang mit der REST API von ProPay wird bei uns mit einem Wrapper gehändelt.
+Dabei werden die jeweiligen Schnittstellen mit Methoden gewrapped, welche aus dem Backend aufgerufen werden können.
+Um ein einfacheres Testen zu ermöglichen haben wir uns entschieden die Methoden non-Static zu implementieren.
+In dem Fall dass die ProPay Schnittstelle nicht erreichbar ist, wird 5 mal in Abständen von 5 Sekunden ein Retry durchgeführt.
+Kann dann immer noch keine Verbindung aufgebaut werden, muss der Admin die Transaktion über das Admin Panel manuell durchführen,
+wenn der Fehler mit Propay behoben ist.
