@@ -15,7 +15,9 @@ import propra2.leihOrDie.propay.ProPayWrapper;
 
 import javax.servlet.http.Cookie;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
@@ -47,7 +49,7 @@ public class BuyControllerTest {
     private Buy testBuy;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
         testUser1 = dummyUserGenerator.generateUser();
         testUser2 = dummyUserGenerator.generateUser();
@@ -94,10 +96,24 @@ public class BuyControllerTest {
         Assert.assertFalse(buyRepository.findBuysOfItem(testItem.getId()).get(0).getItem().isAvailability());
     }
 
-    @Ignore
     @Test
-    public void testItemSale() {
-        // ???
+    public void testItemSale() throws Exception {
+        when(proPayWrapper
+                .transferMoney
+                        (testBuy.getBuyer().getEmail(), testUser2.getEmail(), testBuy.getPurchasePrice()))
+                .thenReturn("something");
+        when(proPayWrapper.getBalanceOfUser(testUser2.getEmail())).thenReturn((double)testBuy.getPurchasePrice());
+
+        mvc.perform(post("/buy/accept/" + testItem.getId())
+                .cookie(new Cookie("SessionID", "2"))
+                .param("PurchasePrice", "10"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().string("Erfolgreich verkauft"));
+
+
+        Assert.assertEquals("completed", buyRepository.findBuysOfItem(testItem.getId()).get(0).getStatus());
+        Assert.assertEquals(10.0, proPayWrapper.getBalanceOfUser(testUser2.getEmail()), 0.001);
+
     }
 
     @Test

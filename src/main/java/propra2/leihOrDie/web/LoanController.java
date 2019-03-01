@@ -37,8 +37,8 @@ public class LoanController {
     private AuthorizationHandler authorizationHandler = new AuthorizationHandler(sessionRepository);
   
     private ResponseBuilder responseBuilder = new ResponseBuilder();
-    private ProPayWrapper proPayWrapper = new ProPayWrapper();
-
+    @Autowired
+    private ProPayWrapper proPayWrapper;
 
     @PostMapping("/request/{itemId}")
     public ResponseEntity requestLoan(Model model, @Valid LoanForm form, BindingResult bindingResult,

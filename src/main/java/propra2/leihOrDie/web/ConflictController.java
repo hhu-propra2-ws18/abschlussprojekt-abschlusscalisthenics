@@ -30,7 +30,8 @@ public class ConflictController {
     TransactionRepository transactionRepository;
 
     private ResponseBuilder responseBuilder = new ResponseBuilder();
-    private ProPayWrapper proPayWrapper = new ProPayWrapper();
+    @Autowired
+    private ProPayWrapper proPayWrapper;
     @Autowired
     private AuthorizationHandler authorizationHandler = new AuthorizationHandler(sessionRepository);
 
@@ -85,6 +86,7 @@ public class ConflictController {
 
         User convenantee = userRepository.findUserByName(userName).get(0);
 
+        // when the person who gets the money is the person who wanted to loan the item
         if (convenantee.getEmail().equals(loan.getUser().getEmail())) {
             try {
                 proPayWrapper.freeReservationOfUser(convenantee.getEmail(), loan.getProPayReservationId());
@@ -95,6 +97,7 @@ public class ConflictController {
                 return responseBuilder.createProPayErrorResponse();
             }
 
+            // when the person who gets the money is the person that the item belongs to him
         } else if(convenantee.getEmail().equals(loan.getItem().getUser().getEmail())) {
             try {
                 proPayWrapper.punishAccount(loan.getUser().getEmail(), loan.getProPayReservationId());

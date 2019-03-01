@@ -12,10 +12,7 @@ import propra2.leihOrDie.dataaccess.ItemRepository;
 import propra2.leihOrDie.dataaccess.UserRepository;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.User;
-
 import java.util.List;
-
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -54,7 +51,7 @@ public class ItemRepositoryTest {
     }
 
     @Test
-    public void saveOneItem() throws Exception {
+    public void saveOneItem() {
         DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
         User user = dummyUserGenerator.generateUser();
         DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
@@ -69,7 +66,7 @@ public class ItemRepositoryTest {
     }
 
     @Test
-    public void saveSeveralItems() throws Exception {
+    public void saveSeveralItems() {
         DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
         User user = dummyUserGenerator.generateUser();
         DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
@@ -101,7 +98,7 @@ public class ItemRepositoryTest {
     }
 
     @Test
-    public void editItem() throws Exception {
+    public void editItem() {
         DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
         User user = dummyUserGenerator.generateUser();
         DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
