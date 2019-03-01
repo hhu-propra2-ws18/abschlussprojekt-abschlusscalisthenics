@@ -1,13 +1,9 @@
 package propra2.leihOrDie;
 
-
 import org.junit.Assert;
 import org.junit.Test;
-import propra2.leihOrDie.model.Address;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.User;
-
-import java.security.MessageDigest;
 
 public class ItemTest {
 

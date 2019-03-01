@@ -47,7 +47,7 @@ public class BuyControllerTest {
     private Buy testBuy;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
         testUser1 = dummyUserGenerator.generateUser();
         testUser2 = dummyUserGenerator.generateUser();
