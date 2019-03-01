@@ -153,15 +153,17 @@
                                         <th>An</th>
                                         <th>Betrag</th>
                                         <th>Datum</th>
+                                        <th>Betreff</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
-                                <tr th:each="transaction: ${transactions}">
+                                <tr th:each="transaction: ${transactions}"  th:object="${map}">
                                     <th th:text="${transaction.getFromUser().getUsername()}"></th>
                                     <td th:text="${transaction.getToUser().getUsername()}"></td>
                                     <td th:text="${transaction.getAmount()}"></td>
-                                    <td th:text="${transaction.getDate()}"></td>
+                                    <td th:text="${map.get(transaction.getId())}"></td>
+                                    <td th:text="${transaction.getComment()}"></td>
                                 </tr>
 
                                 </tbody>
