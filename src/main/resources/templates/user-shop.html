@@ -77,12 +77,10 @@
         function setDataSenderOnForms() {
             var forms = document.getElementsByClassName("buyForm");
 
-            for(var i = 0; i < forms.length; i++) {
-                Array.prototype.forEach.call(forms[i], el=>el.addEventListener("submit", function (event) {
-                    event.preventDefault();
-                    sendData(el);
-                }));
-            };
+            Array.prototype.forEach.call(forms, el=>el.addEventListener("submit", function (event) {
+                event.preventDefault();
+                sendData(el);
+            }));
         }
     </script>
 </head>
