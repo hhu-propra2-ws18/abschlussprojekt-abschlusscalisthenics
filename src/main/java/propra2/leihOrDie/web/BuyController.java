@@ -12,14 +12,11 @@ import propra2.leihOrDie.model.Buy;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Transaction;
 import propra2.leihOrDie.model.User;
+import propra2.leihOrDie.propay.ProPayWrapper;
 import propra2.leihOrDie.response.ResponseBuilder;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-
-import static propra2.leihOrDie.propay.ProPayWrapper.transferMoney;
-
 
 @Controller
 public class BuyController {
@@ -35,8 +32,29 @@ public class BuyController {
     TransactionRepository transactionRepository;
 
     private ResponseBuilder responseBuilder = new ResponseBuilder();
+    @Autowired
+    private ProPayWrapper proPayWrapper;
 
-    @GetMapping("/myaccount/buy")
+    @GetMapping("/reloadbuyitems")
+    public String reloadBuyItems(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+        List<Item> items = itemRepository.findItemsOfUser(user.getUsername());
+        List<Buy> buys = new ArrayList<>();
+
+        for (Item item: items) {
+            Buy pendingBuy = getPendingBuyOfItem(item);
+
+            if (pendingBuy != null ) {
+                buys.add(pendingBuy);
+            }
+        }
+        model.addAttribute("buys", buys);
+        model.addAttribute("mypurchases", buyRepository.findBuysOfUser(user.getUsername()));
+        return "buy-snippet";
+    }
+
+
+    @GetMapping("/buy")
     public String showBuyService(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         List<Item> items = itemRepository.findItemsOfUser(user.getUsername());
@@ -55,14 +73,10 @@ public class BuyController {
     }
 
     @PostMapping("buy/{itemId}")
-    public ResponseEntity buyItem(Model model, BuyForm form, @PathVariable Long itemId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+    public ResponseEntity buyItem(Model model, @PathVariable Long itemId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         Item item = itemRepository.findById(itemId).get();
         User user = sessionRepository.findUserBySessionCookie(sessionId);
-        Buy buy = new Buy(item, form.getPurchasePrice(), "pending", user);
-
-        /*if (!isAuthorized(user, item)) {
-            return responseBuilder.createUnauthorizedResponse();
-        }*/
+        Buy buy = new Buy(item, item.getSoldPrice(), "pending", user);
 
         buyRepository.save(buy);
         item.setAvailability(false);
@@ -71,7 +85,7 @@ public class BuyController {
         return responseBuilder.createSuccessResponse("Kaufanfrage wurde gestellt");
     }
 
-    @PostMapping("buy/accept/{itemId}")
+    @PostMapping("/buy/accept/{itemId}")
     public ResponseEntity itemSale(Model model, BuyForm form, @PathVariable Long itemId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         Item item = itemRepository.findById(itemId).get();
         User user = sessionRepository.findUserBySessionCookie(sessionId);
@@ -82,21 +96,20 @@ public class BuyController {
         }
 
         try {
-            transferMoney(buy.getBuyer().getEmail(), user.getEmail(), buy.getPurchasePrice());
+            proPayWrapper.transferMoney(buy.getBuyer().getEmail(), user.getEmail(), buy.getPurchasePrice());
             Transaction transaction = new Transaction(buy.getBuyer(), user, buy.getPurchasePrice(), "Kauf von " + item.getName());
-            item.setUser(buy.getBuyer());
             buy.setStatus("completed");
-            itemRepository.save(item);
             buyRepository.save(buy);
             transactionRepository.save(transaction);
         } catch (Exception e) {
+            buy.setStatus("error");
             return responseBuilder.createProPayErrorResponse(user, buy);
         }
 
         return responseBuilder.createSuccessResponse("Erfolgreich verkauft");
     }
 
-    @PostMapping("buy/decline/{itemId}")
+    @PostMapping("/buy/decline/{itemId}")
     public ResponseEntity declineItemSale(Model model, BuyForm form, @PathVariable Long itemId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         Item item = itemRepository.findById(itemId).get();
         Buy buy = getPendingBuyOfItem(item);

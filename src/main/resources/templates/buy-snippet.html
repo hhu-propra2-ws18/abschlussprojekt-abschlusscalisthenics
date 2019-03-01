@@ -1,0 +1,17 @@
+<table class="table is-fullwidth is-striped" xmlns:th="http://www.w3.org/1999/xhtml">
+    <tbody>
+    <tr th:each="buy: ${buys}">
+        <th th:text="${buy.getItem().getName()}"></th>
+        <td>
+            <form class="buyForm" action="#" method="POST" th:action="@{'buy/accept/' + ${buy.getItem().getId()}}">
+                <button type="submit" name="submit" value="value" class="button is-small is-primary">bestätigen</button>
+            </form>
+        </td>
+        <td>
+            <form class="buyForm" action="#" method="POST" th:action="@{'buy/decline/' + ${buy.getItem().getId()}}">
+                <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">ablehnen</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>

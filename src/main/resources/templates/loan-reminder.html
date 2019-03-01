@@ -5,10 +5,10 @@
     <title>LeihOrDie!</title>
 </head>
 <body>
+    <h3>Erinnerung: Sie müssen noch folgende Artikel zurückgeben</h3>
     <ul>
-        <li th:text="${user}"></li>
         <th:block th:each="exceededLoan : ${exceededLoans}">
-            <li th:text="'${exceededLoan.loan.item.name}' + '-' + '${exceededLoan.numberOfExceededDays}' Tage">< /li >
+            <li th:text="'Artikel: ' + ${exceededLoan.loan.item.name} + '; Überschreitungsdauer: ' + ${exceededLoan.numberOfExceededDays} + ' Tage'">< /li >
         </th:block >
     </ul>
 </body>

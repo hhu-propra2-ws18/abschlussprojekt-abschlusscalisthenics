@@ -3,7 +3,6 @@ package propra2.leihOrDie;
 import propra2.leihOrDie.model.Address;
 import propra2.leihOrDie.model.User;
 
-import java.security.SecureRandom;
 import java.util.UUID;
 
 public class DummyUserGenerator {

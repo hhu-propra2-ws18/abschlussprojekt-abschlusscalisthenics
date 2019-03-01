@@ -1,4 +1,4 @@
-<div xmlns:th="http://www.w3.org/1999/xhtml">
+<div id="articles" xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="columns">
         <div class="column is-6">
             <div class="card events-card">
@@ -13,6 +13,12 @@
                             <tbody>
                             <tr th:each="item: ${items}">
                                 <th><a th:href="@{'/borrowall/' + ${item.id}}" th:text="${item.getName()}"></a></th>
+                                <td>
+                                    <form class="deleteForm" method="POST" th:action="@{'/delete/' + ${item.id}}">
+                                        <button type="submit" name="submit" value="value" class="button is-small is-primary">Löschen</button>
+                                    </form>
+                                </td>
+
                             </tr>
                             </tbody>
                         </table>
@@ -37,7 +43,7 @@
                                 <th th:text="${loan.getItem().getName()}"></th>
                                 <td>
                                     <form class="currentLoansForm" method="POST" th:action="@{'/conflict/open/' + ${loan.getId()}}">
-                                        <button type="submit" name="submit" value="value" class="button is-medium is-primary">Konflikt</button>
+                                        <button type="submit" name="submit" value="value" class="button is-small is-primary">Konflikt</button>
                                     </form>
                                 </td>
                             </tr>

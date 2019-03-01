@@ -32,7 +32,6 @@ public class ReminderController {
         List<Loan> exceededLoansOfUser = getExceededLoans(user);
         List<ExceededLoan> exceededLoans = getExceededLoansList(exceededLoansOfUser);
 
-        model.addAttribute("user", user.getUsername());
         model.addAttribute("exceededLoans", exceededLoans);
 
         return "loan-reminder";
@@ -64,8 +63,7 @@ public class ReminderController {
     private int numberOfExceededDays(Loan loan) {
         LocalDate startDate = loan.getDayOfRental();
         LocalDate now = LocalDate.now();
-
-        Period differenceBetweenDays = Period.between(startDate, now);
+        Period differenceBetweenDays = Period.between(now, startDate);
 
         return differenceBetweenDays.getDays();
     }

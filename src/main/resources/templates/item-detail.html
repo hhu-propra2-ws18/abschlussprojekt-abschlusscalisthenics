@@ -24,8 +24,7 @@
                       location.href = "/login";
                   } else {
                       if(xhr.status == 200) {
-                          document.getElementById("modal-text").innerHTML = "Ihre Anfrage wurde erfolgreich übermittelt.\n" +
-                              "Sie werden über die Entscheidung des Verleihers in Kürze informiert.";
+                          document.getElementById("modal-text").innerHTML = "Ihre Anfrage wurde erfolgreich übermittelt.";
                           document.getElementById("modal-text").style.color = "green";
                           document.getElementById("loanForm").innerHTML="<p style='color:green; font-size:20px'>Anfrage erfolgreich!</p>";
                       } else {
@@ -79,7 +78,7 @@
               cursor: pointer;
           }
 
-}
+
       </style>
 </head>
 <body th:href="@{|/borrowall/{id}|}">
@@ -142,31 +141,39 @@
                     </p>
                     <h2 th:text="'Beschreibung: ' + ${description}" class="subtitle is-4">
                         Beschreibung:
-
                     </h2>
+
                     <h3 th:text="'Abholort: ' + ${location}" class="subtitle is-4">
                         Abholort:
-
                     </h3>
+
                     <h4 th:text="'Max. Ausleihdauer: ' + ${availableTime} + ' Tage'" class="subtitle is-4">
                         Verfügbarkeit:
-
                     </h4>
+
                     <h5 th:text="'Kaution: ' + ${deposit} + '€' " class="subtitle is-4">
                         Kaution (€):
-
                     </h5>
+
                     <h6 th:text="'Preis pro Tag: ' + ${cost} + '€'" class="subtitle is-4">
                         Preis pro Tag (€):
-
                     </h6>
-                    <h7 th:text="'Anbieter: ' + ${username}" class="subtitle is-4">
+
+                    <div class="navbar-start" th:if="${soldPrice} > 0">
+                        <h7 th:text="'Kaufpreis: ' + ${soldPrice} + '€'" class="subtitle is-4">
+                            Kaufpreis(€) :
+                        </h7>
+                        <br><br>
+                    </div>
+
+
+                    <h8 th:text="'Anbieter: ' + ${username}" class="subtitle is-4">
                         Ausleiher:
+                    </h8>
 
 
-                    </h7>
-                    <br>
-                    <br>
+
+                    <br><br>
 
                     <div>
                         <div th:if="${isAvailable} == true">
@@ -180,7 +187,7 @@
                                     </div>
                                     <button style="float:left;margin-right:5px;" id="loanRequestButton" type="submit" name="submit" value="value" class="button is-small is-primary">Anfragen</button>
                                 </form>
-                                <form method="POST" th:action="@{'/buy/' + ${itemID}}">
+                                <form method="POST" th:action="@{'/buy/' + ${itemID}}" th:if="${soldPrice} > 0">
                                     <button style="float:left;" id="buyButton" type="submit" name="submit" value="value" class="button is-small is-primary">Kaufen</button>
                                 </form>
                             </div>
@@ -214,7 +221,7 @@
 
       buyBtn.addEventListener("click", function(event) {
           event.preventDefault();
-          sendLoanRequest(btn.form);
+          sendLoanRequest(buyBtn.form);
       });
 
       span.onclick = function() {
@@ -227,6 +234,6 @@
           }
       };
   </script>
-  </body>
+</body>
 </html>
 

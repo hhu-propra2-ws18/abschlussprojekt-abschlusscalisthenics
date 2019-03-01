@@ -54,12 +54,12 @@
               <p class="help is-danger" th:if="${#fields.hasErrors('street')}" th:errors="*{street}">Straßenname ungültig</p>
             </div>
 
-              <div class="field">
+            <div class="field">
               <div class="control">
                 <input class="input" type="text" pattern="\d*" placeholder="Postleitzahl" th:field="*{postcode}">
               </div>
               <p class="help is-danger" th:if="${#fields.hasErrors('postcode')}" th:errors="*{postcode}">Postleitzahl ungültig</p>
-              </div>
+            </div>
 
             <div class="field">
               <div class="control">
@@ -68,23 +68,11 @@
               <p class="help is-danger" th:if="${#fields.hasErrors('houseNumber')}" th:errors="*{houseNumber}">Hausnummer ungültig</p>
             </div>
 
-
-              <div class="field">
+            <div class="field">
               <div class="control">
                 <input class="input" type="text" placeholder="Stadt" th:field="*{city}">
               </div>
               <p class="help is-danger" th:if="${#fields.hasErrors('city')}" th:errors="*{city}">Gibt es diese Stadt?</p>
-            </div>
-
-
-
-            <div class="field">
-              <div class="control">
-                <label class="checkbox">
-                  <input type="checkbox">
-                  Ich akzeptiere die <a href="#">LeihOrDie Conditions</a>
-                </label>
-              </div>
             </div>
 
             <div class="field">
@@ -97,7 +85,7 @@
         </form>
       </div>
       <p class="has-text-grey">
-        <a href="../">Startseite</a> &nbsp;·&nbsp;
+        <a href="/">Startseite</a> &nbsp;·&nbsp;
         <a href="/help">Brauchst Du Hilfe?</a>
       </p>
     </div>

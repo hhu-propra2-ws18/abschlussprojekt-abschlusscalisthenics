@@ -28,6 +28,10 @@ public class AuthorizationHandler {
     }
 
     public boolean isAdmin(String sessionId) {
-        return sessionRepository.findUserBySessionCookie(sessionId).getRole().equals("ADMIN");
+        try {
+            return sessionRepository.findUserBySessionCookie(sessionId).getRole().equals("ADMIN");
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 }

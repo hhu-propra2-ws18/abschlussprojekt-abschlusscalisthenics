@@ -5,8 +5,6 @@ import org.junit.Assert;
 import propra2.leihOrDie.model.Address;
 import propra2.leihOrDie.model.User;
 
-import java.security.MessageDigest;
-
 public class UserTest {
     @Test
     public void testCreateUser() throws Exception {

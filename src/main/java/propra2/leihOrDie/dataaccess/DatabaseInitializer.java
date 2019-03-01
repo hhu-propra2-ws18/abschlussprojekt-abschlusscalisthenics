@@ -7,11 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.stereotype.Component;
 import propra2.leihOrDie.model.*;
+import propra2.leihOrDie.propay.ProPayWrapper;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static propra2.leihOrDie.propay.ProPayWrapper.raiseBalanceOfUser;
 
 
 @Component
@@ -24,6 +23,8 @@ public class DatabaseInitializer implements ServletContextInitializer {
     LoanRepository loanRepository;
     @Autowired
     TransactionRepository transactionRepository;
+
+    ProPayWrapper proPayWrapper = new ProPayWrapper();
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Benutzerkonto</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-      <style>
+    <style>
           .modal {
               display: none;
               font-size: 25px;
@@ -44,7 +44,7 @@
               cursor: pointer;
           }
       </style>
-      <script th:inline="javascript">
+    <script th:inline="javascript">
           function sendConflictRequest(form) {
               var xhr = new XMLHttpRequest();
               var formData = new FormData(form);
@@ -99,7 +99,8 @@
                   document.getElementsByClassName("acceptRequestForm"),
                   document.getElementsByClassName("declineRequestForm"),
                   document.getElementsByClassName("pickedUpForm"),
-                  document.getElementsByClassName("returnedForm")
+                  document.getElementsByClassName("returnedForm"),
+                  document.getElementsByClassName("deleteForm")
               ];
 
               for(var i = 0; i < forms.length; i++) {
@@ -117,213 +118,212 @@
               }));
           }
       </script>
-  </head>
+</head>
 
-  <body>
-  <div th:insert="fragments/header :: header"></div>
+<body>
+<div th:insert="fragments/header :: header"></div>
 <br></br>
 <br></br>
 
-    <div class="container">
-        <div id="myModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p id="modal-text">Some text in the Modal..</p>
-            </div>
-
+<div class="container">
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modal-text">Some text in the Modal..</p>
         </div>
-        <div class="columns">
-            <div class="column is-3 ">
-                <aside class="menu is-hidden-mobile">
 
-                    <p class="menu-label">
-                        Profil
-                    </p>
-                    <ul class="menu-list">
-                        <li><a href="/myaccount">Profil</a></li>
-                    </ul>
-                    <p class="menu-label">
-                        Menü
-                    </p>
-                    <ul class="menu-list">
-                        <li><a href="/myaccount/propay">Propay</a></li>
-                        <li><a href="/myaccount/buy">Kaufservice</a></li>
-                        <li><a href="/help">Hilfe</a></li>
-                    </ul>
-                </aside>
-            </div>
+    </div>
+    <div class="columns">
+        <div class="column is-3 ">
+            <aside class="menu is-hidden-mobile">
 
-            <div class="column is-9">
+                <p class="menu-label">
+                    Profil
+                </p>
+                <ul class="menu-list">
+                    <li><a href="/myaccount">Profil</a></li>
+                </ul>
+                <p class="menu-label">
+                    Menü
+                </p>
+                <ul class="menu-list">
+                    <li><a href="/myaccount/propay">Propay</a></li>
+                    <li><a href="/myaccount/buy">Kaufservice</a></li>
+                    <li><a href="/help">Hilfe</a></li>
+                </ul>
+            </aside>
+        </div>
 
-                <section class="hero is-primary welcome is-small">
-                    <div class="hero-body">
-                        <div class="container">
-                            <h1 th:text="'Hallo, ' + ${user} +'!'"class="title">
-                            </h1>
-                            <h2 class="subtitle">
-                                Viel Spaß beim aus- und verleihen!
-                            </h2>
-                        </div>
+        <div class="column is-9">
+
+            <section class="hero is-primary welcome is-small">
+                <div class="hero-body">
+                    <div class="container">
+                        <h1 th:text="'Hallo, ' + ${user} +'!'"class="title">
+                        </h1>
+                        <h2 class="subtitle">
+                            Viel Spaß beim aus- und verleihen!
+                        </h2>
                     </div>
-                </section>
-                <br></br>
-                <section class="info-tiles">
-                    <div class="tile is-ancestor has-text-centered">
-                        <div class="tile is-parent">
-                            <article class="tile is-child box">
-                                <p class="title " th:text="${items.size()}"></p>         <!-- HIER MUSS DIE ANZAHL DER EINGESTELLTEN PRODUKTE HIN-->
-                                <p class="subtitle">Produkte online</p>
-                            </article>
-                        </div>
-                        <div class="tile is-parent">
-                            <article class="tile is-child box">
-                                <p class="title" th:text="${loans.size()}"></p>          <!-- HIER MUSS DIE ANZAHL DER AUSGELIEHENEN PRODUKTE HIN-->
-                                <p class="subtitle">ausgeliehene Produkte</p>
-                            </article>
-                        </div>
-                        <div class="tile is-parent">
-                            <article class="tile is-child box">
-                                <p class="title">42</p>         <!-- BEWERTUNGEN?????-->
-                                <p class="subtitle">Bewertungen</p>
-                            </article>
-                        </div>
+                </div>
+            </section>
+            <br></br>
+            <section class="info-tiles">
+                <div class="tile is-ancestor has-text-centered">
+                    <div class="tile is-parent">
+                        <article class="tile is-child box">
+                            <p class="title " th:text="${items.size()}"></p>         <!-- HIER MUSS DIE ANZAHL DER EINGESTELLTEN PRODUKTE HIN-->
+                            <p class="subtitle">Produkte online</p>
+                        </article>
                     </div>
-                </section>
+                    <div class="tile is-parent">
+                        <article class="tile is-child box">
+                            <p class="title" th:text="${loans.size()}"></p>          <!-- HIER MUSS DIE ANZAHL DER AUSGELIEHENEN PRODUKTE HIN-->
+                            <p class="subtitle">ausgeliehene Produkte</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
 
-                <!-- HIER TABELLE VON DEN ANGEBOTENEN PRODUKTEN DES USERS -->
+            <!-- HIER TABELLE VON DEN ANGEBOTENEN PRODUKTEN DES USERS -->
 
-                <div id="articles">
-                    <div class="columns">
-                        <div class="column is-6">
-                            <div class="card events-card">
-                                <header class="card-header">
-                                    <p class="card-header-title">
-                                        Diese Artikel biete ich an:
-                                    </p>
-                                </header>
-                                <div class="card-table">
-                                    <div class="content">
-                                        <table class="table is-fullwidth is-striped">
-                                            <tbody>
-                                            <tr th:each="item: ${items}">
-                                                <th><a th:href="@{'/borrowall/' + ${item.id}}" th:text="${item.getName()}"></a></th>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+            <div id="articles">
+                <div class="columns">
+                    <div class="column is-6">
+                        <div class="card events-card">
+                            <header class="card-header">
+                                <p class="card-header-title">
+                                    Diese Artikel biete ich an:
+                                </p>
+                            </header>
+                            <div class="card-table">
+                                <div class="content">
+                                    <table class="table is-fullwidth is-striped">
+                                        <tbody>
+                                        <tr th:each="item: ${items}">
+                                            <th><a th:href="@{'/borrowall/' + ${item.id}}" th:text="${item.getName()}"></a></th>
+                                            <td>
+                                                <form class="deleteForm" method="POST" th:action="@{'/delete/' + ${item.id}}">
+                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary">Löschen</button>
+                                                </form>
+                                            </td>
+
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-
                             </div>
-                        </div>
 
-                        <div class="column is-6">
-                            <div class="card events-card">
-                                <header class="card-header">
-                                    <p class="card-header-title">
-                                        Ich leihe zurzeit aus:
-                                    </p>
-                                </header>
-                                <div class="card-table">
-                                    <div class="content">
-                                        <table class="table is-fullwidth is-striped">
-                                            <tbody>
-                                            <tr th:each="loan: ${loans}">
-                                                <th th:text="${loan.getItem().getName()}"></th>
-                                                <td>
-                                                    <form class="currentLoansForm" method="POST" th:action="@{'/conflict/open/' + ${loan.getId()}}">
-                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary">Konflikt</button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                            </div>
                         </div>
                     </div>
 
-                    <!-- HIER TABELLE VON DEN ARTIKELN, WELCHE JEMAND VOM USER AUSLEIHEN MÖCHTE -->
-
-                    <div class="columns">
-                        <div class="column is-6">
-                            <div class="card events-card">
-                                <header class="card-header">
-                                    <p class="card-header-title">
-                                        Anfragen zum Verleihen:
-                                    </p>
-                                </header>
-                                <div class="card-table">
-                                    <div class="content">
-                                        <table class="table is-fullwidth is-striped">
-                                            <tbody>
-                                            <tr th:each="item: ${pendingloans}">
-                                                <th th:text="${item.getItem().getName()}"></th>
-                                                <td>
-                                                    <form class="acceptRequestForm" method="POST" th:action="@{'/request/accept/' + ${item.getId()}}">
-                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary">bestätigen</button>
-                                                    </form>
-                                                </td>
-                                                <td>
-                                                    <form class="declineRequestForm" method="POST" th:action="@{'/request/decline/' + ${item.getId()}}">
-                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">ablehnen</button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-
-                                        </table>
-                                    </div>
+                    <div class="column is-6">
+                        <div class="card events-card">
+                            <header class="card-header">
+                                <p class="card-header-title">
+                                    Ich leihe zurzeit aus:
+                                </p>
+                            </header>
+                            <div class="card-table">
+                                <div class="content">
+                                    <table class="table is-fullwidth is-striped">
+                                        <tbody>
+                                        <tr th:each="loan: ${loans}">
+                                            <th th:text="${loan.getItem().getName()}"></th>
+                                            <td>
+                                                <form class="currentLoansForm" method="POST" th:action="@{'/conflict/open/' + ${loan.getId()}}">
+                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary">Konflikt</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-
                             </div>
-                        </div>
-                        <div class="column is-6">
-                            <div class="card events-card">
-                                <header class="card-header">
-                                    <p class="card-header-title">
-                                        Diese Artikel verleihe ich zurzeit:
-                                    </p>
-                                </header>
-                                <div class="card-table">
-                                    <div class="content">
-                                        <table class="table is-fullwidth is-striped">
-                                            <tbody>
-                                            <tr th:each="acceptedloan: ${acceptedloans}">
-                                                <th th:text="${acceptedloan.getItem().getName()}"></th>
-                                                <td>
-                                                    <form class="pickedUpForm" method="POST" th:action="@{'/request/activate/' + ${acceptedloan.getId()}}">
-                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary">abgeholt</button>
-                                                    </form>
-                                                </td>
-                                                <td>
-                                                    <form class="conflictForm" method="POST" th:action="@{'/conflict/open/' + ${acceptedloan.getId()}}">
-                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined conflictButton">Konflikt</button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
 
-                                        <table class="table is-fullwidth is-striped">
-                                            <tbody>
-                                            <tr th:each="activeloan: ${activeloans}">
-                                                <th th:text="${activeloan.getItem().getName()}"></th>
-                                                <td>
-                                                    <form class="returnedForm" method="POST" th:action="@{'/request/return/' + ${activeloan.getId()}}">
-                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary">zurückgegeben</button>
-                                                    </form>
-                                                </td>
-                                                <td>
-                                                    <form class="conflictForm" method="POST" th:action="@{'/conflict/open/' + ${activeloan.getId()}}">
-                                                        <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined conflictButton">Konflikt</button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HIER TABELLE VON DEN ARTIKELN, WELCHE JEMAND VOM USER AUSLEIHEN MÖCHTE -->
+
+                <div class="columns">
+                    <div class="column is-6">
+                        <div class="card events-card">
+                            <header class="card-header">
+                                <p class="card-header-title">
+                                    Anfragen zum Verleihen:
+                                </p>
+                            </header>
+                            <div class="card-table">
+                                <div class="content">
+                                    <table class="table is-fullwidth is-striped">
+                                        <tbody>
+                                        <tr th:each="item: ${pendingloans}">
+                                            <th th:text="${item.getItem().getName()}"></th>
+                                            <td>
+                                                <form class="acceptRequestForm" method="POST" th:action="@{'/request/accept/' + ${item.getId()}}">
+                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary">bestätigen</button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form class="declineRequestForm" method="POST" th:action="@{'/request/decline/' + ${item.getId()}}">
+                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">ablehnen</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="column is-6">
+                        <div class="card events-card">
+                            <header class="card-header">
+                                <p class="card-header-title">
+                                    Diese Artikel verleihe ich zurzeit:
+                                </p>
+                            </header>
+                            <div class="card-table">
+                                <div class="content">
+                                    <table class="table is-fullwidth is-striped">
+                                        <tbody>
+                                        <tr th:each="acceptedloan: ${acceptedloans}">
+                                            <th th:text="${acceptedloan.getItem().getName()}"></th>
+                                            <td>
+                                                <form class="pickedUpForm" method="POST" th:action="@{'/request/activate/' + ${acceptedloan.getId()}}">
+                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary">abgeholt</button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form class="conflictForm" method="POST" th:action="@{'/conflict/open/' + ${acceptedloan.getId()}}">
+                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined conflictButton">Konflikt</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table class="table is-fullwidth is-striped">
+                                        <tbody>
+                                        <tr th:each="activeloan: ${activeloans}">
+                                            <th th:text="${activeloan.getItem().getName()}"></th>
+                                            <td>
+                                                <form class="returnedForm" method="POST" th:action="@{'/request/return/' + ${activeloan.getId()}}">
+                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary">zurückgegeben</button>
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form class="conflictForm" method="POST" th:action="@{'/conflict/open/' + ${activeloan.getId()}}">
+                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined conflictButton">Konflikt</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -332,7 +332,12 @@
             </div>
         </div>
     </div>
-  <script>
+</div>
+
+
+<br><br><br><br><br><br><br><br><br><br>
+<div th:insert="fragments/footer :: footer"></div>
+<script>
       var modal = document.getElementById('myModal');
       var span = document.getElementsByClassName("close")[0];
 

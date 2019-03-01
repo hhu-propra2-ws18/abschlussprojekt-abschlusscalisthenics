@@ -1,6 +1,7 @@
 package propra2.leihOrDie.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,6 +15,7 @@ import propra2.leihOrDie.form.LoanForm;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Picture;
 import propra2.leihOrDie.model.User;
+import propra2.leihOrDie.response.ResponseBuilder;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -29,6 +31,8 @@ public class ItemController {
     PictureRepository pictureRepository;
     @Autowired
     SessionRepository sessionRepository;
+
+    ResponseBuilder responseBuilder = new ResponseBuilder();
 
     @PostMapping("/item/create")
     public String newItem(Model model, @Valid ItemForm form, BindingResult bindingResult, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
@@ -48,40 +52,6 @@ public class ItemController {
     @GetMapping("/item/create")
     public String newItem(Model model, ItemForm form) {
         return "create-item";
-    }
-
-
-    @GetMapping("/item/edit/{id}")
-    public String editItem(Model model, @PathVariable Long id, ItemForm form) {
-        Item item = itemRepository.findById(id).get();
-
-        form.setName(item.getName());
-        form.setDescription(item.getDescription());
-        form.setCost(item.getCost());
-        form.setDeposit(item.getDeposit());
-        form.setAvailability(item.isAvailability());
-        form.setAvailableTime(item.getAvailableTime());
-
-        return "edit-item";
-    }
-
-    @PostMapping("/item/edit/{id}")
-    public String editItem(Model model, @PathVariable Long id, @Valid ItemForm form, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "edit-item";
-        }
-        Item item = itemRepository.findById(id).get();
-
-        item.setName(form.getName());
-        item.setDescription(form.getDescription());
-        item.setCost(form.getCost());
-        item.setDeposit(form.getDeposit());
-        item.setAvailability(form.isAvailability());
-        item.setAvailableTime(form.getAvailableTime());
-
-        saveItem(item);
-
-        return "redirect:/borrowall/" + id + "/";
     }
 
     @GetMapping("/borrowall/{id}")
@@ -125,6 +95,27 @@ public class ItemController {
         return urlList;
     }
 
+    @PostMapping("/delete/{id}")
+    public ResponseEntity deleteItem(Model model, @PathVariable Long id, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        Item item = itemRepository.findById(id).get();
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+
+        if (!user.getUsername().equals(item.getUser().getUsername())) {
+            return responseBuilder.createUnauthorizedResponse();
+        }
+
+        if (!item.isAvailability()) {
+            return responseBuilder.createBadRequestResponse("Der Artikel ist noch verliehen und kann deswegen nicht gelöscht werden");
+        }
+
+        try {
+            itemRepository.delete(item);
+            return responseBuilder.createSuccessResponse("Artikel wurde erfolgreich gelöscht");
+        } catch (Exception e) {
+            return responseBuilder.createBadRequestResponse("Artikel existiert nicht und kann deswegen nicht gelöscht werden");
+        }
+    }
+
     private String buildUrl(Picture picture) {
         String raw = "/images/";
         String idString = picture.getId().toString();
@@ -142,6 +133,7 @@ public class ItemController {
         model.addAttribute("username", item.getUser().getUsername());
         model.addAttribute("isAvailable", item.isAvailability());
         model.addAttribute("itemID", item.getId());
+        model.addAttribute("soldPrice", item.getSoldPrice());
     }
 
     private void saveItem(Item item) {

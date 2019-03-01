@@ -6,6 +6,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import propra2.leihOrDie.security.AdminInterceptor;
 import propra2.leihOrDie.security.AuthenticationInterceptor;
 import propra2.leihOrDie.security.SignOutButtonInterceptor;
 
@@ -24,10 +25,18 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return new SignOutButtonInterceptor();
     }
 
+    @Bean
+    AdminInterceptor adminInterceptor() {
+        return new AdminInterceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor())
                 .excludePathPatterns(Arrays.asList("/", "/borrowall/**", "/signout", "/images/**", "/help"));
+
+        registry.addInterceptor(adminInterceptor())
+                .addPathPatterns("/");
 
         registry.addInterceptor(signOutButtonInterceptor())
                 .excludePathPatterns("/signout");

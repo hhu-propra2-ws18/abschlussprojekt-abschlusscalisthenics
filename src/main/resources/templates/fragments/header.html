@@ -50,6 +50,13 @@
             </div>
 
             <div class="navbar-end" th:if="${isLoggedIn} == true">
+                <div class="navbar-item" th:if="${isAdmin} == true">
+                    <div class="buttons">
+                        <a class="button is-light is-outlined" href="/conflict/admin">
+                            Konfliktstelle
+                        </a>
+                    </div>
+                </div>
                 <div class="navbar-item">
                     <div class="buttons">
                         <a class="button is-light" href="/signout">
