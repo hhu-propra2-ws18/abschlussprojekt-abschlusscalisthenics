@@ -54,7 +54,7 @@ public class BuyController {
     }
 
 
-    @GetMapping("/buy")
+    @GetMapping("/account/buy")
     public String showBuyService(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         List<Item> items = itemRepository.findItemsOfUser(user.getUsername());
@@ -72,7 +72,7 @@ public class BuyController {
         return "user-shop";
     }
 
-    @PostMapping("buy/{itemId}")
+    @PostMapping("/buy/{itemId}")
     public ResponseEntity buyItem(Model model, @PathVariable Long itemId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         Item item = itemRepository.findById(itemId).get();
         User user = sessionRepository.findUserBySessionCookie(sessionId);
