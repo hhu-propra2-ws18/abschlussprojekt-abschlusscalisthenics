@@ -46,9 +46,10 @@ erhöhen kann und alle Transaktionen an denen er beteiligt ist einsehen kann.
 Um einen Artikel auszuleihen, muss ein eingeloggter User eine Anfrage an den
 Anbieter senden und dabei die gewünschte Ausleihdauer angeben. Ein Artikel
 ist immer für die angegebene max. Ausleihdauer verfügbar, wenn er online ist und
-gerade nicht ausgeliehen wird. Möchte man einen Artikel nicht mehr anderen Nutzern
-zur Verfügung stellen, muss man ihn löschen, da Artikel nicht automatisch von der
-Seite genommen werden. +
+gerade nicht ausgeliehen wird. Nach dem Senden einer Ausleiganfrage wird der Artikel für alle
+anderen blokiert, damit der Verleiher nicht mit Anfragen überflutet wird. Möchte man einen
+Artikel nicht mehr anderen Nutzern zur Verfügung stellen, muss man ihn löschen, da Artikel
+nicht automatisch von der Seite genommen werden. +
 Die Kaution des Artikels wird bereits nach Abschicken der Anfrage auf dem ProPay
 Konto reserviert, um zu verhindern, dass beim Annehmen einer Anfrage das Geld für die
 Reservierung nicht mehr verfügbar ist. +
