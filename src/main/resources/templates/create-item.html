@@ -41,7 +41,7 @@
 
 
                         <div class="field">
-                            <label class="label">Verleihpreis pro Tag</label>
+                            <label class="label">Verleihpreis (pro Tag/in Euro)</label>
                             <div class="control">
                                 <input class="input" type="number" pattern="\d*" placeholder="in Euro / pro Tag" th:field="*{cost}">
                             </div>
@@ -50,7 +50,7 @@
 
 
                         <div class="field">
-                            <label class="label">Kaution</label>
+                            <label class="label">Kaution (in Euro)</label>
                             <div class="control">
                                 <input class="input" type="number" pattern="\d*" placeholder="in Euro" th:field="*{deposit}">
                             </div>
@@ -59,7 +59,7 @@
 
 
                         <div class="field">
-                            <label class="label">Verfügbarkeit</label>
+                            <label class="label">max. Ausleihdauer (in Tagen)</label>
                             <div class="control">
                                 <input class="input" type="number" pattern="\d*" placeholder="Wie lange am Stück willst du deinen Artikel ausleihen?" th:field="*{availableTime}">
                             </div>
@@ -67,9 +67,9 @@
                         </div>
 
                         <div class="field">
-                            <label class="label">Preis für den Verkauf</label>
+                            <label class="label">Preis für den Verkauf (in € / 0€ falls nicht gewünscht)</label>
                             <div class="control">
-                                <input class="input" type="number" pattern="\d*" placeholder="Gib einen Preis für den Verkauf an" th:field="*{soldPrice}">
+                                <input class="input" type="number" pattern="\d*" placeholder="in € (Willst du nicht verkaufen? Gib dann bitte 0€ ein.)" th:field="*{soldPrice}">
                             </div>
                             <p class="help is-danger" th:if="${#fields.hasErrors('soldPrice')}" th:errors="*{soldPrice}">Preis falsch eingegeben</p>
                         </div>
