@@ -88,6 +88,7 @@ public class BuyController {
             buyRepository.save(buy);
             transactionRepository.save(transaction);
         } catch (Exception e) {
+            buy.setStatus("error");
             return responseBuilder.createProPayErrorResponse(user, buy);
         }
 

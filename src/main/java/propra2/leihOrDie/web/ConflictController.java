@@ -5,16 +5,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import propra2.leihOrDie.propay.ProPayWrapper;
+import propra2.leihOrDie.dataaccess.*;
+import propra2.leihOrDie.model.*;
 import propra2.leihOrDie.response.ResponseBuilder;
 import propra2.leihOrDie.security.AuthorizationHandler;
-import propra2.leihOrDie.dataaccess.ItemRepository;
-import propra2.leihOrDie.dataaccess.LoanRepository;
-import propra2.leihOrDie.dataaccess.SessionRepository;
-import propra2.leihOrDie.dataaccess.UserRepository;
-import propra2.leihOrDie.model.Item;
-import propra2.leihOrDie.model.Loan;
-import propra2.leihOrDie.model.User;
 
 import java.util.List;
 
@@ -27,7 +23,11 @@ public class ConflictController {
     @Autowired
     LoanRepository loanRepository;
     @Autowired
+    BuyRepository buyRepository;
+    @Autowired
     SessionRepository sessionRepository;
+    @Autowired
+    TransactionRepository transactionRepository;
 
     private ResponseBuilder responseBuilder = new ResponseBuilder();
     private ProPayWrapper proPayWrapper = new ProPayWrapper();
@@ -83,20 +83,24 @@ public class ConflictController {
             return responseBuilder.createBadRequestResponse("User " + userName + " existiert nicht.");
         }
 
-
         User convenantee = userRepository.findUserByName(userName).get(0);
-        User lendingUser = userRepository.findUserByEMail(convenantee.getEmail()).get(0);
 
         if (convenantee.getEmail().equals(loan.getUser().getEmail())) {
             try {
-                proPayWrapper.freeReservationOfUser(lendingUser.getEmail(), loan.getProPayReservationId());
+                proPayWrapper.freeReservationOfUser(convenantee.getEmail(), loan.getProPayReservationId());
+                Transaction transaction = new Transaction(convenantee, convenantee,
+                        loan.getItem().getDeposit(), "Kaution - Konfliktstelle");
+                transactionRepository.save(transaction);
             } catch (Exception e) {
                 return responseBuilder.createProPayErrorResponse();
             }
 
         } else if(convenantee.getEmail().equals(loan.getItem().getUser().getEmail())) {
             try {
-                proPayWrapper.punishAccount(lendingUser.getEmail(), loan.getProPayReservationId());
+                proPayWrapper.punishAccount(loan.getUser().getEmail(), loan.getProPayReservationId());
+                Transaction transaction = new Transaction(loan.getUser(), convenantee,
+                        loan.getItem().getDeposit(), "Kaution - Konfliktstelle");
+                transactionRepository.save(transaction);
             } catch (Exception e) {
                 return responseBuilder.createProPayErrorResponse();
             }
@@ -110,14 +114,14 @@ public class ConflictController {
         loanRepository.save(loan);
 
         Item item = loan.getItem();
-        item.setAvailability(false);
+        item.setAvailability(true);
         itemRepository.save(item);
 
         return responseBuilder.createSuccessResponse("Konflikt wurde gelöst.");
     }
 
-    @PostMapping("/conflict/solveerror/{loanId}")
-    public ResponseEntity solveError(Model model, @PathVariable Long loanId,
+    @PostMapping("/conflict/solveerror/loan/{loanId}")
+    public ResponseEntity solveLoanError(Model model, @PathVariable Long loanId,
                                      @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         if (!authorizationHandler.isAdmin(sessionId)) {
             return responseBuilder.createUnauthorizedResponse();
@@ -135,12 +139,50 @@ public class ConflictController {
 
         try {
             proPayWrapper.transferMoney(lenderEmail, ownerEmail, amount);
+            Transaction transaction = new Transaction(loan.getUser(), loan.getItem().getUser(), amount,
+                    "Überweisung");
+            transactionRepository.save(transaction);
+            proPayWrapper.freeReservationOfUser(loan.getUser().getEmail(), loan.getProPayReservationId());
+            transaction = new Transaction(loan.getUser(), loan.getUser(),
+                    loan.getItem().getDeposit(), "Kaution");
+            transactionRepository.save(transaction);
         } catch (Exception e) {
             return responseBuilder.createProPayErrorResponse();
         }
 
         loan.setState("completed");
         loanRepository.save(loan);
+
+        return responseBuilder.createSuccessResponse("Überweisung wurde getätigt.");
+    }
+
+    @PostMapping("/conflict/solveerror/buy/{buyId}")
+    public ResponseEntity solveBuyError(Model model, @PathVariable Long buyId,
+                                         @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        if (!authorizationHandler.isAdmin(sessionId)) {
+            return responseBuilder.createUnauthorizedResponse();
+        }
+
+        Buy buy= buyRepository.findById(buyId).get();
+
+        if (!buy.getStatus().equals("error")) {
+            return responseBuilder.createBadRequestResponse("Es liegt kein Fehler bei diesem Kauf vor.");
+        }
+
+        int amount = buy.getPurchasePrice();
+        String buyerEmail = buy.getBuyer().getEmail();
+        String sellerEmail = buy.getItem().getUser().getEmail();
+
+        try {
+            proPayWrapper.transferMoney(buyerEmail, sellerEmail, amount);
+            Transaction transaction = new Transaction(buy.getBuyer(), buy.getItem().getUser(), amount, "Kauf");
+            transactionRepository.save(transaction);
+        } catch (Exception e) {
+            return responseBuilder.createProPayErrorResponse();
+        }
+
+        buy.setStatus("completed");
+        buyRepository.save(buy);
 
         return responseBuilder.createSuccessResponse("Überweisung wurde getätigt.");
     }
@@ -154,8 +196,11 @@ public class ConflictController {
         List<Loan> openConflicts = loanRepository.findLoansByState("conflict");
         model.addAttribute("conflicts", openConflicts);
 
-        List<Loan> openErrors = loanRepository.findLoansByState("error");
-        model.addAttribute("errors", openErrors);
+        List<Loan> openLoanErrors = loanRepository.findLoansByState("error");
+        model.addAttribute("loanErrors", openLoanErrors);
+
+        List<Buy> openBuyErrors = buyRepository.findBuysByState("error");
+        model.addAttribute("buyErrors", openBuyErrors);
 
         return "conflict-list";
     }
