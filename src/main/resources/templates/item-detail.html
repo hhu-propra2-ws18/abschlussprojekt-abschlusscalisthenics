@@ -15,34 +15,31 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
     <script th:inline="javascript">
-          function sendLoanRequest() {
-              /*<![CDATA[*/
-              var url = /*[[@{|http://localhost:8080/request/${id}|}]]*/ "request/";
-              /*]]>*/
-              var loanDuration = document.getElementById("loanDuration").value;
+          function sendLoanRequest(form) {
               var xhr = new XMLHttpRequest();
-              xhr.open("POST", url, true);
-              xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+              var formData = new FormData(form);
 
-              xhr.send("loanDuration=" + loanDuration);
-              xhr.onreadystatechange = function() {
-                  if(xhr.readyState === 4 && xhr.responseURL == "http://localhost:8080/login") {
-                      location.href = "http://localhost:8080/login";
-                  } else if (xhr.readyState === 4 && xhr.status == 200) {
-                      document.getElementById("modal-text").innerHTML = "Ihre Anfrage wurde erfolgreich übermittelt.\n" +
-                          "Sie werden über die Entscheidung des Verleihers in Kürze informiert.";
-                      document.getElementById("modal-text").style.color = "green";
-                      document.getElementById("loanForm").innerHTML;
-                      document.getElementById("loanForm").innerHTML="<p style='color:green; font-size:20px'>Anfrage erfolgreich!</p>";
-                      modal.style.display = "block";
-                  } else if(xhr.readyState === 4 && xhr.status != 200) {
-                      document.getElementById("modal-text").innerHTML = "Es gab einen Fehler beim Ausführen Ihrer Anfrage:\n" +
-                          xhr.response;
-                      document.getElementById("modal-text").style.color = "red";
+              xhr.addEventListener("load", function(event) {
+                  if(xhr.responseURL == "http://localhost:8080/login") {
+                      location.href = "/login";
+                  } else {
+                      if(xhr.status == 200) {
+                          document.getElementById("modal-text").innerHTML = "Ihre Anfrage wurde erfolgreich übermittelt.\n" +
+                              "Sie werden über die Entscheidung des Verleihers in Kürze informiert.";
+                          document.getElementById("modal-text").style.color = "green";
+                          document.getElementById("loanForm").innerHTML="<p style='color:green; font-size:20px'>Anfrage erfolgreich!</p>";
+                      } else {
+                          document.getElementById("modal-text").innerHTML = "Es gab einen Fehler beim Ausführen Ihrer Anfrage:\n" +
+                              xhr.response;
+                          document.getElementById("modal-text").style.color = "red";
+                      }
                       modal.style.display = "block";
                   }
-              };
-          };
+              });
+
+              xhr.open("POST", form.action);
+              xhr.send(formData);
+          }
       </script>
     <style>
           .modal {
@@ -173,30 +170,29 @@
 
                     <div>
                         <div th:if="${isAvailable} == true">
-                            <form class= action="#" th:action="@{'/request/' + ${itemID}}" th:object="${loanForm}" method="post">
-                                <div class="field">
-                                    <div class="control">
-                                        <input class="input" type="number" pattern="\d*" placeholder="Wie lange am Stück willst du deinen Artikel ausleihen?" th:field="*{loanDuration}">
+                            <div id="loanForm">
+                                <form class= action="#" th:action="@{'/request/' + ${itemID}}" th:object="${loanForm}" method="post">
+                                    <div class="field">
+                                        <div class="control">
+                                            <input class="input" type="number" pattern="\d*" placeholder="Wie lange am Stück willst du deinen Artikel ausleihen?" th:field="*{loanDuration}">
+                                        </div>
+                                        <p class="help is-danger" th:if="${#fields.hasErrors('loanDuration')}" th:errors="*{loanDuration}">Falsch eingegeben</p>
                                     </div>
-                                    <p class="help is-danger" th:if="${#fields.hasErrors('loanDuration')}" th:errors="*{loanDuration}">Falsch eingegeben</p>
-                                </div>
-                                <button type="submit" name="submit" value="value" class="button is-small is-primary">Anfragen</button>
-                            </form>
-                            <br>
-
-                            <div class="buttons has-addons is-centered">
-                                <form method="POST" th:action="@{'/buy/' + ${itemID}}">
-                                    <button type="submit" name="submit" value="value" class="button is-small is-primary is-outlined">Kaufen</button>
+                                    <button style="float:left;margin-right:5px;" id="loanRequestButton" type="submit" name="submit" value="value" class="button is-small is-primary">Anfragen</button>
                                 </form>
-                                &nbsp;
-                                &nbsp;
-                                <a  th:href="@{'/borrowall'}" class="button is-small is-primary is-outlined">zurück</a>
+                                <form method="POST" th:action="@{'/buy/' + ${itemID}}">
+                                    <button style="float:left;" id="buyButton" type="submit" name="submit" value="value" class="button is-small is-primary">Kaufen</button>
+                                </form>
                             </div>
+                            &nbsp;
+                            &nbsp;
 
+                            <a  th:href="@{'/borrowall'}" class="button is-small is-primary is-outlined">zurück</a>
 
-                            <div th:if="${isAvailable} == false">
-                                <p>Dieser Artikel ist gerade nicht verfügbar.</p>
-                            </div>
+                        </div>
+
+                        <div th:if="${isAvailable} == false">
+                            <p>Dieser Artikel ist gerade nicht verfügbar.</p>
                         </div>
 
                         <br>
@@ -207,12 +203,19 @@
 </section>
 <script>
       var modal = document.getElementById('myModal');
-      var btn = document.getElementById("loanBtn");
+      var btn = document.getElementById("loanRequestButton");
+      var buyBtn = document.getElementById("buyButton");
       var span = document.getElementsByClassName("close")[0];
 
-      btn.onclick = function() {
-          sendLoanRequest();
-      };
+      btn.addEventListener("click", function(event) {
+          event.preventDefault();
+          sendLoanRequest(btn.form);
+      });
+
+      buyBtn.addEventListener("click", function(event) {
+          event.preventDefault();
+          sendLoanRequest(btn.form);
+      });
 
       span.onclick = function() {
           modal.style.display = "none";

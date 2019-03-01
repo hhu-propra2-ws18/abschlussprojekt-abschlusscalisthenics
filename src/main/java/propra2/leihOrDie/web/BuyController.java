@@ -60,9 +60,9 @@ public class BuyController {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         Buy buy = new Buy(item, form.getPurchasePrice(), "pending", user);
 
-        if (!isAuthorized(user, item)) {
+        /*if (!isAuthorized(user, item)) {
             return responseBuilder.createUnauthorizedResponse();
-        }
+        }*/
 
         buyRepository.save(buy);
         item.setAvailability(false);
