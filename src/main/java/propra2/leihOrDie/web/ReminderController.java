@@ -27,7 +27,7 @@ public class ReminderController {
     @Autowired
     SessionRepository sessionRepository;
 
-    @GetMapping("/reminde")
+    @GetMapping("/reminder")
     public String getReminded(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         List<Loan> exceededLoansOfUser = getExceededLoans(user);
@@ -36,7 +36,7 @@ public class ReminderController {
         model.addAttribute("user", user.getUsername());
         model.addAttribute("exceededLoans", exceededLoans);
 
-        return "";
+        return "loan-reminder";
     }
 
     private List<Loan> getExceededLoans(User user) {
