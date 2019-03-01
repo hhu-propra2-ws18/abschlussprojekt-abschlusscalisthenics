@@ -111,7 +111,6 @@ public class ConflictControllerTest {
         Assert.assertEquals("completed", loanRepository.findAll().get(0).getState());
     }
 
-    @Ignore
     @Test
     public void testSolveError() throws Exception {
         testLoan.setState("error");
@@ -121,8 +120,8 @@ public class ConflictControllerTest {
         testItem.setCost(10);
         itemRepository.save(testItem);
 
-        Mockito.doNothing()
-                .when(proPayWrapper).transferMoney(testUser2.getEmail(), testUser1.getEmail(), 10);
+        Mockito.when(proPayWrapper.transferMoney(testUser2.getEmail(), testUser1.getEmail(), 10))
+                .thenReturn("");
 
         mvc.perform(post("/conflict/solveerror/" + testLoan.getId())
                 .cookie(new Cookie("SessionID", "2")))

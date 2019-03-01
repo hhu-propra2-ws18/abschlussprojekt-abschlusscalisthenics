@@ -53,7 +53,7 @@ public class ProPayWrapper {
     }
 
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
-    public void transferMoney(String senderUsername, String recipientUsername,
+    public String transferMoney(String senderUsername, String recipientUsername,
                                         double amount) throws Exception {
         RestTemplate rt = new RestTemplate();
         String url = "http://localhost:8888/account/" + senderUsername + "/transfer/" + recipientUsername;
@@ -61,17 +61,17 @@ public class ProPayWrapper {
         postParams.add("amount", amount);
         ResponseEntity<String> result = rt.postForEntity(url, postParams, String.class);
 
-        //return result.getBody();
+        return result.getBody();
     }
 
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
-    public void punishAccount(String username, Long reservationId) throws Exception {
+    public Account punishAccount(String username, Long reservationId) throws Exception {
         RestTemplate rt = new RestTemplate();
         String url = "http://localhost:8888/reservation/punish/" + username;
         MultiValueMap<String, Object> postParams = new LinkedMultiValueMap<>();
         postParams.add("reservationId", reservationId);
 
-        //return rt.postForEntity(url, postParams, Account.class).getBody();
+        return rt.postForEntity(url, postParams, Account.class).getBody();
     }
 
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
