@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import propra2.leihOrDie.model.Transaction;
+import propra2.leihOrDie.propay.ProPayWrapper;
 import propra2.leihOrDie.response.ResponseBuilder;
 import propra2.leihOrDie.security.AuthorizationHandler;
 import propra2.leihOrDie.dataaccess.*;
@@ -19,8 +20,6 @@ import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
-
-import static propra2.leihOrDie.propay.ProPayWrapper.*;
 
 @Controller
 public class LoanController {
@@ -38,6 +37,7 @@ public class LoanController {
     private AuthorizationHandler authorizationHandler = new AuthorizationHandler(sessionRepository);
   
     private ResponseBuilder responseBuilder = new ResponseBuilder();
+    private ProPayWrapper proPayWrapper = new ProPayWrapper();
 
 
     @PostMapping("/request/{itemId}")
@@ -69,7 +69,7 @@ public class LoanController {
 
         Long proPayReservationId;
         try {
-            proPayReservationId = reserve(user.getEmail(), item.getUser().getEmail(), item.getDeposit()).getId();
+            proPayReservationId = proPayWrapper.reserve(user.getEmail(), item.getUser().getEmail(), item.getDeposit()).getId();
         } catch (Exception e) {
             return responseBuilder.createBadRequestResponse("ProPay Fehler");
         }
@@ -145,7 +145,7 @@ public class LoanController {
         loan.setDayOfReturn(LocalDate.now());
       
         try {
-            transferMoney(loan.getUser().getEmail(), user.getEmail(), amount);
+            proPayWrapper.transferMoney(loan.getUser().getEmail(), user.getEmail(), amount);
             Transaction transaction = new Transaction(loan.getUser(), user, amount, "Danke für die Ausleihe");
             transactionRepository.save(transaction);
         } catch (Exception e) {

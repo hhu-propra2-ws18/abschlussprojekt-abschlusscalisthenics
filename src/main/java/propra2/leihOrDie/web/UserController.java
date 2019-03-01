@@ -15,6 +15,7 @@ import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Loan;
 import propra2.leihOrDie.model.Transaction;
 import propra2.leihOrDie.model.User;
+import propra2.leihOrDie.propay.ProPayWrapper;
 import propra2.leihOrDie.response.ResponseBuilder;
 
 import javax.servlet.http.HttpServletResponse;
@@ -23,8 +24,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static propra2.leihOrDie.propay.ProPayWrapper.getBalanceOfUser;
-import static propra2.leihOrDie.propay.ProPayWrapper.raiseBalanceOfUser;
 
 @Controller
 public class UserController {
@@ -38,6 +37,7 @@ public class UserController {
     private TransactionRepository transactionRepository;
 
     private ResponseBuilder responseBuilder = new ResponseBuilder();
+    private ProPayWrapper proPayWrapper = new ProPayWrapper();
 
     @GetMapping("/myaccount")
     public String showUserPage(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId,
@@ -66,7 +66,7 @@ public class UserController {
     public String showPropay(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId, HttpServletResponse response, TransactionForm form) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
 
-        double bankBalance = getBalanceOfUser(user.getEmail());
+        double bankBalance = proPayWrapper.getBalanceOfUser(user.getEmail());
 
         List<Transaction> transactions = transactionRepository.findAllTransactionsOfUser(user.getUsername());
         List<String> formattedDates = getFormattedDate(transactions);
@@ -87,7 +87,7 @@ public class UserController {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
 
         try {
-            raiseBalanceOfUser(user.getEmail(), form.getAmount());
+            proPayWrapper.raiseBalanceOfUser(user.getEmail(), form.getAmount());
 
             Transaction transaction = new Transaction(user, user, form.getAmount(), "Überweisung");
             transactionRepository.save(transaction);

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import propra2.leihOrDie.propay.ProPayWrapper;
 import propra2.leihOrDie.response.ResponseBuilder;
 import propra2.leihOrDie.security.AuthorizationHandler;
 import propra2.leihOrDie.dataaccess.ItemRepository;
@@ -16,8 +17,6 @@ import propra2.leihOrDie.model.Loan;
 import propra2.leihOrDie.model.User;
 
 import java.util.List;
-
-import static propra2.leihOrDie.propay.ProPayWrapper.*;
 
 @Controller
 public class ConflictController {
@@ -31,6 +30,7 @@ public class ConflictController {
     SessionRepository sessionRepository;
 
     private ResponseBuilder responseBuilder = new ResponseBuilder();
+    private ProPayWrapper proPayWrapper = new ProPayWrapper();
     @Autowired
     private AuthorizationHandler authorizationHandler = new AuthorizationHandler(sessionRepository);
 
@@ -79,32 +79,30 @@ public class ConflictController {
 
         Loan loan = loanRepository.findById(loanId).get();
 
-        String covenanteeName = userName;
-
-        if (userRepository.findUserByName(covenanteeName).isEmpty()) {
-            return responseBuilder.createBadRequestResponse("User " + covenanteeName + " existiert nicht.");
+        if (userRepository.findUserByName(userName).isEmpty()) {
+            return responseBuilder.createBadRequestResponse("User " + userName + " existiert nicht.");
         }
 
 
-        User convenantee = userRepository.findUserByName(covenanteeName).get(0);
+        User convenantee = userRepository.findUserByName(userName).get(0);
         User lendingUser = userRepository.findUserByEMail(convenantee.getEmail()).get(0);
 
         if (convenantee.getEmail().equals(loan.getUser().getEmail())) {
             try {
-                freeReservationOfUser(lendingUser.getEmail(), loan.getProPayReservationId());
+                proPayWrapper.freeReservationOfUser(lendingUser.getEmail(), loan.getProPayReservationId());
             } catch (Exception e) {
                 return responseBuilder.createProPayErrorResponse();
             }
 
         } else if(convenantee.getEmail().equals(loan.getItem().getUser().getEmail())) {
             try {
-                punishAccount(lendingUser.getEmail(), loan.getProPayReservationId());
+                proPayWrapper.punishAccount(lendingUser.getEmail(), loan.getProPayReservationId());
             } catch (Exception e) {
                 return responseBuilder.createProPayErrorResponse();
             }
 
         } else {
-            return responseBuilder.createBadRequestResponse("User " + covenanteeName + " steht nicht im Kontext mit Loan " +
+            return responseBuilder.createBadRequestResponse("User " + userName + " steht nicht im Kontext mit Loan " +
                     loan.getId() + ".");
         }
 
@@ -136,7 +134,7 @@ public class ConflictController {
         String ownerEmail = loan.getItem().getUser().getEmail();
 
         try {
-            transferMoney(lenderEmail, ownerEmail, amount);
+            proPayWrapper.transferMoney(lenderEmail, ownerEmail, amount);
         } catch (Exception e) {
             return responseBuilder.createProPayErrorResponse();
         }

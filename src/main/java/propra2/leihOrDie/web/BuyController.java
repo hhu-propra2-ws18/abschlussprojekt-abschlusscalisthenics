@@ -12,14 +12,11 @@ import propra2.leihOrDie.model.Buy;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Transaction;
 import propra2.leihOrDie.model.User;
+import propra2.leihOrDie.propay.ProPayWrapper;
 import propra2.leihOrDie.response.ResponseBuilder;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-
-import static propra2.leihOrDie.propay.ProPayWrapper.transferMoney;
-
 
 @Controller
 public class BuyController {
@@ -35,6 +32,7 @@ public class BuyController {
     TransactionRepository transactionRepository;
 
     private ResponseBuilder responseBuilder = new ResponseBuilder();
+    private ProPayWrapper proPayWrapper = new ProPayWrapper();
 
     @GetMapping("/myaccount/buy")
     public String showBuyService(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
@@ -82,7 +80,7 @@ public class BuyController {
         }
 
         try {
-            transferMoney(buy.getBuyer().getEmail(), user.getEmail(), buy.getPurchasePrice());
+            proPayWrapper.transferMoney(buy.getBuyer().getEmail(), user.getEmail(), buy.getPurchasePrice());
             Transaction transaction = new Transaction(buy.getBuyer(), user, buy.getPurchasePrice(), "Kauf von " + item.getName());
             item.setUser(buy.getBuyer());
             buy.setStatus("completed");

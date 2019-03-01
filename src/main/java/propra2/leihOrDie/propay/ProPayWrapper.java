@@ -14,7 +14,7 @@ import propra2.leihOrDie.model.Reservation;
 
 @Service
 public class ProPayWrapper {
-    public static RestTemplate createRestTemplate() {
+    public RestTemplate createRestTemplate() {
         HttpComponentsClientHttpRequestFactory clientRequestFactory = new HttpComponentsClientHttpRequestFactory();
         clientRequestFactory.setReadTimeout(3000);
         clientRequestFactory.setConnectTimeout(3000);
@@ -24,7 +24,7 @@ public class ProPayWrapper {
     }
 
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
-    public static double getBalanceOfUser(String username) {
+    public double getBalanceOfUser(String username) {
         try {
             return getAccountOfUser(username).getAmount();
         } catch (Exception e) {
@@ -33,7 +33,7 @@ public class ProPayWrapper {
     }
 
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
-    public static void createUser(String username) {
+    public void createUser(String username) {
         try {
             getAccountOfUser(username);
         } catch (Exception e) {
@@ -42,7 +42,7 @@ public class ProPayWrapper {
     }
 
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
-    public static Account raiseBalanceOfUser(String username, double amount) {
+    public Account raiseBalanceOfUser(String username, double amount) {
         RestTemplate rt = new RestTemplate();
         String url = "http://localhost:8888/account/" + username;
         MultiValueMap<String, Object> postParams = new LinkedMultiValueMap<>();
@@ -53,7 +53,7 @@ public class ProPayWrapper {
     }
 
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
-    public static String transferMoney(String senderUsername, String recipientUsername,
+    public String transferMoney(String senderUsername, String recipientUsername,
                                         double amount) throws Exception {
         RestTemplate rt = new RestTemplate();
         String url = "http://localhost:8888/account/" + senderUsername + "/transfer/" + recipientUsername;
@@ -65,7 +65,7 @@ public class ProPayWrapper {
     }
 
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
-    public static Account punishAccount(String username, Long reservationId) throws Exception {
+    public Account punishAccount(String username, Long reservationId) throws Exception {
         RestTemplate rt = new RestTemplate();
         String url = "http://localhost:8888/reservation/punish/" + username;
         MultiValueMap<String, Object> postParams = new LinkedMultiValueMap<>();
@@ -75,18 +75,18 @@ public class ProPayWrapper {
     }
 
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
-    public static Account freeReservationOfUser(String username, Long reservationId) throws Exception {
+    public void freeReservationOfUser(String username, Long reservationId) throws Exception {
         RestTemplate rt = new RestTemplate();
         String url = "http://localhost:8888/reservation/release/" + username;
         MultiValueMap<String, Object> postParams = new LinkedMultiValueMap<>();
         postParams.add("reservationId", reservationId);
         ResponseEntity<Account> result = rt.postForEntity(url, postParams, Account.class);
 
-        return result.getBody();
+        //return result.getBody();
     }
 
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
-    public static Reservation reserve(String senderUsername, String recipientUsername,
+    public Reservation reserve(String senderUsername, String recipientUsername,
                                       double amount) throws Exception {
         RestTemplate rt = new RestTemplate();
         String url = "http://localhost:8888/reservation/reserve/" + senderUsername + "/" + recipientUsername;
@@ -98,7 +98,7 @@ public class ProPayWrapper {
     }
 
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
-    private static Account getAccountOfUser(String username) throws Exception {
+    private Account getAccountOfUser(String username) throws Exception {
         RestTemplate rt = new RestTemplate();
         String url = "http://localhost:8888/account/" + username;
         ResponseEntity<Account> result = rt.getForEntity(url, Account.class);
