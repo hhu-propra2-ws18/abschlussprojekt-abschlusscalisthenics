@@ -142,31 +142,36 @@
                     </p>
                     <h2 th:text="'Beschreibung: ' + ${description}" class="subtitle is-4">
                         Beschreibung:
-
                     </h2>
+
                     <h3 th:text="'Abholort: ' + ${location}" class="subtitle is-4">
                         Abholort:
-
                     </h3>
+
                     <h4 th:text="'Max. Ausleihdauer: ' + ${availableTime} + ' Tage'" class="subtitle is-4">
                         Verfügbarkeit:
-
                     </h4>
+
                     <h5 th:text="'Kaution: ' + ${deposit} + '€' " class="subtitle is-4">
                         Kaution (€):
-
                     </h5>
+
                     <h6 th:text="'Preis pro Tag: ' + ${cost} + '€'" class="subtitle is-4">
                         Preis pro Tag (€):
-
                     </h6>
-                    <h7 th:text="'Anbieter: ' + ${username}" class="subtitle is-4">
-                        Ausleiher:
 
 
+                    <h7 th:text="'Kaufpreis: ' + ${soldPrice} + '€'" class="subtitle is-4">
+                        Kaufpreis(€) :
                     </h7>
-                    <br>
-                    <br>
+
+                    <br><br>
+
+                    <h8 th:text="'Anbieter: ' + ${username}" class="subtitle is-4">
+                        Ausleiher:
+                    </h8>
+
+                    <br><br>
 
                     <div>
                         <div th:if="${isAvailable} == true">
