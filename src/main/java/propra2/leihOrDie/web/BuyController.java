@@ -32,7 +32,8 @@ public class BuyController {
     TransactionRepository transactionRepository;
 
     private ResponseBuilder responseBuilder = new ResponseBuilder();
-    private ProPayWrapper proPayWrapper = new ProPayWrapper();
+    @Autowired
+    private ProPayWrapper proPayWrapper;
 
     @GetMapping("/myaccount/buy")
     public String showBuyService(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
@@ -58,9 +59,11 @@ public class BuyController {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         Buy buy = new Buy(item, item.getSoldPrice(), "pending", user);
 
+
         /*if (!isAuthorized(user, item)) {
             return responseBuilder.createUnauthorizedResponse();
         }*/
+
 
         buyRepository.save(buy);
         item.setAvailability(false);
