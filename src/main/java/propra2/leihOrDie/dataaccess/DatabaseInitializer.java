@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import propra2.leihOrDie.model.*;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static propra2.leihOrDie.propay.ProPayWrapper.raiseBalanceOfUser;
 
@@ -26,6 +27,12 @@ public class DatabaseInitializer implements ServletContextInitializer {
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
+        List<User> userList = userRepository.findAll();
+        if(userList.size() != 0) {
+            return;
+        }
+
+
         User user0 = new User("admin", "admin@leihordie.de", "admin1234", "ADMIN",
                 new Address(12345, "Universitaetsstr.", 12, "Duisburg"));
         User user1 = new User("anton", "anton@gmail.com", "anton1234", "USER",
