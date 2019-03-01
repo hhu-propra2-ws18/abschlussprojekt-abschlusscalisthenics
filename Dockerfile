@@ -7,4 +7,5 @@ RUN ./gradlew bootJar
 FROM openjdk:8-jre-alpine
 WORKDIR ./
 COPY --from=build-env /build/libs/*.jar *.jar
+CMD sleep 30
 ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "*.jar"]
