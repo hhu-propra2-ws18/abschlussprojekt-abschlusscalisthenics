@@ -10,19 +10,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import propra2.leihOrDie.dataaccess.ItemRepository;
-import propra2.leihOrDie.dataaccess.LoanRepository;
-import propra2.leihOrDie.dataaccess.SessionRepository;
-import propra2.leihOrDie.dataaccess.UserRepository;
-import propra2.leihOrDie.model.Item;
-import propra2.leihOrDie.model.Loan;
-import propra2.leihOrDie.model.Session;
-import propra2.leihOrDie.model.User;
+import propra2.leihOrDie.dataaccess.*;
+import propra2.leihOrDie.model.*;
 import propra2.leihOrDie.propay.ProPayWrapper;
 
 import javax.servlet.http.Cookie;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
@@ -43,6 +40,9 @@ public class ConflictControllerTest {
     @Autowired
     SessionRepository sessionRepository;
 
+    @Autowired
+    BuyRepository buyRepository;
+
     @MockBean
     ProPayWrapper proPayWrapper;
 
@@ -51,6 +51,7 @@ public class ConflictControllerTest {
     private User testAdmin;
     private Item testItem;
     private Loan testLoan;
+    private Buy testBuy;
 
     @Before
     public void setUp() throws Exception {
@@ -76,11 +77,19 @@ public class ConflictControllerTest {
         DummyLoanGenerator dummyLoanGenerator = new DummyLoanGenerator();
         testLoan = dummyLoanGenerator.generateLoan(testItem, testUser2);
         loanRepository.save(testLoan);
+
+        testBuy = new Buy();
+        testBuy.setItem(testItem);
+        testBuy.setBuyer(testUser2);
+        testBuy.setPurchasePrice(10);
+        testBuy.setStatus("error");
+        buyRepository.save(testBuy);
     }
 
     @After
     public void tearDown() {
         loanRepository.deleteAll();
+        buyRepository.deleteAll();
         itemRepository.deleteAll();
         sessionRepository.deleteAll();
         userRepository.deleteAll();
@@ -99,34 +108,112 @@ public class ConflictControllerTest {
         Assert.assertFalse(itemRepository.findAll().get(0).isAvailability());
     }
 
-    @Ignore
     @Test
     public void testSolveConflictLender() throws Exception {
-        Mockito.doNothing()
-                .when(proPayWrapper).punishAccount(testUser2.getEmail(), testLoan.getProPayReservationId());
+        Account account = new Account();
+
+        when(proPayWrapper
+                        .punishAccount(testLoan.getUser().getEmail(), testLoan.getProPayReservationId()))
+                .thenReturn(account);
 
         mvc.perform(post("/conflict/solve/" + testLoan.getId() + "/and/" + testUser1.getUsername())
                 .cookie(new Cookie("SessionID", "2")))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().string("Konflikt wurde gelöst."));
 
         Assert.assertEquals("completed", loanRepository.findAll().get(0).getState());
     }
 
-    @Ignore
     @Test
-    public void testSolveError() throws Exception {
+    public void testSolveConflictBuyer() throws Exception {
+        doNothing().when(proPayWrapper).freeReservationOfUser(testUser2.getUsername(), testLoan.getProPayReservationId());
+
+        mvc.perform(post("/conflict/solve/" + testLoan.getId() + "/and/" + testUser2.getUsername())
+                .cookie(new Cookie("SessionID", "2")))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().string("Konflikt wurde gelöst."));
+
+        Assert.assertEquals("completed", loanRepository.findAll().get(0).getState());
+    }
+
+    @Test
+    public void testSolveConficUserNotExisting() throws Exception {
+        mvc.perform(post("/conflict/solve/" + testLoan.getId() + "/and/NotHere")
+                .cookie(new Cookie("SessionID", "2")))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError())
+                .andExpect(content().string("User NotHere existiert nicht."));
+    }
+
+    @Test
+    public void testSolveLoanError() throws Exception {
         testLoan.setState("error");
+        testLoan.setDuration(1);
+        loanRepository.save(testLoan);
+
+
+        testItem.setCost(10);
+        itemRepository.save(testItem);
+
+        when(proPayWrapper
+                .transferMoney
+                        (testLoan.getUser().getEmail(), testLoan.getItem().getUser().getEmail(), 20.0))
+                .thenReturn("something");
+        when(proPayWrapper.getBalanceOfUser(testLoan.getItem().getUser().getEmail()))
+                .thenReturn(20.0);
+
+        doNothing()
+                .when(proPayWrapper)
+                .freeReservationOfUser(testLoan.getUser().getEmail(), testLoan.getProPayReservationId());
+
+        when(proPayWrapper.getBalanceOfUser(testLoan.getItem().getUser().getEmail()))
+                .thenReturn(20.0 + testLoan.getProPayReservationId());
+
+
+        mvc.perform(post("/conflict/solveerror/loan/" + testLoan.getId())
+                .cookie(new Cookie("SessionID", "2")))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().string("Überweisung wurde getätigt."));
+
+        Assert.assertEquals("completed", loanRepository.findAll().get(0).getState());
+    }
+
+    @Test
+    public void testSolveLoanErrorNotExisting() throws Exception {
+        testLoan.setState("completed");
         testLoan.setDuration(1);
         loanRepository.save(testLoan);
 
         testItem.setCost(10);
         itemRepository.save(testItem);
 
-        Mockito.when(proPayWrapper.transferMoney(testUser2.getEmail(), testUser1.getEmail(), 10))
-                .thenReturn("");
-
-        mvc.perform(post("/conflict/solveerror/" + testLoan.getId())
+        mvc.perform(post("/conflict/solveerror/loan/" + testLoan.getId())
                 .cookie(new Cookie("SessionID", "2")))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError())
+                .andExpect(content().string("Es liegt kein Fehler bei dieser Ausleihe vor."));
+    }
+
+    @Test
+    public void testSolveBuyError() throws Exception {
+        when(proPayWrapper
+                .transferMoney
+                        (testLoan.getUser().getEmail(), testLoan.getItem().getUser().getEmail(), 20.0))
+                .thenReturn("something");
+        when(proPayWrapper.getBalanceOfUser(testLoan.getItem().getUser().getEmail()))
+                .thenReturn(20.0);
+
+        doNothing()
+                .when(proPayWrapper)
+                .freeReservationOfUser(testLoan.getUser().getEmail(), testLoan.getProPayReservationId());
+
+        when(proPayWrapper.getBalanceOfUser(testLoan.getItem().getUser().getEmail()))
+                .thenReturn(20.0 + testLoan.getProPayReservationId());
+
+
+        mvc.perform(post("/conflict/solveerror/buy/" + testBuy.getId())
+                .cookie(new Cookie("SessionID", "2")))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(content().string("Überweisung wurde getätigt."));
+
+        Assert.assertEquals("completed", buyRepository.findAll().get(0).getStatus());
     }
 }
