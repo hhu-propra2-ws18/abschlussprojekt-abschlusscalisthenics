@@ -54,7 +54,7 @@ public class BuyController {
     }
 
 
-    @GetMapping("/account/buy")
+    @GetMapping("/myaccount/buy")
     public String showBuyService(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);
         List<Item> items = itemRepository.findItemsOfUser(user.getUsername());
