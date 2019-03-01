@@ -13,7 +13,7 @@ import java.util.Arrays;
 import static propra2.leihOrDie.propay.ProPayWrapper.raiseBalanceOfUser;
 
 
-@Component
+//@Component
 public class DatabaseInitializer implements ServletContextInitializer {
     @Autowired
     UserRepository userRepository;
