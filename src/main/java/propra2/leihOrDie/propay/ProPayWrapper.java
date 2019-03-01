@@ -44,7 +44,7 @@ public class ProPayWrapper {
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
     public Account raiseBalanceOfUser(String username, double amount) {
         RestTemplate rt = new RestTemplate();
-        String url = "http://localhost:8888/account/" + username;
+        String url = "http://propay:8888/account/" + username;
         MultiValueMap<String, Object> postParams = new LinkedMultiValueMap<>();
         postParams.add("amount", amount);
         ResponseEntity<Account> result = rt.postForEntity(url, postParams, Account.class);
@@ -56,7 +56,7 @@ public class ProPayWrapper {
     public String transferMoney(String senderUsername, String recipientUsername,
                                         double amount) throws Exception {
         RestTemplate rt = new RestTemplate();
-        String url = "http://localhost:8888/account/" + senderUsername + "/transfer/" + recipientUsername;
+        String url = "http://propay:8888/account/" + senderUsername + "/transfer/" + recipientUsername;
         MultiValueMap<String, Object> postParams = new LinkedMultiValueMap<>();
         postParams.add("amount", amount);
         ResponseEntity<String> result = rt.postForEntity(url, postParams, String.class);
@@ -67,7 +67,7 @@ public class ProPayWrapper {
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
     public Account punishAccount(String username, Long reservationId) throws Exception {
         RestTemplate rt = new RestTemplate();
-        String url = "http://localhost:8888/reservation/punish/" + username;
+        String url = "http://propay:8888/reservation/punish/" + username;
         MultiValueMap<String, Object> postParams = new LinkedMultiValueMap<>();
         postParams.add("reservationId", reservationId);
 
@@ -77,7 +77,7 @@ public class ProPayWrapper {
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
     public void freeReservationOfUser(String username, Long reservationId) throws Exception {
         RestTemplate rt = new RestTemplate();
-        String url = "http://localhost:8888/reservation/release/" + username;
+        String url = "http://propay:8888/reservation/release/" + username;
         MultiValueMap<String, Object> postParams = new LinkedMultiValueMap<>();
         postParams.add("reservationId", reservationId);
         ResponseEntity<Account> result = rt.postForEntity(url, postParams, Account.class);
@@ -89,7 +89,7 @@ public class ProPayWrapper {
     public Reservation reserve(String senderUsername, String recipientUsername,
                                       double amount) throws Exception {
         RestTemplate rt = new RestTemplate();
-        String url = "http://localhost:8888/reservation/reserve/" + senderUsername + "/" + recipientUsername;
+        String url = "http://propay:8888/reservation/reserve/" + senderUsername + "/" + recipientUsername;
         MultiValueMap<String, Object> postParams = new LinkedMultiValueMap<>();
         postParams.add("amount", amount);
         ResponseEntity<Reservation> result = rt.postForEntity(url, postParams, Reservation.class);
@@ -100,7 +100,7 @@ public class ProPayWrapper {
     @Retryable(maxAttempts = 5, backoff = @Backoff(delay=5000),value = Exception.class)
     private Account getAccountOfUser(String username) throws Exception {
         RestTemplate rt = new RestTemplate();
-        String url = "http://localhost:8888/account/" + username;
+        String url = "http://propay:8888/account/" + username;
         ResponseEntity<Account> result = rt.getForEntity(url, Account.class);
 
         return result.getBody();
