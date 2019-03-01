@@ -22,7 +22,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -70,10 +72,14 @@ public class UserController {
 
         List<Transaction> transactions = transactionRepository.findAllTransactionsOfUser(user.getUsername());
         List<String> formattedDates = getFormattedDate(transactions);
+        Map <Long, String> map = new HashMap<Long, String>();
+        for(int i = 0; i < transactions.size(); i++) {
+            map.put(transactions.get(0).getId(), formattedDates.get(i));
+        }
 
         model.addAttribute("bankBalance", bankBalance);
         model.addAttribute("transactions", transactions);
-        model.addAttribute("formattedDates", formattedDates);
+        model.addAttribute("map", map);
 
         return "user-propay";
     }
