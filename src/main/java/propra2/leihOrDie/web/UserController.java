@@ -104,7 +104,6 @@ public class UserController {
         return responseBuilder.createSuccessResponse("Überweisung erfolgreich!");
     }
 
-    //neu
     @GetMapping("/reloaditems")
     public String reloadItems(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId,
                               HttpServletResponse response) {
