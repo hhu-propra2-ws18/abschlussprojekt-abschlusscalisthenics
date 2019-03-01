@@ -32,7 +32,7 @@ public class ItemController {
     @Autowired
     SessionRepository sessionRepository;
 
-    ResponseBuilder responseBuilder;
+    ResponseBuilder responseBuilder = new ResponseBuilder();
 
     @PostMapping("/item/create")
     public String newItem(Model model, @Valid ItemForm form, BindingResult bindingResult, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
@@ -129,7 +129,7 @@ public class ItemController {
         return urlList;
     }
 
-    @PostMapping("/delete/{itemId}")
+    @PostMapping("/delete/{id}")
     public ResponseEntity deleteItem(Model model, @PathVariable Long id, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         Item item = itemRepository.findById(id).get();
         User user = sessionRepository.findUserBySessionCookie(sessionId);

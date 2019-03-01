@@ -99,7 +99,8 @@
                   document.getElementsByClassName("acceptRequestForm"),
                   document.getElementsByClassName("declineRequestForm"),
                   document.getElementsByClassName("pickedUpForm"),
-                  document.getElementsByClassName("returnedForm")
+                  document.getElementsByClassName("returnedForm"),
+                  document.getElementsByClassName("deleteForm")
               ];
 
               for(var i = 0; i < forms.length; i++) {
@@ -202,7 +203,9 @@
                                         <tr th:each="item: ${items}">
                                             <th><a th:href="@{'/borrowall/' + ${item.id}}" th:text="${item.getName()}"></a></th>
                                             <td>
-                                                <button type="submit" name="submit" value="value" class="button is-small is-primary">löschen</button>
+                                                <form class="deleteForm" method="POST" th:action="@{'/delete/' + ${item.id}}">
+                                                    <button type="submit" name="submit" value="value" class="button is-small is-primary">Löschen</button>
+                                                </form>
                                             </td>
 
                                         </tr>
