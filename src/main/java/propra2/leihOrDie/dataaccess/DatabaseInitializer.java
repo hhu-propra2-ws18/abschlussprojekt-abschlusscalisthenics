@@ -60,25 +60,25 @@ public class DatabaseInitializer implements ServletContextInitializer {
         userRepository.saveAll(Arrays.asList(user0, user1, user2, user3, user4, user5, user6, user7, user8,
                 user9, user10));
 
-        raiseBalanceOfUser(user1.getEmail(), 89);
+        proPayWrapper.raiseBalanceOfUser(user1.getEmail(), 89);
         Transaction transaction1 = new Transaction(user1, user1, 89, "Überweisung");
-        raiseBalanceOfUser(user2.getEmail(), 23);
+        proPayWrapper.raiseBalanceOfUser(user2.getEmail(), 23);
         Transaction transaction2 = new Transaction(user2, user2, 23, "Überweisung");
-        raiseBalanceOfUser(user3.getEmail(), 56);
+        proPayWrapper.raiseBalanceOfUser(user3.getEmail(), 56);
         Transaction transaction3 = new Transaction(user3, user3, 56, "Überweisung");
-        raiseBalanceOfUser(user4.getEmail(), 98);
+        proPayWrapper.raiseBalanceOfUser(user4.getEmail(), 98);
         Transaction transaction4 = new Transaction(user4, user4, 98, "Überweisung");
-        raiseBalanceOfUser(user5.getEmail(), 34);
+        proPayWrapper.raiseBalanceOfUser(user5.getEmail(), 34);
         Transaction transaction5 = new Transaction(user5, user5, 34, "Überweisung");
-        raiseBalanceOfUser(user6.getEmail(), 53);
+        proPayWrapper.raiseBalanceOfUser(user6.getEmail(), 53);
         Transaction transaction6 = new Transaction(user6, user6, 53, "Überweisung");
-        raiseBalanceOfUser(user7.getEmail(), 67);
+        proPayWrapper.raiseBalanceOfUser(user7.getEmail(), 67);
         Transaction transaction7 = new Transaction(user7, user7, 67, "Überweisung");
-        raiseBalanceOfUser(user8.getEmail(), 34);
+        proPayWrapper.raiseBalanceOfUser(user8.getEmail(), 34);
         Transaction transaction8 = new Transaction(user8, user8, 34, "Überweisung");
-        raiseBalanceOfUser(user9.getEmail(), 29);
+        proPayWrapper.raiseBalanceOfUser(user9.getEmail(), 29);
         Transaction transaction9 = new Transaction(user9, user9, 29, "Überweisung");
-        raiseBalanceOfUser(user10.getEmail(), 45);
+        proPayWrapper.raiseBalanceOfUser(user10.getEmail(), 45);
         Transaction transaction10 = new Transaction(user10, user10, 45, "Überweisung");
 
         transactionRepository.saveAll(Arrays.asList(transaction1, transaction2, transaction3, transaction4, transaction5, transaction6, transaction7, transaction8, transaction9, transaction10));
