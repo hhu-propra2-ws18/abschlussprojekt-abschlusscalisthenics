@@ -142,6 +142,7 @@ public class ItemController {
         model.addAttribute("username", item.getUser().getUsername());
         model.addAttribute("isAvailable", item.isAvailability());
         model.addAttribute("itemID", item.getId());
+        model.addAttribute("soldPrice", item.getSoldPrice());
     }
 
     private void saveItem(Item item) {
