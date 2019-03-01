@@ -85,28 +85,6 @@ public class ItemControllerTest {
     }
 
     @Test
-    public void testEditItem() throws Exception {
-        mvc.perform(post("/item/edit/" + item1.getId())
-                .cookie(new Cookie("SessionID", "1"))
-                .param("name", "Fahrrad")
-                .param("description", "Toller Fahrrad!")
-                .param("cost", "50")
-                .param("deposit", "200")
-                .param("availableTime", "10"))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/borrowall/" + item1.getId() + "/"));
-
-        Assert.assertEquals(itemRepository.count(), 2);
-
-        // Name attribute was not changed
-        Assert.assertEquals(itemRepository.findById(item1.getId()).get().getName(), "Fahrrad");
-        // Description attribute was changed
-        Assert.assertEquals(itemRepository.findById(item1.getId()).get().getDescription(), "Toller Fahrrad!");
-        // Deposit attribute was changed
-        Assert.assertEquals(itemRepository.findById(item1.getId()).get().getDeposit(), 200);
-    }
-
-
-    @Test
     public void testShowItem() throws Exception {
         mvc.perform(get("/borrowall/" + item1.getId() + "/"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
