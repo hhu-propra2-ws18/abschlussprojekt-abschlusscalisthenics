@@ -82,15 +82,15 @@ public class BuyController {
         try {
             proPayWrapper.transferMoney(buy.getBuyer().getEmail(), user.getEmail(), buy.getPurchasePrice());
             Transaction transaction = new Transaction(buy.getBuyer(), user, buy.getPurchasePrice(), "Kauf von " + item.getName());
-            item.setUser(buy.getBuyer());
             buy.setStatus("completed");
-            itemRepository.save(item);
             buyRepository.save(buy);
             transactionRepository.save(transaction);
         } catch (Exception e) {
             buy.setStatus("error");
             return responseBuilder.createProPayErrorResponse(user, buy);
         }
+
+        itemRepository.delete(item);
 
         return responseBuilder.createSuccessResponse("Erfolgreich verkauft");
     }
