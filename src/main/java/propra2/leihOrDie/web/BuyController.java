@@ -53,10 +53,10 @@ public class BuyController {
     }
 
     @PostMapping("buy/{itemId}")
-    public ResponseEntity buyItem(Model model, BuyForm form, @PathVariable Long itemId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+    public ResponseEntity buyItem(Model model, @PathVariable Long itemId, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         Item item = itemRepository.findById(itemId).get();
         User user = sessionRepository.findUserBySessionCookie(sessionId);
-        Buy buy = new Buy(item, form.getPurchasePrice(), "pending", user);
+        Buy buy = new Buy(item, item.getSoldPrice(), "pending", user);
 
         /*if (!isAuthorized(user, item)) {
             return responseBuilder.createUnauthorizedResponse();
