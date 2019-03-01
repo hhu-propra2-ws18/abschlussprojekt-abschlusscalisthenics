@@ -2,7 +2,6 @@ package propra2.leihOrDie;
 
 import org.junit.*;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +23,6 @@ import javax.servlet.http.Cookie;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
@@ -156,8 +154,6 @@ public class LoanControllerTest {
         testLoan.setDuration(2);
         loanRepository.save(testLoan);
 
-       /* Mockito.doNothing()
-                .when(proPayWrapper).transferMoney(testUser1.getEmail(), testUser2.getEmail(), 20);*/
         doNothing().when(proPayWrapper.transferMoney(testUser1.getEmail(), testUser2.getEmail(),20));
 
         mvc.perform(post("/request/return/" + testLoan.getId())

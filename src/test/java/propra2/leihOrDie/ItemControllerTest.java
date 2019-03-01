@@ -1,17 +1,13 @@
 package propra2.leihOrDie;
 
-import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -22,14 +18,8 @@ import propra2.leihOrDie.dataaccess.UserRepository;
 import propra2.leihOrDie.model.Item;
 import propra2.leihOrDie.model.Session;
 import propra2.leihOrDie.model.User;
-
 import javax.servlet.http.Cookie;
-
-import java.util.List;
-import java.util.regex.Matcher;
-
 import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -53,6 +43,24 @@ public class ItemControllerTest {
     @Autowired
     PictureRepository pictureRepository;
 
+    private User user;
+    private Item item1;
+    private Item item2;
+
+    @Before
+    public void setUp() {
+        DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
+        user = dummyUserGenerator.generateUser();
+        userRepository.save(user);
+        sessionRepository.save(new Session("1", user));
+
+        DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
+        item1 = dummyItemGenerator.generateItem(user);
+        item2 = dummyItemGenerator.generateAnotherItem(user);
+        itemRepository.save(item1);
+        itemRepository.save(item2);
+    }
+
     @After
     public void tearDown() {
         pictureRepository.deleteAll();
@@ -63,15 +71,6 @@ public class ItemControllerTest {
 
     @Test
     public void testCreateItem() throws Exception {
-        DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
-        User user = dummyUserGenerator.generateUser();
-        userRepository.save(user);
-
-        sessionRepository.save(new Session("1", user));
-        DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
-        Item item = dummyItemGenerator.generateItem(user);
-        itemRepository.save(item);
-
         mvc.perform(post("/item/create")
                 .cookie(new Cookie("SessionID", "1"))
                 .param("name", "Teller")
@@ -79,76 +78,48 @@ public class ItemControllerTest {
                 .param("cost", "99999")
                 .param("deposit", "1000")
                 .param("availableTime", "5"))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/item/" + (item.getId()+1) + "/uploadphoto"));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/item/" + (item2.getId()+1) + "/uploadphoto"));
 
-        Assert.assertEquals(itemRepository.count(), 2);
-        Assert.assertEquals(itemRepository.findById(item.getId()+1).get().getName(), "Teller");
+        Assert.assertEquals(itemRepository.count(), 3);
+        Assert.assertEquals(itemRepository.findById(item2.getId()+1).get().getName(), "Teller");
     }
 
     @Test
     public void testEditItem() throws Exception {
-        DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
-        User user = dummyUserGenerator.generateUser();
-        userRepository.save(user);
-
-        sessionRepository.save(new Session("1", user));
-        DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
-        Item item = dummyItemGenerator.generateItem(user);
-        itemRepository.save(item);
-
-        mvc.perform(post("/item/edit/" + item.getId())
+        mvc.perform(post("/item/edit/" + item1.getId())
                 .cookie(new Cookie("SessionID", "1"))
                 .param("name", "Fahrrad")
                 .param("description", "Toller Fahrrad!")
                 .param("cost", "50")
                 .param("deposit", "200")
                 .param("availableTime", "10"))
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/borrowall/" + item.getId() + "/"));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/borrowall/" + item1.getId() + "/"));
 
-        Assert.assertEquals(itemRepository.count(), 1);
+        Assert.assertEquals(itemRepository.count(), 2);
 
         // Name attribute was not changed
-        Assert.assertEquals(itemRepository.findById(item.getId()).get().getName(), "Fahrrad");
+        Assert.assertEquals(itemRepository.findById(item1.getId()).get().getName(), "Fahrrad");
         // Description attribute was changed
-        Assert.assertEquals(itemRepository.findById(item.getId()).get().getDescription(), "Toller Fahrrad!");
+        Assert.assertEquals(itemRepository.findById(item1.getId()).get().getDescription(), "Toller Fahrrad!");
         // Deposit attribute was changed
-        Assert.assertEquals(itemRepository.findById(item.getId()).get().getDeposit(), 200);
+        Assert.assertEquals(itemRepository.findById(item1.getId()).get().getDeposit(), 200);
     }
 
 
     @Test
     public void testShowItem() throws Exception {
-        DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
-        User user = dummyUserGenerator.generateUser();
-        userRepository.save(user);
-
-        sessionRepository.save(new Session("1", user));
-        DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
-        Item item = dummyItemGenerator.generateItem(user);
-        itemRepository.save(item);
-
-        mvc.perform(get("/borrowall/" + item.getId() + "/"))
+        mvc.perform(get("/borrowall/" + item1.getId() + "/"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(model().attribute("description", item.getDescription()))
-                .andExpect(model().attribute("location", item.getUser().getAddress().getCity()))
-                .andExpect(model().attribute("availableTime", item.getAvailableTime()))
-                .andExpect(model().attribute("deposit", item.getDeposit()))
-                .andExpect(model().attribute("cost", item.getCost()))
-                .andExpect(model().attribute("username", item.getUser().getUsername()));
+                .andExpect(model().attribute("description", item1.getDescription()))
+                .andExpect(model().attribute("location", item1.getUser().getAddress().getCity()))
+                .andExpect(model().attribute("availableTime", item1.getAvailableTime()))
+                .andExpect(model().attribute("deposit", item1.getDeposit()))
+                .andExpect(model().attribute("cost", item1.getCost()))
+                .andExpect(model().attribute("username", item1.getUser().getUsername()));
     }
 
     @Test
     public void testListAllItems() throws Exception {
-        DummyUserGenerator dummyUserGenerator = new DummyUserGenerator();
-        User user = dummyUserGenerator.generateUser();
-        userRepository.save(user);
-
-        sessionRepository.save(new Session("1", user));
-        DummyItemGenerator dummyItemGenerator = new DummyItemGenerator();
-        Item item1 = dummyItemGenerator.generateItem(user);
-        itemRepository.save(item1);
-        Item item2 = dummyItemGenerator.generateAnotherItem(user);itemRepository.save(item2);
-
         mvc.perform(get("/borrowall/"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(model().attribute("items", hasSize(2)))
