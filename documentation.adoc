@@ -131,3 +131,9 @@ Um ein einfacheres Testen zu ermöglichen haben wir uns entschieden die Methoden
 In dem Fall dass die ProPay Schnittstelle nicht erreichbar ist, wird 5 mal in Abständen von 5 Sekunden ein Retry durchgeführt.
 Kann dann immer noch keine Verbindung aufgebaut werden, muss der Admin die Transaktion über das Admin Panel manuell durchführen,
 wenn der Fehler mit Propay behoben ist.
+
+## Erinnerung an überfällige Ausleihen
+Wenn ein ausgelihener Artikel zurückgegeben werden muss, weil er eigentlich schon einen Tag vorher zurückgegeben werden sollte,
+dann wird der Ausleiher nach dem Login über ein Popup-Fenster darüber informiert, welche Artikel noch zurückgegeben werden
+müssen und wie viel Tage man die Frist schon überschritten hat. +
+Eine Aktualisierung für diese Erinnerung wird jeden Tag morgens um 7 Uhr druchgeführt.
