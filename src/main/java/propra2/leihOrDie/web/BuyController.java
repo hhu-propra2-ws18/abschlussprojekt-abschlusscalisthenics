@@ -34,6 +34,25 @@ public class BuyController {
     private ResponseBuilder responseBuilder = new ResponseBuilder();
     private ProPayWrapper proPayWrapper = new ProPayWrapper();
 
+    @GetMapping("/reloadbuyitems")
+    public String reloadBuyItems(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
+        User user = sessionRepository.findUserBySessionCookie(sessionId);
+        List<Item> items = itemRepository.findItemsOfUser(user.getUsername());
+        List<Buy> buys = new ArrayList<>();
+
+        for (Item item: items) {
+            Buy pendingBuy = getPendingBuyOfItem(item);
+
+            if (pendingBuy != null ) {
+                buys.add(pendingBuy);
+            }
+        }
+        model.addAttribute("buys", buys);
+        model.addAttribute("mypurchases", buyRepository.findBuysOfUser(user.getUsername()));
+        return "buy-snippet";
+    }
+
+
     @GetMapping("/myaccount/buy")
     public String showBuyService(Model model, @CookieValue(value="SessionID", defaultValue="") String sessionId) {
         User user = sessionRepository.findUserBySessionCookie(sessionId);

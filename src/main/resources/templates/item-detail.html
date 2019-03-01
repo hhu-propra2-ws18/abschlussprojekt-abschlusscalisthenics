@@ -24,8 +24,7 @@
                       location.href = "/login";
                   } else {
                       if(xhr.status == 200) {
-                          document.getElementById("modal-text").innerHTML = "Ihre Anfrage wurde erfolgreich übermittelt.\n" +
-                              "Sie werden über die Entscheidung des Verleihers in Kürze informiert.";
+                          document.getElementById("modal-text").innerHTML = "Ihre Anfrage wurde erfolgreich übermittelt.";
                           document.getElementById("modal-text").style.color = "green";
                           document.getElementById("loanForm").innerHTML="<p style='color:green; font-size:20px'>Anfrage erfolgreich!</p>";
                       } else {
